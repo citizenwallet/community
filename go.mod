@@ -1,0 +1,3 @@
+module github.com/citizenwallet/community
+
+go 1.21.3

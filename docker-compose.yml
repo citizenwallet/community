@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: .docker/dev/Dockerfile
+      args:
+        ENTRYPOINT_PATH: cmd/community/main.go
+    ports:
+      - "3000:3000"
