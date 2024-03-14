@@ -1,4 +1,4 @@
-FROM ghcr.io/cirruslabs/flutter:stable
+FROM fischerscode/flutter:stable
 
 ARG REPO_PATH
 ARG REPO_NAME
