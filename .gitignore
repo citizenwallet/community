@@ -19,3 +19,15 @@
 
 # Go workspace file
 go.work
+
+# env
+.env
+.env.app
+.env.dashboard
+.env.indexer
+
+# community
+community.json
+
+# generated data
+.community

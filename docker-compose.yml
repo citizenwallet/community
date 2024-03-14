@@ -1,11 +1,86 @@
 version: '3.8'
 
 services:
-  dev:
+  compile-app:
+    env_file:
+        - .env.app
     build:
       context: .
-      dockerfile: .docker/dev/Dockerfile
+      dockerfile: .docker/app/Dockerfile
       args:
-        ENTRYPOINT_PATH: cmd/community/main.go
+        REPO_PATH: ${APP_REPO_PATH}
+        REPO_NAME: ${APP_REPO_NAME}
+    restart: on-failure
+    healthcheck:
+      test: "exit 0"
+    networks:
+      cwnet:
+        aliases:
+          - cw-app
+    volumes:
+      - ./.community/web:/home/flutter/cw/web
+  dashboard:
+    env_file:
+        - .env.dashboard
+    build:
+      context: .
+      dockerfile: .docker/dashboard/Dockerfile
+      args:
+        REPO_PATH: ${DASHBOARD_REPO_PATH}
+        REPO_NAME: ${DASHBOARD_REPO_NAME}
+        BASE_PATH: ${NEXT_PUBLIC_BASE_PATH}
+        BASE_ASSET_PATH: ${NEXT_PUBLIC_BASE_ASSET_PATH}
+    restart: on-failure
+    healthcheck:
+      test: "exit 0"
+    networks:
+      cwnet:
+        aliases:
+          - cw-dashboard
+  indexer:
+    env_file:
+        - .env.indexer
+    build:
+      context: .
+      dockerfile: .docker/indexer/Dockerfile
+      args:
+        REPO_PATH: ${INDEXER_REPO_PATH}
+        REPO_NAME: ${INDEXER_REPO_NAME}
+        GOOS: ${GOOS}
+        GOARCH: ${GOARCH}
+    restart: on-failure
+    healthcheck:
+      test: "exit 0"
+    networks:
+      cwnet:
+        aliases:
+          - cw-indexer
+    volumes:
+      - ./.community/data:/cw/data
+  server:
+    image: nginx:latest
     ports:
-      - "3000:3000"
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./.community/nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./.community/certbot/www:/var/www/certbot/:ro
+      - ./.community/certbot/conf/:/etc/nginx/ssl/:ro
+      - ./.community/web:/var/www/html/:ro
+    networks:
+      cwnet:
+        aliases:
+          - cw-server
+    depends_on:
+      - compile-app
+      - dashboard
+      - indexer
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./.community/certbot/www/:/var/www/certbot/:rw
+
+networks:
+  cwnet:
+    name: cwnet
