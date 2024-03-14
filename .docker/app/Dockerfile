@@ -6,11 +6,8 @@ ARG REPO_NAME
 
 ENV REPO_NAME=${REPO_NAME}
 
-# prepare our working directory
-RUN mkdir -p /home/flutter/cw
-RUN mkdir -p /home/flutter/cw/web
-
 # switch to the working directory
+WORKDIR /home/flutter/cw/web
 WORKDIR /home/flutter/cw
 
 # fetch the repository and ignore the cache
