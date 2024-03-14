@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:21 as builder
 
 ARG REPO_PATH

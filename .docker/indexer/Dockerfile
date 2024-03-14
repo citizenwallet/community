@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # Build the binary from a golang image
 FROM golang:1.22 AS builder
 
