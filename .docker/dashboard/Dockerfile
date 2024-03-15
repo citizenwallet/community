@@ -7,14 +7,10 @@ ARG BASE_PATH
 ARG BASE_ASSET_PATH
 
 # prepare our working directory
-RUN mkdir -p /cw
 WORKDIR /cw
 
-# fetch the repository and ignore the cache
-ADD ${REPO_PATH} skipcache
-
-# clone the repository
-RUN git clone --depth 1 ${REPO_PATH}
+# fetch the repository
+ADD ${REPO_PATH} /cw/${REPO_NAME}
 
 # move into the repository
 WORKDIR /cw/${REPO_NAME}
@@ -40,9 +36,6 @@ RUN npm run build
 FROM node:21-alpine
 
 ARG REPO_NAME
-
-# create the working directory
-RUN mkdir -p /cw
 
 # move into the working directory
 WORKDIR /cw

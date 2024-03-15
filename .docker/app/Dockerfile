@@ -10,14 +10,16 @@ ENV REPO_NAME=${REPO_NAME}
 WORKDIR /home/flutter/cw/web
 WORKDIR /home/flutter/cw
 
-# fetch the repository and ignore the cache
-ADD ${REPO_PATH} skipcache
-
-# clone the repository
-RUN git clone --depth 1 ${REPO_PATH}
+# fetch the repository
+ADD ${REPO_PATH} /home/flutter/cw/${REPO_NAME}
 
 # move into the repository
 WORKDIR /home/flutter/cw/${REPO_NAME}
+
+# fix permission issues with the repo folder
+USER root
+RUN chown -R flutter:flutter .
+USER flutter
 
 # create the app environment files
 COPY .env.app .env
