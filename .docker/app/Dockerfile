@@ -15,9 +15,6 @@ RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
 # Set Flutter path
 ENV PATH "$PATH:/usr/local/flutter/bin"
 
-# Run flutter doctor
-RUN flutter doctor 
-
 # switch to the working directory
 WORKDIR /home/flutter/cw/web
 WORKDIR /home/flutter/cw
