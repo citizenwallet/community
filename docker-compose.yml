@@ -34,6 +34,9 @@ services:
       cwnet:
         aliases:
           - cw-dashboard
+    volumes:
+      - data_volume:/cw/data
+      - config_volume:/cw/config
   indexer:
     env_file:
         - .env.indexer
@@ -53,7 +56,8 @@ services:
         aliases:
           - cw-indexer
     volumes:
-      - ./.community/data:/cw/data
+      - data_volume:/cw/data
+      - config_volume:/cw/config/:ro
   server:
     image: nginx:latest
     ports:
@@ -65,6 +69,7 @@ services:
       - ./.community/certbot/www:/var/www/certbot/:ro
       - ./.community/certbot/conf/:/etc/nginx/ssl/:ro
       - ./.community/web:/var/www/html/:ro
+      - config_volume:/var/www/config/:ro
     networks:
       cwnet:
         aliases:
@@ -77,6 +82,20 @@ services:
     image: certbot/certbot:latest
     volumes:
       - ./.community/certbot/www/:/var/www/certbot/:rw
+
+volumes:
+  config_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/.community/config
+  data_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/.community/data
 
 networks:
   cwnet:
