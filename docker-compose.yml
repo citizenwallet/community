@@ -66,8 +66,8 @@ services:
     restart: always
     volumes:
       - ./.community/nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./.community/certbot/www:/var/www/certbot/:ro
-      - ./.community/certbot/conf/:/etc/nginx/ssl/:ro
+      - certs_volume/www:/var/www/certbot/:ro
+      - certs_volume/conf/:/etc/nginx/ssl/:ro
       - ./.community/web:/var/www/html/:ro
       - config_volume:/var/www/config/:ro
     networks:
@@ -81,7 +81,7 @@ services:
   certbot:
     image: certbot/certbot:latest
     volumes:
-      - ./.community/certbot/www/:/var/www/certbot/:rw
+      - certs_volume/www/:/var/www/certbot/:rw
 
 volumes:
   config_volume:
@@ -96,6 +96,12 @@ volumes:
       o: bind
       type: none
       device: ${PWD}/.community/data
+  certs_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/.community/certbot
 
 networks:
   cwnet:
