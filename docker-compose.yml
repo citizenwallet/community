@@ -70,16 +70,32 @@ services:
       - certs_conf_volume:/etc/nginx/ssl/:ro
       - ./.community/web:/var/www/html/:ro
       - config_volume:/var/www/config/:ro
+    depends_on:
+      - dashboard
     networks:
       cwnet:
         aliases:
           - cw-server
+  server-cert:
+    image: nginx:latest
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    volumes:
+      - ./.community/nginx_cert/conf/:/etc/nginx/conf.d/:ro
+      - certs_www_volume:/var/www/certbot/:ro
+      - certs_conf_volume:/etc/nginx/ssl/:ro
+    networks:
+      cwnet:
+        aliases:
+          - cw-server-cert
   certbot:
     image: certbot/certbot:latest
     volumes:
       - certs_www_volume:/var/www/certbot/:rw
     depends_on:
-      - server
+      - server-cert
 
 volumes:
   config_volume:
