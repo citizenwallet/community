@@ -78,6 +78,8 @@ services:
     image: certbot/certbot:latest
     volumes:
       - certs_www_volume:/var/www/certbot/:rw
+    depends_on:
+      - server
 
 volumes:
   config_volume:
