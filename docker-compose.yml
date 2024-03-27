@@ -74,10 +74,6 @@ services:
       cwnet:
         aliases:
           - cw-server
-    depends_on:
-      - compile-app
-      - dashboard
-      - indexer
   certbot:
     image: certbot/certbot:latest
     volumes:
