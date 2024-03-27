@@ -26,9 +26,6 @@ RUN npm i
 # disable telemetry
 RUN npx next telemetry disable
 
-# copy the community.json file
-COPY community.json .
-
 # build the dashboard
 RUN npm run build
 
