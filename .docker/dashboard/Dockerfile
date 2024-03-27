@@ -16,9 +16,7 @@ ADD ${REPO_PATH} /cw/${REPO_NAME}
 WORKDIR /cw/${REPO_NAME}
 
 # allows us to run the next server under a subpath, needs to be provided at compile time
-RUN touch .env
-RUN echo "NEXT_PUBLIC_BASE_PATH='${BASE_PATH}'" > .env
-RUN echo "NEXT_PUBLIC_BASE_ASSET_PATH='${BASE_ASSET_PATH}'" > .env
+COPY .env.dashboard .env
 
 # install all dependencies
 RUN npm i

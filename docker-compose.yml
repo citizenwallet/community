@@ -25,8 +25,6 @@ services:
       args:
         REPO_PATH: ${DASHBOARD_REPO_PATH}
         REPO_NAME: ${DASHBOARD_REPO_NAME}
-        BASE_PATH: ${NEXT_PUBLIC_BASE_PATH}
-        BASE_ASSET_PATH: ${NEXT_PUBLIC_BASE_ASSET_PATH}
     restart: on-failure
     healthcheck:
       test: "exit 0"
