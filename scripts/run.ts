@@ -3,20 +3,36 @@ import { terminal as term } from "terminal-kit";
 import { exec, spawn } from "child_process";
 import { config } from "dotenv";
 
-function execPromise(command: string) {
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.log(`error: ${error.message}`);
-        reject(error);
+function execPromise(command: string, verbose = false) {
+  return new Promise<void>((resolve, reject) => {
+    const [cmd, ...args] = command.split(" ");
+    const child = spawn(cmd, args);
+
+    if (verbose) {
+      child.stdout.on("data", (data) => {
+        console.log(data);
+      });
+    }
+
+    child.stderr.on("data", (data) => {
+      console.error(data);
+    });
+
+    child.on("error", (error) => {
+      console.log(error.message);
+      reject(error);
+    });
+
+    child.on("exit", (code, signal) => {
+      if (code !== 0) {
+        const err = new Error(
+          `Process exited with code: ${code}, signal: ${signal}`
+        );
+        console.log(`error: ${err.message}`);
+        reject(err);
         return;
       }
-      if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        reject(new Error(stderr));
-        return;
-      }
-      resolve(stdout);
+      resolve();
     });
   });
 }
