@@ -58,29 +58,29 @@ async function main() {
 
   // start nginx
   term.nextLine(2);
+  term("Server: starting...");
   let spinner = await term.spinner("dotSpinner");
-  term("Server: starting...\n");
   await execPromise("docker compose up server -d");
   spinner.animate(false);
-  term.nextLine(1);
+  term.previousLine(1);
   term("Server: started ✅\n");
 
   // compile community
   term.nextLine(2);
+  term("Community: compiling...");
   spinner = await term.spinner("dotSpinner");
-  term("Community: compiling...\n");
   await execPromise("npm run build");
   spinner.animate(false);
-  term.nextLine(1);
+  term.previousLine(1);
   term("Community: compiled ✅\n");
 
   // start community
-  term.nextLine(2);
+  term.nextLine(1);
+  term("Community: starting...");
   spinner = await term.spinner("dotSpinner");
-  term("Community: starting...\n");
   spawn("npx next start -H 0.0.0.0");
   spinner.animate(false);
-  term.nextLine(1);
+  term.previousLine(1);
   term("Community: started ✅\n");
 
   // parse .env
@@ -88,7 +88,7 @@ async function main() {
 
   // display url
   term.nextLine(2);
-  term("Community URL\n");
+  term.bold("Community URL\n");
   term.nextLine(2);
   qrcode.generate(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
