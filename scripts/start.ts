@@ -1,6 +1,15 @@
+import { readFileSync } from "fs";
+import { terminal as term } from "terminal-kit";
+
 // Purpose: Start the application.
 async function main() {
-  console.log("Starting application");
+  const logo = readFileSync("./assets/citizenwallet.ans", "utf8");
+
+  term(logo);
+
+  term.nextLine(2);
+
+  term("Welcome to Citizen Wallet\n");
   // TODO: check if .env files exist
   // TODO: if !exists >> prep .env files for nginx and community
   // TODO: check if certs exist

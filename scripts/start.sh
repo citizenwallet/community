@@ -2,7 +2,7 @@
 
 # check for curl, install if needed
 if command -v curl >/dev/null 2>&1; then
-    echo "Checking for curl: OK"
+    echo "Checking for curl: ✅"
 else
     echo "Checking for curl: Needs to be installed"
     sudo apt update
@@ -12,7 +12,7 @@ fi
 
 # check for node, install if needed
 if command -v node >/dev/null 2>&1; then
-    echo "Checking for Node.js: OK"
+    echo "Checking for Node.js: ✅"
 else
     echo "Checking for Node.js: Needs to be installed"
 
@@ -27,7 +27,7 @@ fi
 
 # check for git, install if needed
 if command -v git >/dev/null 2>&1; then
-    echo "Checking for git: OK"
+    echo "Checking for git: ✅"
 else
     echo "Checking for git: Needs to be installed"
     sudo apt update
@@ -37,7 +37,7 @@ fi
 
 # check for docker, install if needed
 if command -v docker >/dev/null 2>&1; then
-    echo "Checking for docker: OK"
+    echo "Checking for docker: ✅"
 else
     echo "Checking for docker: Needs to be
     installed"
@@ -55,13 +55,13 @@ fi
 
 # check for community repo, clone if not exists
 if [ -d "community" ]; then
-    echo "Community: OK"
+    echo "Community: ✅"
 else
     echo "Community: Needs to be downloaded"
 
     git clone https://github.com/citizenwallet/community.git
 
-    echo "Community: OK"
+    echo "Community: ✅"
 fi
 
 # change directory to community
@@ -80,6 +80,9 @@ echo "Community: installing dependencies"
 npm i --no-audit
 
 echo "Community: dependencies installed"
+
+echo "\n"
+echo "\n"
 
 # run start script
 npx ts-node scripts/start.ts
