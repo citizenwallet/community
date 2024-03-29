@@ -36,7 +36,6 @@ services:
       - data_volume:/cw/data
       - config_volume:/cw/config
       - assets_volume:/cw/assets/
-      - env_volume:/cw/env/
       - /var/run/docker.sock:/var/run/docker.sock
   indexer:
     env_file:
@@ -99,12 +98,6 @@ services:
       - server-cert
 
 volumes:
-  env_volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${PWD}/.community/env/
   assets_volume:
     driver: local
     driver_opts:
