@@ -88,5 +88,10 @@ echo "Community: dependencies installed"
 echo
 echo
 
+echo
+echo "Start script complete: ✅"
+echo "Community is ready to run"
+echo
+
 # run start script
 npx ts-node scripts/start.ts
