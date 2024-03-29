@@ -40,13 +40,17 @@ COPY --from=builder /cw/${REPO_NAME} .
 
 RUN apt-get update && apt-get install -y curl
 
-RUN curl -sSL https://get.docker.com/ | sh
+USER root
 
+# Install Docker CLI, not the whole Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh
+RUN sh ./get-docker.sh
+
+# Add node to the docker group
 RUN usermod -aG docker node
 
+# Switch to the node user
 USER node
-
-RUN docker ps
 
 # define the command to be run on launch
 CMD ["npx", "next", "start", "-H", "0.0.0.0"]
