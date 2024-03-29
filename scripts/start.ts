@@ -3,7 +3,7 @@ const { terminal: term } = require("terminal-kit");
 
 // Purpose: Start the application.
 async function main() {
-  const logo = readFileSync("./assets/citizenwallet.ans", "utf8");
+  const logo = readFileSync("./assets/cw.ans", "utf8");
 
   term(logo);
 
