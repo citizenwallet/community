@@ -50,7 +50,7 @@ async function main() {
 
   term.nextLine(2);
 
-  term("Welcome to Citizen Wallet\n");
+  term.bold("Citizen Wallet - Community Server\n");
   // TODO: check if .env files exist
   // TODO: if !exists >> prep .env files for nginx and community
   // TODO: check if certs exist
