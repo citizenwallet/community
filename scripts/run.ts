@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
-import { exec, spawn } from "child_process";
+import { spawn } from "child_process";
+import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
 
 function execPromise(command: string, verbose = false) {
@@ -82,8 +83,14 @@ async function main() {
 
   // display url
   term.nextLine(2);
-  term("Community: URL\n");
-  term.underline(`https://${process.env.NGINX_HOST}`);
+  term("Community URL\n");
+  term.nextLine(2);
+  qrcode.generate(
+    `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
+  );
+  term.underline(
+    `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
+  );
   term.nextLine(2);
 }
 
