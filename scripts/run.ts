@@ -60,33 +60,36 @@ async function main() {
 
   // start nginx
   term.nextLine(2);
-  term("Server: starting...");
+  let cursor = term.saveCursor();
+  cursor("Server: starting...");
   let spinner = await term.spinner("dotSpinner");
   await execPromise("docker compose up server -d");
   spinner.animate(false);
-  term.moveTo(1);
-  term.eraseLine();
-  term("Server: started ✅\n");
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("Server: started ✅\n");
 
   // compile community
   term.nextLine(1);
-  term("Community: compiling...");
+  cursor = term.saveCursor();
+  cursor("Community: compiling...");
   spinner = await term.spinner("dotSpinner");
   await execPromise("npm run build");
   spinner.animate(false);
-  term.moveTo(1);
-  term.eraseLine();
-  term("Community: compiled ✅\n");
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("Community: compiled ✅\n");
 
   // start community
   term.nextLine(1);
-  term("Community: starting...");
+  cursor = term.saveCursor();
+  cursor("Community: starting...");
   spinner = await term.spinner("dotSpinner");
   spawn("npx next start -H 0.0.0.0");
   spinner.animate(false);
-  term.moveTo(1);
-  term.eraseLine();
-  term("Community: started ✅\n");
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("Community: started ✅\n");
 
   // parse .env
   config();
