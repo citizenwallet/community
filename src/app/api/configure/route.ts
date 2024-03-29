@@ -1,6 +1,9 @@
-// app/api/configure.ts
+// app/api/configure
 import {
   communityFileExists,
+  communityHashExists,
+  configFolderExists,
+  createConfigFolder,
   writeAppEnv,
   writeCommunityFile,
   writeCommunityHash,
@@ -18,8 +21,12 @@ export async function POST(req: Request) {
   try {
     const config: Config = await req.json(); // assuming the config is sent in the request body
 
-    if (communityFileExists()) {
+    if (communityFileExists() && communityHashExists()) {
       return Response.json({ message: "File already exists" }, { status: 400 });
+    }
+
+    if (!configFolderExists()) {
+      createConfigFolder();
     }
 
     const network: Network | undefined = NETWORKS[config.node.chain_id];

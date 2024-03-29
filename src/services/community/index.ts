@@ -1,6 +1,26 @@
 import { Config, Network } from "@citizenwallet/sdk";
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
+
+export const appFolderExists = (): boolean => {
+  const folderPath = path.join(process.cwd(), ".community/web");
+  return existsSync(folderPath);
+};
+
+export const createAppFolder = () => {
+  const folderPath = path.join(process.cwd(), ".community/web");
+  return mkdirSync(folderPath, { recursive: true });
+};
+
+export const configFolderExists = (): boolean => {
+  const folderPath = path.join(process.cwd(), ".community/config");
+  return existsSync(folderPath);
+};
+
+export const createConfigFolder = () => {
+  const folderPath = path.join(process.cwd(), ".community/config");
+  return mkdirSync(folderPath, { recursive: true });
+};
 
 export const readCommunityFile = (): Config | undefined => {
   if (!communityFileExists()) {
@@ -16,6 +36,11 @@ export const readCommunityFile = (): Config | undefined => {
 
 export const communityFileExists = (): boolean => {
   const filePath = path.join(process.cwd(), ".community/config/community.json");
+  return existsSync(filePath);
+};
+
+export const communityHashExists = (): boolean => {
+  const filePath = path.join(process.cwd(), ".community/config/hash");
   return existsSync(filePath);
 };
 
@@ -64,7 +89,7 @@ export const writeIndexerEnv = (
     DB_SECRET='${dbSecret}'
     `;
 
-  const filePath = path.join(process.cwd(), "env/.env.indexer");
+  const filePath = path.join(process.cwd(), ".env.indexer");
   return writeFileSync(filePath, env);
 };
 
@@ -84,6 +109,6 @@ export const writeAppEnv = (
     SENTRY_URL='${webSentryUrl}'
     `;
 
-  const filePath = path.join(process.cwd(), "env/.env.indexer");
+  const filePath = path.join(process.cwd(), ".env.indexer");
   return writeFileSync(filePath, env);
 };

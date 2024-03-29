@@ -16,6 +16,14 @@ export enum ConfigStep {
   Deploy = "deploy",
 }
 
+export enum DeployStep {
+  Config = "config",
+  App = "app",
+  Indexer = "indexer",
+  Success = "success",
+  Failed = "failed",
+}
+
 export type ConfigStore = {
   step: ConfigStep;
   primaryColor: string;
@@ -36,10 +44,11 @@ export type ConfigStore = {
   chainContinue: (network: Network, scan: ConfigScan, node: ConfigNode) => void;
   communityContinue: (community: ConfigCommunity, token: ConfigToken) => void;
   deployment: {
+    step: DeployStep;
     loading: boolean;
     error: boolean;
   };
-  deployRequest: () => void;
+  deployRequest: (step: DeployStep) => void;
   deploySuccess: () => void;
   deployFailed: () => void;
   failed: () => void;
@@ -55,6 +64,7 @@ const getInitialState = () => ({
   error: false,
   invalidUrl: false,
   deployment: {
+    step: DeployStep.Config,
     loading: false,
     error: false,
   },
@@ -71,9 +81,18 @@ export const useConfigStore = create<ConfigStore>((set) => ({
     set({ step: ConfigStep.Community, network, scan, node }),
   communityContinue: (community, token) =>
     set({ step: ConfigStep.Checkout, community, token }),
-  deployRequest: () => set({ deployment: { loading: true, error: false } }),
-  deploySuccess: () => set({ deployment: { loading: false, error: false } }),
-  deployFailed: () => set({ deployment: { loading: false, error: true } }),
+  deployRequest: (step: DeployStep) =>
+    set({
+      deployment: { step, loading: true, error: false },
+    }),
+  deploySuccess: () =>
+    set({
+      deployment: { step: DeployStep.Success, loading: false, error: false },
+    }),
+  deployFailed: () =>
+    set({
+      deployment: { step: DeployStep.Failed, loading: false, error: true },
+    }),
   failed: () => set({ loading: false, error: true }),
   reset: () => set(getInitialState(), true),
 }));

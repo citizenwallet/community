@@ -1,5 +1,5 @@
 import { StoreApi } from "zustand";
-import { ConfigStep, ConfigStore, useConfigStore } from "./state";
+import { ConfigStep, ConfigStore, DeployStep, useConfigStore } from "./state";
 import { useMemo } from "react";
 import {
   CommunityFactoryContractService,
@@ -135,7 +135,7 @@ class ConfigLogic {
     checkoutService: SessionService
   ): Promise<boolean> {
     try {
-      this.store.getState().deployRequest();
+      this.store.getState().deployRequest(DeployStep.Config);
 
       // deploy community
       const tx = await factoryService.create(owner, tokenAddress, 0);
@@ -243,6 +243,10 @@ class ConfigLogic {
 
       // TODO: remove this when the above is implemented
       await checkoutService.refund();
+
+      this.store.getState().deployRequest(DeployStep.App);
+
+      this.store.getState().deployRequest(DeployStep.Indexer);
 
       this.store.getState().deploySuccess();
 
