@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo
+echo "Start script 1.0.0"
+echo
+
 # check for curl, install if needed
 if command -v curl >/dev/null 2>&1; then
     echo "Checking for curl: ✅"
