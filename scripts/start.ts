@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { terminal as term } from "terminal-kit";
+const { readFileSync } = require("fs");
+const { terminal: term } = require("terminal-kit");
 
 // Purpose: Start the application.
 async function main() {

@@ -81,8 +81,8 @@ npm i --no-audit
 
 echo "Community: dependencies installed"
 
-echo "\n"
-echo "\n"
+echo \n
+echo \n
 
 # run start script
 npx ts-node scripts/start.ts
