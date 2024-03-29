@@ -42,6 +42,8 @@ function execPromise(command: string, verbose = false) {
 
 // Purpose: Start the application.
 async function main() {
+  term.clear();
+
   const logo = readFileSync("./assets/cw.ans", "utf8");
 
   term(logo);
@@ -62,6 +64,7 @@ async function main() {
   let spinner = await term.spinner("dotSpinner");
   await execPromise("docker compose up server -d");
   spinner.animate(false);
+  term.eraseLine();
   term("Server: started ✅\n");
 
   // compile community
@@ -70,6 +73,7 @@ async function main() {
   spinner = await term.spinner("dotSpinner");
   await execPromise("npm run build");
   spinner.animate(false);
+  term.eraseLine();
   term("Community: compiled ✅\n");
 
   // start community
@@ -78,6 +82,7 @@ async function main() {
   spinner = await term.spinner("dotSpinner");
   spawn("npx next start -H 0.0.0.0");
   spinner.animate(false);
+  term.eraseLine();
   term("Community: started ✅\n");
 
   // parse .env
