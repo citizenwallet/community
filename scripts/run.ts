@@ -62,7 +62,6 @@ async function main() {
   let spinner = await term.spinner("dotSpinner");
   await execPromise("docker compose up server -d");
   spinner.animate(false);
-  term.previousLine(1);
   term("Server: started ✅\n");
 
   // compile community
@@ -71,7 +70,6 @@ async function main() {
   spinner = await term.spinner("dotSpinner");
   await execPromise("npm run build");
   spinner.animate(false);
-  term.previousLine(1);
   term("Community: compiled ✅\n");
 
   // start community
@@ -80,7 +78,6 @@ async function main() {
   spinner = await term.spinner("dotSpinner");
   spawn("npx next start -H 0.0.0.0");
   spinner.animate(false);
-  term.previousLine(1);
   term("Community: started ✅\n");
 
   // parse .env
