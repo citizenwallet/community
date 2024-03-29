@@ -3,6 +3,7 @@ import { terminal as term } from "terminal-kit";
 import { spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
+import { communityFileExists, communityHashExists } from "@/services/community";
 
 function execPromise(command: string, verbose = false) {
   return new Promise<void>((resolve, reject) => {
@@ -51,6 +52,9 @@ async function main() {
   term.nextLine(2);
 
   term.bold("Citizen Wallet - Community Server\n");
+
+  // TODO: when we need more automation, adding these steps would be helpful
+
   // TODO: check if .env files exist
   // TODO: if !exists >> prep .env files for nginx and community
   // TODO: check if certs exist
@@ -94,6 +98,32 @@ async function main() {
   cursor.eraseLine();
   cursor.column(1);
   cursor("Community: started ✅\n");
+
+  const communityExists = communityFileExists();
+  const hashExists = communityHashExists();
+  if (communityExists && hashExists) {
+    // start indexer
+    term.nextLine(1);
+    cursor = term.saveCursor();
+    cursor("Indexer: starting...");
+    spinner = await term.spinner("dotSpinner");
+    await execPromise("docker compose up indexer -d");
+    spinner.animate(false);
+    cursor.eraseLine();
+    cursor.column(1);
+    cursor("Indexer: started ✅\n");
+
+    // start app
+    term.nextLine(1);
+    cursor = term.saveCursor();
+    cursor("App: compiling...");
+    spinner = await term.spinner("dotSpinner");
+    await execPromise("docker compose up compile-app -d");
+    spinner.animate(false);
+    cursor.eraseLine();
+    cursor.column(1);
+    cursor("App: compiled ✅\n");
+  }
 
   // parse .env
   config();
