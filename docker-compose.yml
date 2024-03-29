@@ -72,8 +72,6 @@ services:
       - ./.community/web:/var/www/html/:ro
       - config_volume:/var/www/config/:ro
       - assets_volume:/var/www/assets/:ro
-    depends_on:
-      - dashboard
     networks:
       cwnet:
         aliases:

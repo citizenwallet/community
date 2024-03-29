@@ -28,7 +28,7 @@ RUN npx next telemetry disable
 RUN npm run build
 
 # Set up the runtime image
-FROM node:21
+FROM node:21-alpine
 
 ARG REPO_NAME
 
@@ -37,20 +37,6 @@ WORKDIR /cw
 
 # copy the build from the builder
 COPY --from=builder /cw/${REPO_NAME} .
-
-RUN apt-get update && apt-get install -y curl
-
-USER root
-
-# Install Docker CLI, not the whole Docker
-RUN curl -fsSL https://get.docker.com -o get-docker.sh
-RUN sh ./get-docker.sh
-
-# Add node to the docker group
-RUN usermod -aG docker node
-
-# Switch to the node user
-USER node
 
 # define the command to be run on launch
 CMD ["npx", "next", "start", "-H", "0.0.0.0"]
