@@ -15,9 +15,11 @@ function execPromise(command: string, verbose = false) {
       });
     }
 
-    child.stderr.on("data", (data) => {
-      console.error(data.toString());
-    });
+    if (verbose) {
+      child.stderr.on("data", (data) => {
+        console.error(data.toString());
+      });
+    }
 
     child.on("error", (error) => {
       console.log(error.message);
@@ -56,26 +58,29 @@ async function main() {
 
   // start nginx
   term.nextLine(2);
-  term("Server: starting...\n");
   let spinner = await term.spinner("dotSpinner");
+  term("Server: starting...\n");
   await execPromise("docker compose up server -d");
   spinner.animate(false);
+  term.nextLine(1);
   term("Server: started ✅\n");
 
   // compile community
   term.nextLine(2);
-  term("Community: compiling...\n");
   spinner = await term.spinner("dotSpinner");
+  term("Community: compiling...\n");
   await execPromise("npm run build");
   spinner.animate(false);
+  term.nextLine(1);
   term("Community: compiled ✅\n");
 
   // start community
   term.nextLine(2);
-  term("Community: starting...\n");
   spinner = await term.spinner("dotSpinner");
+  term("Community: starting...\n");
   spawn("npx next start -H 0.0.0.0");
   spinner.animate(false);
+  term.nextLine(1);
   term("Community: started ✅\n");
 
   // parse .env
@@ -88,6 +93,7 @@ async function main() {
   qrcode.generate(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
+  term.nextLine(1);
   term.underline(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
