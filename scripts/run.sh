@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo
-echo "Start script 1.0.0"
+echo "Run script 1.0.0"
 echo
 
 # check for curl, install if needed
@@ -89,9 +89,9 @@ echo
 echo
 
 echo
-echo "Start script complete: ✅"
+echo "Run script complete: ✅"
 echo "Community is ready to run"
 echo
 
-# run start script
-npx ts-node scripts/start.ts
+# trigger run script
+npm run community

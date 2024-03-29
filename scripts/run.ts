@@ -1,5 +1,6 @@
-const { readFileSync } = require("fs");
-const { terminal: term } = require("terminal-kit");
+import { readFileSync } from "fs";
+import { terminal as term } from "terminal-kit";
+import { execSync } from "child_process";
 
 // Purpose: Start the application.
 async function main() {
@@ -16,9 +17,21 @@ async function main() {
   // TODO: if !exists >> ask for host name
   // TODO: if !exists >> generate SSL certs
   // TODO: if !exists >> stop containers
-  // TODO: start nginx
-  // TODO: compile community
-  // TODO: start community
+
+  // start nginx
+  term.nextLine(2);
+  term("Starting nginx\n");
+  execSync("docker compose up server");
+
+  // compile community
+  term.nextLine(2);
+  term("Compiling community\n");
+  execSync("npm run build");
+
+  // start community
+  term.nextLine(2);
+  term("Starting community\n");
+  execSync("npx next start -H 0.0.0.0");
 }
 
 main()
