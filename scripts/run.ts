@@ -85,7 +85,11 @@ async function main() {
   cursor = term.saveCursor();
   cursor("Community: starting...");
   spinner = await term.spinner("dotSpinner");
-  spawn("npx next start -H 0.0.0.0", { detached: true, shell: true });
+  spawn("npx next start -H 0.0.0.0", {
+    detached: true,
+    shell: true,
+    stdio: "ignore",
+  });
   spinner.animate(false);
   cursor.eraseLine();
   cursor.column(1);
