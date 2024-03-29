@@ -37,6 +37,7 @@ services:
       - config_volume:/cw/config
       - assets_volume:/cw/assets/
       - env_volume:/cw/env/
+      - /var/run/docker.sock:/var/run/docker.sock
   indexer:
     env_file:
         - .env.indexer

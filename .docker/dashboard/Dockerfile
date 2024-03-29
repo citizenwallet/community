@@ -19,7 +19,7 @@ WORKDIR /cw/${REPO_NAME}
 COPY .env.dashboard .env
 
 # install all dependencies
-RUN npm i
+RUN npm i --no-audit
 
 # disable telemetry
 RUN npx next telemetry disable
@@ -28,7 +28,7 @@ RUN npx next telemetry disable
 RUN npm run build
 
 # Set up the runtime image
-FROM node:21-alpine
+FROM node:21
 
 ARG REPO_NAME
 
@@ -37,6 +37,16 @@ WORKDIR /cw
 
 # copy the build from the builder
 COPY --from=builder /cw/${REPO_NAME} .
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -sSL https://get.docker.com/ | sh
+
+RUN usermod -aG docker node
+
+USER node
+
+RUN docker ps
 
 # define the command to be run on launch
 CMD ["npx", "next", "start", "-H", "0.0.0.0"]
