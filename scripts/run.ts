@@ -57,7 +57,7 @@ async function main() {
   term.nextLine(2);
   term("Server: starting...\n");
   let spinner = await term.spinner("dotSpinner");
-  await execPromise("docker compose up server");
+  await execPromise("docker compose up server -d");
   spinner.animate(false);
   term("Server: started ✅\n");
 
