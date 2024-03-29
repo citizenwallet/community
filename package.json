@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "community": "ts-node -P scripts/tsconfig.json scripts/run.ts",
+    "community": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -55,6 +55,7 @@
     "tailwindcss": "^3.3.0",
     "terminal-kit": "^3.1.1",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }
 }
