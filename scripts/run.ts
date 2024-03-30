@@ -41,6 +41,35 @@ function execPromise(command: string, verbose = false) {
   });
 }
 
+async function prepareApp() {
+  config();
+
+  term.nextLine(1);
+  let cursor = term.saveCursor();
+  cursor("App: compiling...");
+  const spinner = await term.spinner("dotSpinner");
+
+  // clean up the web folder
+  await execPromise("rm -rf .community/web/*");
+
+  // download version file
+  const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
+  const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
+  await execPromise(
+    `curl -H 'Cache-Control: no-cache' -o .community/${buildVersionFileName}-web -L ${buildOutputUrl}/web/${buildVersionFileName}?cache_buster=$(date +%s)`
+  );
+
+  // download the app
+  await execPromise(`BUILD_VERSION=$(cat .community/${buildVersionFileName}-web) && \
+  curl -o app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersionFileName}.tar.gz && \
+  tar -xvf app.tar.gz -C .community/web`);
+
+  spinner.animate(false);
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("App: compiled ✅\n");
+}
+
 // Purpose: Start the application.
 async function main() {
   term.clear();
@@ -90,17 +119,8 @@ async function main() {
     cursor.column(1);
     cursor("Indexer: started ✅\n");
 
-    // start app
-    term.nextLine(1);
-    cursor = term.saveCursor();
-    cursor("App: compiling...");
-    spinner = await term.spinner("dotSpinner");
-    await execPromise("rm -rf .community/web/*");
-    await execPromise("docker compose up app --build -d");
-    spinner.animate(false);
-    cursor.eraseLine();
-    cursor.column(1);
-    cursor("App: compiled ✅\n");
+    // app
+    await prepareApp();
   }
 
   // compile community
