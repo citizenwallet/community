@@ -105,7 +105,7 @@ async function main() {
   // TODO: if !exists >> stop containers
 
   // stop all containers
-  // await execPromise("docker compose down");
+  await execPromise("docker compose down");
 
   // start nginx
   term.nextLine(2);
