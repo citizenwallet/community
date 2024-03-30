@@ -1,40 +1,25 @@
 # syntax=docker/dockerfile:1
-FROM dart:3.3-sdk
+# Set up the runtime image
+FROM ubuntu:jammy
 
-ARG REPO_PATH
-ARG REPO_NAME
+ARG BUILD_OUTPUT_URL
+ARG BUILD_VERSION_FILE_NAME
 
-ENV REPO_NAME=${REPO_NAME}
+WORKDIR /cw/app 
+WORKDIR /cw/web 
 
-# Install git
-RUN apt-get update && apt-get install -y git
+WORKDIR /cw
 
-# Clone Flutter repo
-RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
+# install curl
+RUN apt-get update && apt-get install -y curl 
 
-# Set Flutter path
-ENV PATH "$PATH:/usr/local/flutter/bin"
+# download the version file
+RUN curl -H 'Cache-Control: no-cache' -o ${BUILD_VERSION_FILE_NAME} -L ${BUILD_OUTPUT_URL}/web/${BUILD_VERSION_FILE_NAME}?cache_buster=$(date +%s)
 
-# switch to the working directory
-WORKDIR /home/flutter/cw/web
-WORKDIR /home/flutter/cw
-
-# fetch the repository
-ADD ${REPO_PATH} /home/flutter/cw/${REPO_NAME}
-
-# move into the repository
-WORKDIR /home/flutter/cw/${REPO_NAME}
-
-# create the app environment files
-COPY .env.app .env
-COPY .env.app .web.env
-
-# install all dependencies
-RUN flutter --disable-analytics
-RUN flutter pub get
-
-# build the app
-RUN flutter build web --source-maps --web-renderer canvaskit
+# read the version from the file into a variable & download the binary
+RUN BUILD_VERSION=$(cat ${BUILD_VERSION_FILE_NAME}) && \
+    curl -o app.tar.gz -L ${BUILD_OUTPUT_URL}/web/cw_web_${BUILD_VERSION}.tar.gz && \
+    tar -xvf app.tar.gz -C /cw/app
 
 # copy all the static files to the web directory
-CMD sh -c "cp -R /home/flutter/cw/${REPO_NAME}/build/web/* /home/flutter/cw/web/"
+CMD sh -c "rm -rf /cw/web/* && cp -R /cw/app/* /cw/web/"

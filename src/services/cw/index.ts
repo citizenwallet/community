@@ -28,7 +28,7 @@ export const dockerIsIndexerUp = async () => {
 };
 
 export const dockerComposeCompileApp = async () => {
-  await compose.upOne("compile-app", {
+  await compose.upOne("app", {
     cwd: path.join(process.cwd()),
     log: true,
   });
@@ -55,10 +55,10 @@ export const dockerIsAppUp = async () => {
   // Split the output into lines
   const lines = out.split("\n");
 
-  // Find the line that contains the 'compile-app' service name
+  // Find the line that contains the 'app' service name
   const appLine = lines.find((line) => line.includes("app"));
 
-  // Check if the 'compile-app' service is up
+  // Check if the 'app' service is up
   const isAppUp = appLine && appLine.includes("Up");
 
   return isAppUp;

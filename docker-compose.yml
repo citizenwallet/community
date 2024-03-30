@@ -1,21 +1,19 @@
 version: '3.8'
 
 services:
-  compile-app:
-    env_file:
-        - .env.app
+  app:
     build:
       context: .
       dockerfile: .docker/app/Dockerfile
       args:
-        REPO_PATH: ${APP_REPO_PATH}
-        REPO_NAME: ${APP_REPO_NAME}
+        BUILD_OUTPUT_URL: ${BUILD_OUTPUT_URL}
+        BUILD_VERSION_FILE_NAME: ${BUILD_VERSION_FILE_NAME}
     networks:
       cwnet:
         aliases:
           - cw-app
     volumes:
-      - ./.community/web:/home/flutter/cw/web
+      - web_volume:/cw/web
   dashboard:
     env_file:
         - .env.dashboard
@@ -44,8 +42,8 @@ services:
       context: .
       dockerfile: .docker/indexer/Dockerfile
       args:
-        REPO_PATH: ${INDEXER_REPO_PATH}
-        REPO_NAME: ${INDEXER_REPO_NAME}
+        BUILD_OUTPUT_URL: ${BUILD_OUTPUT_URL}
+        BUILD_VERSION_FILE_NAME: ${BUILD_VERSION_FILE_NAME}
         GOOS: ${GOOS}
         GOARCH: ${GOARCH}
     restart: on-failure
@@ -98,6 +96,12 @@ services:
       - server-cert
 
 volumes:
+  web_volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${PWD}/.community/web
   assets_volume:
     driver: local
     driver_opts:
