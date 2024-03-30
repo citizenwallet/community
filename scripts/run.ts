@@ -60,9 +60,12 @@ async function prepareApp() {
   );
 
   // download the app
-  await execPromise(`BUILD_VERSION=$(cat .community/${buildVersionFileName}-web) && \
+  await execPromise(
+    `BUILD_VERSION=$(cat .community/${buildVersionFileName}-web) && \
   curl -o app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersionFileName}.tar.gz && \
-  tar -xvf app.tar.gz -C .community/web`);
+  tar -xvf app.tar.gz -C .community/web`,
+    true
+  );
 
   spinner.animate(false);
   cursor.eraseLine();
