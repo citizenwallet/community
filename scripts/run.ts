@@ -67,7 +67,7 @@ async function main() {
   let cursor = term.saveCursor();
   cursor("Server: starting...");
   let spinner = await term.spinner("dotSpinner");
-  await execPromise("docker compose up server -d");
+  await execPromise("docker compose up server --build -d");
   spinner.animate(false);
   cursor.eraseLine();
   cursor.column(1);
@@ -92,7 +92,7 @@ async function main() {
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
-    await execPromise("docker compose up indexer -d");
+    await execPromise("docker compose up indexer --build -d");
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
@@ -103,7 +103,7 @@ async function main() {
     cursor = term.saveCursor();
     cursor("App: compiling...");
     spinner = await term.spinner("dotSpinner");
-    await execPromise("docker compose up app -d", true);
+    await execPromise("docker compose up app --build -d", true);
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
