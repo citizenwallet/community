@@ -62,6 +62,9 @@ async function main() {
   // TODO: if !exists >> generate SSL certs
   // TODO: if !exists >> stop containers
 
+  // stop all containers
+  await execPromise("docker compose down");
+
   // start nginx
   term.nextLine(2);
   let cursor = term.saveCursor();
@@ -72,17 +75,6 @@ async function main() {
   cursor.eraseLine();
   cursor.column(1);
   cursor("Server: started ✅\n");
-
-  // compile community
-  term.nextLine(1);
-  cursor = term.saveCursor();
-  cursor("Community: compiling...");
-  spinner = await term.spinner("dotSpinner");
-  await execPromise("npm run build");
-  spinner.animate(false);
-  cursor.eraseLine();
-  cursor.column(1);
-  cursor("Community: compiled ✅\n");
 
   const communityExists = communityFileExists();
   const hashExists = communityHashExists();
@@ -109,6 +101,17 @@ async function main() {
     cursor.column(1);
     cursor("App: compiled ✅\n");
   }
+
+  // compile community
+  term.nextLine(1);
+  cursor = term.saveCursor();
+  cursor("Community: compiling...");
+  spinner = await term.spinner("dotSpinner");
+  await execPromise("npm run build");
+  spinner.animate(false);
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("Community: compiled ✅\n");
 
   // start community
   term.nextLine(1);
