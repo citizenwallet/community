@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
-import { spawn } from "child_process";
+import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
 import { communityFileExists, communityHashExists } from "@/services/community";
@@ -36,6 +36,7 @@ function execPromise(command: string, verbose = false) {
         reject(err);
         return;
       }
+      console.log("done", code, signal);
       resolve();
     });
   });
@@ -50,22 +51,32 @@ async function prepareApp() {
   const spinner = await term.spinner("dotSpinner");
 
   // clean up the web folder
-  await execPromise("rm -rf .community/web/*");
+  execSync(`rm -rf ${process.cwd()}/.community/web/*`);
 
   // download version file
   const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
   const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
-  await execPromise(
-    `curl -H 'Cache-Control: no-cache' -o .community/${buildVersionFileName}-web -L ${buildOutputUrl}/web/${buildVersionFileName}?cache_buster=$(date +%s)`
+  execSync(
+    `curl -H 'Cache-Control: no-cache' -o ${process.cwd()}/.community/${buildVersionFileName}-web -L ${buildOutputUrl}/web/${buildVersionFileName}?cache_buster=$(date +%s) > /dev/null 2>&1`
   );
 
+  const buildVersion = readFileSync(
+    `${process.cwd()}/.community/${buildVersionFileName}-web`,
+    "utf8"
+  ).replace(/\r?\n|\r/g, "");
+
   // download the app
-  await execPromise(
-    `BUILD_VERSION=$(cat .community/${buildVersionFileName}-web) && \
-  curl -o app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersionFileName}.tar.gz && \
-  tar -xvf app.tar.gz -C .community/web`,
-    true
+  execSync(
+    `curl -o ${process.cwd()}/.community/app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersion}.tar.gz > /dev/null 2>&1`
   );
+
+  // extract the app
+  execSync(
+    `tar -xvf ${process.cwd()}/.community/app.tar.gz -C .community/web > /dev/null 2>&1`
+  );
+
+  // remove the tar
+  execSync(`rm -rf ${process.cwd()}/.community/app.tar.gz > /dev/null 2>&1`);
 
   spinner.animate(false);
   cursor.eraseLine();
@@ -95,7 +106,7 @@ async function main() {
   // TODO: if !exists >> stop containers
 
   // stop all containers
-  await execPromise("docker compose down");
+  // await execPromise("docker compose down");
 
   // start nginx
   term.nextLine(2);
