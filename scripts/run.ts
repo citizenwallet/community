@@ -84,21 +84,6 @@ async function main() {
   cursor.column(1);
   cursor("Community: compiled ✅\n");
 
-  // start community
-  term.nextLine(1);
-  cursor = term.saveCursor();
-  cursor("Community: starting...");
-  spinner = await term.spinner("dotSpinner");
-  spawn("npx next start -H 0.0.0.0", {
-    detached: true,
-    shell: true,
-    stdio: "ignore",
-  });
-  spinner.animate(false);
-  cursor.eraseLine();
-  cursor.column(1);
-  cursor("Community: started ✅\n");
-
   const communityExists = communityFileExists();
   const hashExists = communityHashExists();
   if (communityExists && hashExists) {
@@ -124,6 +109,21 @@ async function main() {
     cursor.column(1);
     cursor("App: compiled ✅\n");
   }
+
+  // start community
+  term.nextLine(1);
+  cursor = term.saveCursor();
+  cursor("Community: starting...");
+  spinner = await term.spinner("dotSpinner");
+  spawn("npx next start -H 0.0.0.0", {
+    detached: true,
+    shell: true,
+    stdio: "ignore",
+  });
+  spinner.animate(false);
+  cursor.eraseLine();
+  cursor.column(1);
+  cursor("Community: started ✅\n");
 
   // parse .env
   config();
