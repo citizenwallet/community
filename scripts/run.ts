@@ -36,7 +36,6 @@ function execPromise(command: string, verbose = false) {
         reject(err);
         return;
       }
-      console.log("done", code, signal);
       resolve();
     });
   });
