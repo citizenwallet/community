@@ -118,7 +118,7 @@ async function main() {
     cursor = term.saveCursor();
     cursor("App: compiling...");
     spinner = await term.spinner("dotSpinner");
-    await execPromise("docker compose up compile-app -d");
+    await execPromise("docker compose up compile-app -d", true);
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
