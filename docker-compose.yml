@@ -33,7 +33,7 @@ services:
     volumes:
       - data_volume:/cw/data
       - config_volume:/cw/config
-      - assets_volume:/cw/assets/
+      - uploads_volume:/cw/uploads/
       - /var/run/docker.sock:/var/run/docker.sock
   indexer:
     env_file:
@@ -68,7 +68,7 @@ services:
       - certs_conf_volume:/etc/nginx/ssl/:ro
       - ./.community/web:/var/www/html/:ro
       - config_volume:/var/www/config/:ro
-      - assets_volume:/var/www/assets/:ro
+      - uploads_volume:/var/www/uploads/:ro
     networks:
       cwnet:
         aliases:
@@ -102,12 +102,12 @@ volumes:
       o: bind
       type: none
       device: ${PWD}/.community/web
-  assets_volume:
+  uploads_volume:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: ${PWD}/.community/assets/
+      device: ${PWD}/.community/uploads/
   config_volume:
     driver: local
     driver_opts:

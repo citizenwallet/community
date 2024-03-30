@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     // Replace spaces in the file name with underscores
     const filename = file.name.replaceAll(" ", "_");
 
-    const filePath = path.join(process.cwd(), `.community/assets/${filename}`);
+    const filePath = path.join(process.cwd(), `.community/uploads/${filename}`);
     await pump(file.stream() as any, fs.createWriteStream(filePath));
     return NextResponse.json({ status: "success", data: file.size });
   } catch (e) {

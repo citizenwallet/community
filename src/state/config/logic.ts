@@ -52,7 +52,7 @@ class ConfigLogic {
       logoData.append("file", logoBlob, "logo.svg");
 
       // Send the FormData with fetch
-      await fetch(`${this.baseUrl}/api/assets`, {
+      await fetch(`${this.baseUrl}/api/uploads`, {
         method: "POST",
         body: logoData,
       });
@@ -165,7 +165,7 @@ class ConfigLogic {
       const protocol = window.location.protocol;
       const baseUrl = window.location.host;
 
-      community.logo = `${protocol}//${baseUrl}/assets/logo.svg`;
+      community.logo = `${protocol}//${baseUrl}/uploads/logo.svg`;
 
       const token = this.store.getState().token;
       if (!token) {
