@@ -56,7 +56,7 @@ else
 
     sudo usermod -aG docker ${USER}
 
-    su -s ${USER}
+    newgrp docker
 
     echo "docker installed"
 fi
