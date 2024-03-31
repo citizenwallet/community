@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     await Promise.race([
       dockerComposeUpIndexer(),
-      new Promise<void>((resolve, _) => setTimeout(() => resolve(), 2000)),
+      new Promise<void>((resolve, _) => setTimeout(() => resolve(), 5000)),
     ]);
 
     return Response.json({} as ConfigureResponse, { status: 200 });

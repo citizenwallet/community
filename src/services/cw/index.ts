@@ -1,12 +1,10 @@
+import { execPromise } from "@/utils/exec";
 import { v2 as compose } from "docker-compose";
 import { existsSync } from "fs";
 import path from "path";
 
 export const dockerComposeUpIndexer = async () => {
-  await compose.upOne("indexer", {
-    cwd: path.join(process.cwd()),
-    log: true,
-  });
+  await execPromise("docker compose up indexer --build -d");
 };
 
 export const dockerIsIndexerUp = async () => {

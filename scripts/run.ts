@@ -1,87 +1,14 @@
 import { readFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
-import { execSync, spawn } from "child_process";
+import { spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
-import { communityFileExists, communityHashExists } from "@/services/community";
-
-function execPromise(command: string, verbose = false) {
-  return new Promise<void>((resolve, reject) => {
-    const [cmd, ...args] = command.split(" ");
-    const child = spawn(cmd, args);
-
-    if (verbose) {
-      child.stdout.on("data", (data) => {
-        console.log(data.toString());
-      });
-    }
-
-    if (verbose) {
-      child.stderr.on("data", (data) => {
-        console.error(data.toString());
-      });
-    }
-
-    child.on("error", (error) => {
-      console.log(error.message);
-      reject(error);
-    });
-
-    child.on("exit", (code, signal) => {
-      if (code !== 0) {
-        const err = new Error(
-          `Process exited with code: ${code}, signal: ${signal}`
-        );
-        console.log(`error: ${err.message}`);
-        reject(err);
-        return;
-      }
-      resolve();
-    });
-  });
-}
-
-async function prepareApp() {
-  config();
-
-  term.nextLine(1);
-  let cursor = term.saveCursor();
-  cursor("App: compiling...");
-  const spinner = await term.spinner("dotSpinner");
-
-  // clean up the web folder
-  execSync(`rm -rf ${process.cwd()}/.community/web/*`);
-
-  // download version file
-  const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
-  const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
-  execSync(
-    `curl -H 'Cache-Control: no-cache' -o ${process.cwd()}/.community/${buildVersionFileName}-web -L ${buildOutputUrl}/web/${buildVersionFileName}?cache_buster=$(date +%s) > /dev/null 2>&1`
-  );
-
-  const buildVersion = readFileSync(
-    `${process.cwd()}/.community/${buildVersionFileName}-web`,
-    "utf8"
-  ).replace(/\r?\n|\r/g, "");
-
-  // download the app
-  execSync(
-    `curl -o ${process.cwd()}/.community/app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersion}.tar.gz > /dev/null 2>&1`
-  );
-
-  // extract the app
-  execSync(
-    `tar -xvf ${process.cwd()}/.community/app.tar.gz -C .community/web > /dev/null 2>&1`
-  );
-
-  // remove the tar
-  execSync(`rm -rf ${process.cwd()}/.community/app.tar.gz > /dev/null 2>&1`);
-
-  spinner.animate(false);
-  cursor.eraseLine();
-  cursor.column(1);
-  cursor("App: compiled ✅\n");
-}
+import {
+  communityFileExists,
+  communityHashExists,
+  downloadApp,
+} from "@/services/community";
+import { execPromise } from "@/utils/exec";
 
 // Purpose: Start the application.
 async function main() {
@@ -133,7 +60,19 @@ async function main() {
     cursor("Indexer: started ✅\n");
 
     // app
-    await prepareApp();
+    config();
+
+    term.nextLine(1);
+    cursor = term.saveCursor();
+    cursor("App: compiling...");
+    spinner = await term.spinner("dotSpinner");
+
+    await downloadApp();
+
+    spinner.animate(false);
+    cursor.eraseLine();
+    cursor.column(1);
+    cursor("App: compiled ✅\n");
   }
 
   // compile community
