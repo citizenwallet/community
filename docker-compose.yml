@@ -1,40 +1,6 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: .docker/app/Dockerfile
-      args:
-        BUILD_OUTPUT_URL: ${BUILD_OUTPUT_URL}
-        BUILD_VERSION_FILE_NAME: ${BUILD_VERSION_FILE_NAME}
-    networks:
-      cwnet:
-        aliases:
-          - cw-app
-    volumes:
-      - web_volume:/cw/web
-  dashboard:
-    env_file:
-        - .env.dashboard
-    build:
-      context: .
-      dockerfile: .docker/dashboard/Dockerfile
-      args:
-        REPO_PATH: ${DASHBOARD_REPO_PATH}
-        REPO_NAME: ${DASHBOARD_REPO_NAME}
-    restart: on-failure
-    healthcheck:
-      test: "exit 0"
-    networks:
-      cwnet:
-        aliases:
-          - cw-dashboard
-    volumes:
-      - data_volume:/cw/data
-      - config_volume:/cw/config
-      - uploads_volume:/cw/uploads/
-      - /var/run/docker.sock:/var/run/docker.sock
   indexer:
     env_file:
         - .env.indexer
@@ -66,7 +32,7 @@ services:
       - ./.community/nginx/conf/:/etc/nginx/conf.d/:ro
       - certs_www_volume:/var/www/certbot/:ro
       - certs_conf_volume:/etc/nginx/ssl/:ro
-      - ./.community/web:/var/www/html/:ro
+      - web_volume:/var/www/html/:ro
       - config_volume:/var/www/config/:ro
       - uploads_volume:/var/www/uploads/:ro
     networks:
