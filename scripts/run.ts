@@ -49,7 +49,6 @@ async function main() {
   const hashExists = communityHashExists();
   if (communityExists && hashExists) {
     // start indexer
-    term.nextLine(1);
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
@@ -62,7 +61,6 @@ async function main() {
     // app
     config();
 
-    term.nextLine(1);
     cursor = term.saveCursor();
     cursor("App: compiling...");
     spinner = await term.spinner("dotSpinner");
@@ -76,7 +74,6 @@ async function main() {
   }
 
   // compile community
-  term.nextLine(1);
   cursor = term.saveCursor();
   cursor("Community: compiling...");
   spinner = await term.spinner("dotSpinner");
@@ -87,7 +84,6 @@ async function main() {
   cursor("Community: compiled ✅\n");
 
   // start community
-  term.nextLine(1);
   cursor = term.saveCursor();
   cursor("Community: starting...");
   spinner = await term.spinner("dotSpinner");
