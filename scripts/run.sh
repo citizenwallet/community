@@ -87,7 +87,11 @@ if [ ! -d "community" ]; then
     mkdir community
 fi
 
-CURRENT_VERSION=$(cat community_version)
+if [ -f "community_version" ]; then
+    CURRENT_VERSION=$(cat community_version)
+else
+    CURRENT_VERSION="0.0.0"
+fi
 
 curl -o community_version -L https://builds.internal.citizenwallet.xyz/community/version
 
