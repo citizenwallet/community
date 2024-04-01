@@ -1,7 +1,7 @@
 import os from "os";
 import { existsSync, mkdirSync, readFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
-import { spawn } from "child_process";
+import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
 import {
@@ -153,13 +153,13 @@ async function main() {
     env = env.replace("<pinata_api_secret>", pinataApiSecretInput);
 
     // write .env
-    const filePath = process.cwd() + ".env";
+    const filePath = process.cwd() + "/.env";
     term("\nWriting .env file...\n");
 
     term(`writing ${env} to ${filePath}\n`);
 
     // write the file
-    await execPromise(`echo '${env}' > ${filePath}`);
+    execSync(`echo '${env}' > ${filePath}`);
 
     term("Created .env file.\n");
   }
