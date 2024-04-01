@@ -54,6 +54,8 @@ async function main() {
     }
   });
 
+  execSync("sudo chmod -R u+r ./.community");
+
   const systemOS = os.platform();
   let systemArch = os.arch();
   if (systemArch === "x64") {
