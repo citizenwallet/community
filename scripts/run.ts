@@ -154,11 +154,12 @@ async function main() {
 
     // write .env
     const filePath = ".env";
-    const envFile = env;
     term("\nWriting .env file...\n");
 
+    term(`writing ${env} to ${filePath}\n`);
+
     // write the file
-    await execPromise(`echo '${envFile}' > ${filePath}`);
+    await execPromise(`echo '${env}' > ${filePath}`);
 
     term("Created .env file.\n");
   }
