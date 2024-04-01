@@ -48,6 +48,12 @@ jobs:
       - name: Compile
         run: npm run build
 
+      - name: Include public folder
+        run: cp -r public .next/standalone
+
+      - name: Include .next/static folder
+        run: cp -r .next/static .next/standalone/.next/static
+
       - name: Create outputs folder
         run: mkdir outputs
 
