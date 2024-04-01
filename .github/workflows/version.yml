@@ -60,6 +60,9 @@ jobs:
       - name: Include scripts folder
         run: cp -r scripts .next/standalone
 
+      - name: Create src folder
+        run: mkdir .next/standalone/src
+
       - name: Include utils folder
         run: cp -r src/utils .next/standalone/src/utils
 
