@@ -65,15 +65,26 @@ else
 
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-    if ! getent group docker >/dev/null; then
-        sudo groupadd docker
+    # if ! getent group docker >/dev/null; then
+    #     sudo groupadd docker
 
-        sudo usermod -aG docker ${USER}
+    #     sudo usermod -aG docker ${USER}
 
-        newgrp docker
-    fi
+    #     newgrp docker
+    # fi
 
     echo "docker installed"
+fi
+
+# Check if the docker group exists, and if it doesn't, create it
+if ! getent group docker >/dev/null; then
+    sudo groupadd docker
+fi
+
+# Check if the current user is a member of the docker group, and if they're not, add them to it
+if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
+    sudo usermod -aG docker ${USER}
+    newgrp docker
 fi
 
 # check for community repo, clone if not exists
