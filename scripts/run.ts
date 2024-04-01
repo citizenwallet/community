@@ -323,21 +323,11 @@ async function main() {
     cursor("App: compiled ✅\n");
   }
 
-  // compile community
-  cursor = term.saveCursor();
-  cursor("Community: compiling...");
-  spinner = await term.spinner("dotSpinner");
-  await execPromise("npm run build");
-  spinner.animate(false);
-  cursor.eraseLine();
-  cursor.column(1);
-  cursor("Community: compiled ✅\n");
-
   // start community
   cursor = term.saveCursor();
   cursor("Community: starting...");
   spinner = await term.spinner("dotSpinner");
-  spawn("npx next start -H 0.0.0.0", {
+  spawn("node server.js", {
     detached: true,
     shell: true,
     stdio: "ignore",
