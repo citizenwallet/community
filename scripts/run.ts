@@ -156,8 +156,6 @@ async function main() {
     const filePath = process.cwd() + "/.env";
     term("\nWriting .env file...\n");
 
-    term(`writing ${env} to ${filePath}\n`);
-
     // write the file
     writeFileSync(filePath, env);
 
