@@ -1,5 +1,5 @@
 import os from "os";
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
@@ -159,7 +159,7 @@ async function main() {
     term(`writing ${env} to ${filePath}\n`);
 
     // write the file
-    execSync(`echo '${env}' > ${filePath}`);
+    writeFileSync(filePath, env);
 
     term("Created .env file.\n");
   }
