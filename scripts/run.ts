@@ -47,8 +47,6 @@ async function main() {
 
   term.bold("Citizen Wallet - Community Server\n");
 
-  // TODO: when we need more automation, adding these steps would be helpful
-
   // check if .community folders exist and create them if they don't
   folders.forEach((folder) => {
     if (!existsSync(folder)) {
@@ -276,11 +274,6 @@ async function main() {
       process.exit(1);
     }
   }
-  // TODO: if !exists >> prep .env files for nginx and community
-  // TODO: check if certs exist
-  // TODO: if !exists >> ask for host name
-  // TODO: if !exists >> generate SSL certs
-  // TODO: if !exists >> stop containers
 
   // stop all containers
   await execPromise("docker compose down");
