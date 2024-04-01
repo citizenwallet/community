@@ -78,11 +78,13 @@ fi
 
 # Check if the docker group exists, and if it doesn't, create it
 if ! getent group docker >/dev/null; then
+    echo "Creating the docker group"
     sudo groupadd docker
 fi
 
 # Check if the current user is a member of the docker group, and if they're not, add them to it
 if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
+    echo "Adding the current user to the docker group"
     sudo usermod -aG docker ${USER}
     newgrp docker
 fi
