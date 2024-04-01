@@ -4,11 +4,6 @@ import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
-let publicIp: any;
-
-import("public-ip").then((module) => {
-  publicIp = module;
-});
 import {
   communityFileExists,
   communityHashExists,
@@ -42,7 +37,7 @@ const folders = [
 
 // Purpose: Start the application.
 async function main() {
-  term.clear();
+  // term.clear();
 
   const logo = readFileSync("./assets/cw.ans", "utf8");
 
@@ -67,19 +62,19 @@ async function main() {
     systemArch = "amd64";
   }
 
-  if (
-    systemOS !== "linux" ||
-    !(systemArch === "amd64" || systemArch === "arm64")
-  ) {
-    term.red(
-      `Please use a Linux system with an AMD64 or ARM64 architecture.\n`
-    );
-    term(
-      "Add a GitHub issue or make a pull request if you need support for other systems.\n"
-    );
-    term.underline("https://github.com/citizenwallet/community");
-    process.exit(1);
-  }
+  // if (
+  //   systemOS !== "linux" ||
+  //   !(systemArch === "amd64" || systemArch === "arm64")
+  // ) {
+  //   term.red(
+  //     `Please use a Linux system with an AMD64 or ARM64 architecture.\n`
+  //   );
+  //   term(
+  //     "Add a GitHub issue or make a pull request if you need support for other systems.\n"
+  //   );
+  //   term.underline("https://github.com/citizenwallet/community");
+  //   process.exit(1);
+  // }
 
   // TODO: check if .env files exist
   if (!existsSync(".env")) {
@@ -235,6 +230,7 @@ async function main() {
     term(`Generating an SSL certificate for ${nginxHost}...\n`);
 
     // user needs to add a DNS entry
+    const publicIp = await import("public-ip");
     const ip = await publicIp.publicIpv4();
 
     term("Please add the following DNS entry to your domain:\n");
