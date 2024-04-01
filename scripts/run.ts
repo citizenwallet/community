@@ -256,14 +256,18 @@ async function main() {
       process.exit(1);
     }
 
+    const cursor = term.saveCursor();
+    cursor("Certificate Generation: starting...");
+    let spinner = await term.spinner("dotSpinner");
     // generate SSL certs
-    execSync(
+    await execPromise(
       `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --agree-tos --no-eff-email --email ${emailInput}
-    `,
-      {
-        stdio: "inherit",
-      }
+    `
     );
+    spinner.animate(false);
+    cursor.eraseLine();
+    cursor.column(1);
+    cursor("Certificate Generation: success ✅\n");
 
     if (!existsSync(".community/certbot/conf/live")) {
       term.red("There was an error generating a certificate.\n");
