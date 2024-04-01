@@ -65,14 +65,6 @@ else
 
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-    # if ! getent group docker >/dev/null; then
-    #     sudo groupadd docker
-
-    #     sudo usermod -aG docker ${USER}
-
-    #     newgrp docker
-    # fi
-
     echo "docker installed"
 fi
 
