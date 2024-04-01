@@ -1,0 +1,71 @@
+# Simple workflow for bumping version when pushing to main
+name: Bump patch version
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "version"
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
+        with:
+          initial_version: "0.0.0"
+
+      - uses: actions-ecosystem/action-bump-semver@v1
+        id: bump-semver
+        with:
+          current_version: ${{ steps.get-latest-tag.outputs.tag }}
+          level: patch
+
+      - uses: actions-ecosystem/action-push-tag@v1
+        with:
+          tag: ${{ steps.bump-semver.outputs.new_version }}
+          message: "[tagged] ${{ steps.bump-semver.outputs.new_version }}"
+
+      - name: Download dependencies
+        run: npm ci
+
+      - name: Make .env file
+        run: cp .env.example .env
+
+      - name: Compile
+        run: npm run build
+
+      - name: Create outputs folder
+        run: mkdir outputs
+
+      - name: Archive outputs
+        run: tar -czf 'outputs/dashboard_${{ steps.bump-semver.outputs.new_version }}.tar.gz' .next/standalone
+
+      - name: Create version file
+        run: echo '${{ steps.bump-semver.outputs.new_version }}' > outputs/version
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Upload outputs to S3
+        run: aws s3 sync ./outputs s3://cw-build-artifacts/community
+
+      - name: Invalidate Build Outputs CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id EKM5NR0TASZ5T --paths '/*'
