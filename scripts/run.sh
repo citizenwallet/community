@@ -83,41 +83,31 @@ if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
     newgrp docker
 fi
 
+if [ ! -d "community" ]; then
+    mkdir community
+fi
+
+CURRENT_VERSION=$(cat community_version)
+
+curl -o community_version -L https://builds.internal.citizenwallet.xyz/community/version
+
+NEW_VERSION=$(cat community_version)
+
 # check for community repo, clone if not exists
-if [ -d "community" ]; then
+if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
     echo "Community: ✅"
 else
-    echo "Community: Needs to be downloaded"
+    echo "Community: Needs to be updated"
 
-    git clone https://github.com/citizenwallet/community.git
+    curl -o community.tar.gz -L 'https://builds.internal.citizenwallet.xyz/dashboard_${NEW_VERSION}.tar.gz'
+
+    tar -xzf community.tar.gz -C community
 
     echo "Community: ✅"
 fi
 
 # change directory to community
 cd community
-
-# make sure code is up to date
-echo "Community: updating"
-
-git pull origin main
-
-echo "Community: updated"
-
-# install dependencies
-echo "Community: installing dependencies"
-
-npm i --no-audit
-
-echo "Community: dependencies installed"
-
-echo
-echo
-
-echo
-echo "Run script complete: ✅"
-echo "Community is ready to run"
-echo
 
 # trigger run script
 npm run community
