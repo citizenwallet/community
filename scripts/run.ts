@@ -4,7 +4,11 @@ import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
-import { publicIpv4 } from "public-ip";
+let publicIp: any;
+
+import("public-ip").then((module) => {
+  publicIp = module;
+});
 import {
   communityFileExists,
   communityHashExists,
@@ -231,7 +235,7 @@ async function main() {
     term(`Generating an SSL certificate for ${nginxHost}...\n`);
 
     // user needs to add a DNS entry
-    const ip = await publicIpv4();
+    const ip = await publicIp.publicIpv4();
 
     term("Please add the following DNS entry to your domain:\n");
     term.bold(`A ${ip} ${process.env.NGINX_HOST}\n`);
