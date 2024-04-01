@@ -234,9 +234,9 @@ async function main() {
     const ip = await publicIp.publicIpv4();
 
     term("Please add the following DNS entry to your domain:\n");
-    term.nextLine(2);
-    term.bold(`A ${ip} ${process.env.NGINX_HOST}`);
-    term.nextLine(2);
+
+    term.bold(`\n\nA ${ip} ${process.env.NGINX_HOST}\n\n`);
+
     term("Press any key to continue: \n");
     await term.yesOrNo({ yes: ["yes", "y"], no: ["no", "n"] }).promise;
 
