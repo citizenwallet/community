@@ -103,7 +103,7 @@ if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
 else
     echo "Community: Needs to be updated"
 
-    curl -o community.tar.gz -L 'https://builds.internal.citizenwallet.xyz/dashboard_${NEW_VERSION}.tar.gz'
+    curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz"
 
     tar -xzf community.tar.gz -C community
 
