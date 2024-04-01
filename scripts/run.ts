@@ -37,7 +37,7 @@ const folders = [
 
 // Purpose: Start the application.
 async function main() {
-  // term.clear();
+  term.clear();
 
   const logo = readFileSync("./assets/cw.ans", "utf8");
 
@@ -62,19 +62,19 @@ async function main() {
     systemArch = "amd64";
   }
 
-  // if (
-  //   systemOS !== "linux" ||
-  //   !(systemArch === "amd64" || systemArch === "arm64")
-  // ) {
-  //   term.red(
-  //     `Please use a Linux system with an AMD64 or ARM64 architecture.\n`
-  //   );
-  //   term(
-  //     "Add a GitHub issue or make a pull request if you need support for other systems.\n"
-  //   );
-  //   term.underline("https://github.com/citizenwallet/community");
-  //   process.exit(1);
-  // }
+  if (
+    systemOS !== "linux" ||
+    !(systemArch === "amd64" || systemArch === "arm64")
+  ) {
+    term.red(
+      `Please use a Linux system with an AMD64 or ARM64 architecture.\n`
+    );
+    term(
+      "Add a GitHub issue or make a pull request if you need support for other systems.\n"
+    );
+    term.underline("https://github.com/citizenwallet/community");
+    process.exit(1);
+  }
 
   // TODO: check if .env files exist
   if (!existsSync(".env")) {
