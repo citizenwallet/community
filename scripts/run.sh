@@ -114,4 +114,6 @@ fi
 cd community
 
 # trigger run script
+npm i
+
 npm run community
