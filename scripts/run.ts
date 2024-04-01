@@ -153,7 +153,7 @@ async function main() {
     env = env.replace("<pinata_api_secret>", pinataApiSecretInput);
 
     // write .env
-    const filePath = ".env";
+    const filePath = process.cwd() + ".env";
     term("\nWriting .env file...\n");
 
     term(`writing ${env} to ${filePath}\n`);
