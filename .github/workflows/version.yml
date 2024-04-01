@@ -60,6 +60,12 @@ jobs:
       - name: Include scripts folder
         run: cp -r scripts .next/standalone
 
+      - name: Include utils folder
+        run: cp -r src/utils .next/standalone/src/utils
+
+      - name: Include services folder
+        run: cp -r src/services .next/standalone/src/services
+
       - name: Include tsconfig.json file
         run: cp tsconfig.json .next/standalone
 
