@@ -54,6 +54,9 @@ jobs:
       - name: Include .next/static folder
         run: cp -r .next/static .next/standalone/.next/static
 
+      - name: Include scripts folder
+        run: cp -r scripts .next/standalone
+
       - name: Create outputs folder
         run: mkdir outputs
 
