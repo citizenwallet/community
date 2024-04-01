@@ -2,7 +2,7 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name example.org www.example.org;
+    server_name <host_name> www.<host_name>;
     server_tokens off;
 
     location /.well-known/acme-challenge/ {
@@ -10,6 +10,6 @@ server {
     }
 
     location / {
-        return 301 https://example.org$request_uri;
+        return 301 https://<host_name>$request_uri;
     }
 }

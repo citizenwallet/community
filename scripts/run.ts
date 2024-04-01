@@ -4,6 +4,7 @@ import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
 import qrcode from "qrcode-terminal";
 import { config } from "dotenv";
+import { publicIpv4 } from "public-ip";
 import {
   communityFileExists,
   communityHashExists,
@@ -160,6 +161,108 @@ async function main() {
     writeFileSync(filePath, env);
 
     term("Created .env file.\n");
+  }
+
+  if (!existsSync(".community/nginx_cert/conf/nginx.conf")) {
+    config();
+
+    term("Creating cert nginx.conf file...\n");
+
+    // Read the file
+    let nginxConf = readFileSync("./nginx.cert.conf.example", "utf8");
+
+    // replace the placeholders with values
+    // host_name
+    const nginxHost = process.env.NGINX_HOST;
+    if (!nginxHost) {
+      term.red("Host name is required.\n");
+      process.exit(1);
+    }
+
+    nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
+
+    // write nginx.conf
+    const filePath = process.cwd() + "/.community/nginx_cert/conf/nginx.conf";
+    term("\nWriting cert nginx.conf file...\n");
+
+    // write the file
+    writeFileSync(filePath, nginxConf);
+
+    term("Created cert nginx.conf file.\n");
+  }
+
+  if (!existsSync(".community/nginx/conf/nginx.conf")) {
+    config();
+
+    term("Creating nginx.conf file...\n");
+
+    // Read the file
+    let nginxConf = readFileSync("./nginx.conf.example", "utf8");
+
+    // replace the placeholders with values
+    // host_name
+    const nginxHost = process.env.NGINX_HOST;
+    if (!nginxHost) {
+      term.red("Host name is required.\n");
+      process.exit(1);
+    }
+
+    nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
+
+    // write nginx.conf
+    const filePath = process.cwd() + "/.community/nginx/conf/nginx.conf";
+    term("\nWriting nginx.conf file...\n");
+
+    // write the file
+    writeFileSync(filePath, nginxConf);
+
+    term("Created nginx.conf file.\n");
+  }
+
+  if (!existsSync(".community/certbot/conf/live")) {
+    config();
+
+    const nginxHost = process.env.NGINX_HOST;
+    if (!nginxHost) {
+      term.red("Host name is required.\n");
+      process.exit(1);
+    }
+
+    term(`Generating an SSL certificate for ${nginxHost}...\n`);
+
+    // user needs to add a DNS entry
+    const ip = await publicIpv4();
+
+    term("Please add the following DNS entry to your domain:\n");
+    term.bold(`A ${ip} ${process.env.NGINX_HOST}\n`);
+    term("Press any key to continue: \n");
+    await term.yesOrNo({ yes: ["yes", "y"], no: ["no", "n"] }).promise;
+
+    // pinata_api_key
+    term("\nWhat email would you like to associate with your domain: ");
+    const emailInput = ((await term.inputField({}).promise) || "").trim();
+    if (!emailInput) {
+      term.red("An email is required.\n");
+      process.exit(1);
+    }
+
+    // generate SSL certs
+    execSync(
+      `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --nginx --agree-tos --no-eff-email --email ${emailInput}
+    `,
+      {
+        stdio: "inherit",
+      }
+    );
+
+    if (!existsSync(".community/certbot/conf/live")) {
+      term.red("There was an error generating a certificate.\n");
+
+      term.red(
+        "Make sure that your DNS is correct (it can sometimes take time for the settings to propogate).\n"
+      );
+      process.exit(1);
+    }
   }
   // TODO: if !exists >> prep .env files for nginx and community
   // TODO: check if certs exist
