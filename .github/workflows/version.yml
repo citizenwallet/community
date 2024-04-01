@@ -60,6 +60,9 @@ jobs:
       - name: Include scripts folder
         run: cp -r scripts .next/standalone
 
+      - name: Include tsconfig.json file
+        run: cp tsconfig.json .next/standalone
+
       - name: Include docker compose
         run: cp docker-compose.yml .next/standalone
 
