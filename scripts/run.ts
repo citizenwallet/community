@@ -260,7 +260,7 @@ async function main() {
 
     // generate SSL certs
     execSync(
-      `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --nginx --agree-tos --no-eff-email --email ${emailInput}
+      `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --agree-tos --no-eff-email --email ${emailInput}
     `,
       {
         stdio: "inherit",
