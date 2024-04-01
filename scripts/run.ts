@@ -1,4 +1,5 @@
-import { readFileSync } from "fs";
+import os from "os";
+import { existsSync, mkdirSync, readFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
 import { spawn } from "child_process";
 import qrcode from "qrcode-terminal";
@@ -9,6 +10,17 @@ import {
   downloadApp,
 } from "@/services/community";
 import { execPromise } from "@/utils/exec";
+
+const folders = [
+  ".community/nginx/conf",
+  ".community/nginx_cert/conf",
+  ".community/certbot/www",
+  ".community/certbot/conf",
+  ".community/config",
+  ".community/data",
+  ".community/uploads",
+  ".community/web",
+];
 
 // Purpose: Start the application.
 async function main() {
@@ -24,7 +36,119 @@ async function main() {
 
   // TODO: when we need more automation, adding these steps would be helpful
 
+  // check if .community folders exist and create them if they don't
+  folders.forEach((folder) => {
+    if (!existsSync(folder)) {
+      mkdirSync(folder, { recursive: true });
+    }
+  });
+
+  const systemOS = os.platform();
+  let systemArch = os.arch();
+  if (systemArch === "x64") {
+    systemArch = "amd64";
+  }
+
+  if (
+    systemOS !== "linux" ||
+    !(systemArch === "amd64" || systemArch === "arm64")
+  ) {
+    term.red(
+      `Please use a Linux system with an AMD64 or ARM64 architecture.\n`
+    );
+    term(
+      "Add a GitHub issue or make a pull request if you need support for other systems.\n"
+    );
+    term.underline("https://github.com/citizenwallet/community");
+    process.exit(1);
+  }
+
   // TODO: check if .env files exist
+  if (!existsSync(".env")) {
+    term("Creating .env file...\n");
+
+    // Read the file
+    let env = readFileSync(".env.example", "utf8");
+
+    // replace the placeholders with values
+    // os
+    env = env.replace("<os>", systemOS);
+
+    // arch
+    env = env.replace("<arch>", systemArch);
+
+    // nginx_host
+    term("Enter the host name for the community server: ");
+    const nginxHostInput = ((await term.inputField({}).promise) || "").trim();
+    if (!nginxHostInput) {
+      term.red("Host name is required.\n");
+      process.exit(1);
+    }
+
+    env = env.replace("<nginx_host>", nginxHostInput);
+
+    // session_balance_transfer_address
+    // term("Enter the session balance transfer address: ");
+    // const sessionBalanceTransferAddressInput = (
+    //   (await term.inputField({}).promise) || ""
+    // ).trim();
+
+    // if (!sessionBalanceTransferAddressInput) {
+    //   term.red("Session balance transfer address is required.\n");
+    //   process.exit(1);
+    // }
+
+    // env = env.replace(
+    //   "<session_balance_transfer_address>",
+    //   sessionBalanceTransferAddressInput
+    // );
+
+    // ipfs_cdn_url
+    term("Enter the IPFS CDN URL: ");
+    const ipfsCdnUrlInput = (
+      (await term.inputField({}).promise) || "https://ipfs.io/ipfs/"
+    ).trim();
+    if (!ipfsCdnUrlInput) {
+      term.red("IPFS CDN URL is required.\n");
+      process.exit(1);
+    }
+
+    env = env.replace("<ipfs_cdn_url>", ipfsCdnUrlInput);
+
+    // pinata_api_key
+    term("Enter the Pinata API key: ");
+    const pinataApiKeyInput = (
+      (await term.inputField({}).promise) || ""
+    ).trim();
+    if (!pinataApiKeyInput) {
+      term.red("Pinata API key is required.\n");
+      process.exit(1);
+    }
+
+    env = env.replace("<pinata_api_key>", pinataApiKeyInput);
+
+    // pinata_api_secret
+    term("Enter the Pinata API secret: ");
+    const pinataApiSecretInput = (
+      (await term.inputField({}).promise) || ""
+    ).trim();
+    if (!pinataApiSecretInput) {
+      term.red("Pinata API secret is required.\n");
+      process.exit(1);
+    }
+
+    env = env.replace("<pinata_api_secret>", pinataApiSecretInput);
+
+    // write .env
+    const filePath = ".env";
+    const envFile = env;
+    term("Writing .env file...\n");
+
+    // write the file
+    await execPromise(`echo '${envFile}' > ${filePath}`);
+
+    term("Created .env file.\n");
+  }
   // TODO: if !exists >> prep .env files for nginx and community
   // TODO: check if certs exist
   // TODO: if !exists >> ask for host name
