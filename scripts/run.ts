@@ -162,6 +162,16 @@ async function main() {
     term("Created .env file.\n");
   }
 
+  if (!existsSync(".env.indexer")) {
+    const filePath = process.cwd() + "/.env.indexer";
+    term("Creating .env.indexer file...\n");
+
+    // write the file
+    writeFileSync(filePath, "");
+
+    term("Created .env.indexer file.\n");
+  }
+
   if (!existsSync(".community/nginx_cert/conf/nginx.conf")) {
     config();
 
