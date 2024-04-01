@@ -11,6 +11,19 @@ import {
 } from "@/services/community";
 import { execPromise } from "@/utils/exec";
 
+function terminate() {
+  term.grabInput(false);
+  setTimeout(function () {
+    process.exit();
+  }, 100);
+}
+
+term.on("key", function (name: string, _: any, __: any) {
+  if (name === "CTRL_C") {
+    terminate();
+  }
+});
+
 const folders = [
   ".community/nginx/conf",
   ".community/nginx_cert/conf",
@@ -78,7 +91,7 @@ async function main() {
     env = env.replace("<arch>", systemArch);
 
     // nginx_host
-    term("Enter the host name for the community server: ");
+    term("\nEnter the host name for the community server: ");
     const nginxHostInput = ((await term.inputField({}).promise) || "").trim();
     if (!nginxHostInput) {
       term.red("Host name is required.\n");
@@ -104,7 +117,7 @@ async function main() {
     // );
 
     // ipfs_cdn_url
-    term("Enter the IPFS CDN URL: ");
+    term("\nEnter the IPFS CDN URL: ");
     const ipfsCdnUrlInput = (
       (await term.inputField({}).promise) || "https://ipfs.io/ipfs/"
     ).trim();
@@ -116,7 +129,7 @@ async function main() {
     env = env.replace("<ipfs_cdn_url>", ipfsCdnUrlInput);
 
     // pinata_api_key
-    term("Enter the Pinata API key: ");
+    term("\nEnter the Pinata API key: ");
     const pinataApiKeyInput = (
       (await term.inputField({}).promise) || ""
     ).trim();
@@ -128,7 +141,7 @@ async function main() {
     env = env.replace("<pinata_api_key>", pinataApiKeyInput);
 
     // pinata_api_secret
-    term("Enter the Pinata API secret: ");
+    term("\nEnter the Pinata API secret: ");
     const pinataApiSecretInput = (
       (await term.inputField({}).promise) || ""
     ).trim();
@@ -142,7 +155,7 @@ async function main() {
     // write .env
     const filePath = ".env";
     const envFile = env;
-    term("Writing .env file...\n");
+    term("\nWriting .env file...\n");
 
     // write the file
     await execPromise(`echo '${envFile}' > ${filePath}`);
