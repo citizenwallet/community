@@ -54,8 +54,29 @@ jobs:
       - name: Include .next/static folder
         run: cp -r .next/static .next/standalone/.next/static
 
+      - name: Include assets folder
+        run: cp -r assets .next/standalone
+
       - name: Include scripts folder
         run: cp -r scripts .next/standalone
+
+      - name: Include docker compose
+        run: cp docker-compose.yml .next/standalone
+
+      - name: Include Dockerfile
+        run: cp -r .docker .next/standalone
+
+      - name: Include .env.example file
+        run: cp .env.example .next/standalone
+
+      - name: Include .env.indexer.example file
+        run: cp .env.indexer.example .next/standalone
+
+      - name: Include nginx.conf.example file
+        run: cp nginx.conf.example .next/standalone
+
+      - name: Include nginx.cert.conf.example file
+        run: cp nginx.cert.conf.example .next/standalone
 
       - name: Create outputs folder
         run: mkdir outputs
