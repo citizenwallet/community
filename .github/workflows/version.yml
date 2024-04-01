@@ -90,9 +90,6 @@ jobs:
       - name: Remove included .env
         run: rm .next/standalone/.env
 
-      - name: Remove included .env.indexer
-        run: rm .next/standalone/.env.indexer
-
       - name: Include nginx.cert.conf.example file
         run: cp nginx.cert.conf.example .next/standalone
 
