@@ -52,7 +52,9 @@ jobs:
         run: mkdir outputs
 
       - name: Archive outputs
-        run: tar -czf 'outputs/dashboard_${{ steps.bump-semver.outputs.new_version }}.tar.gz' .next/standalone
+        run: |
+          cd .next/standalone
+          tar -czf '../outputs/dashboard_${{ steps.bump-semver.outputs.new_version }}.tar.gz' .
 
       - name: Create version file
         run: echo '${{ steps.bump-semver.outputs.new_version }}' > outputs/version
