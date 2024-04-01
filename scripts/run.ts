@@ -237,11 +237,11 @@ async function main() {
 
     term.bold(`\n\nA ${ip} ${process.env.NGINX_HOST}\n\n`);
 
-    term("Press any key to continue: \n");
+    term("\nIs your DNS configured (y/n): \n");
     await term.yesOrNo({ yes: ["yes", "y"], no: ["no", "n"] }).promise;
 
     // pinata_api_key
-    term("\nWhat email would you like to associate with your domain: ");
+    term("\nWhat email would you like to associate with your domain: \n");
     const emailInput = ((await term.inputField({}).promise) || "").trim();
     if (!emailInput) {
       term.red("An email is required.\n");
