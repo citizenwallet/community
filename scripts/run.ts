@@ -190,19 +190,6 @@ async function main() {
 
     nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
 
-    // docker_host_ip
-    const dockerHostIp = execSync(
-      "ip -4 addr show docker0 | grep -Po 'inet \\K[\\d.]+'"
-    )
-      .toString()
-      .trim();
-    if (!dockerHostIp) {
-      term.red("Docker host IP is required.\n");
-      process.exit(1);
-    }
-
-    nginxConf = nginxConf.replaceAll("<docker_host_ip>", dockerHostIp);
-
     // write nginx.conf
     const filePath = process.cwd() + "/.community/nginx_cert/conf/nginx.conf";
     term("\nWriting cert nginx.conf file...\n");
@@ -230,6 +217,19 @@ async function main() {
     }
 
     nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
+
+    // docker_host_ip
+    const dockerHostIp = execSync(
+      "ip -4 addr show docker0 | grep -Po 'inet \\K[\\d.]+'"
+    )
+      .toString()
+      .trim();
+    if (!dockerHostIp) {
+      term.red("Docker host IP is required.\n");
+      process.exit(1);
+    }
+
+    nginxConf = nginxConf.replaceAll("<docker_host_ip>", dockerHostIp);
 
     // write nginx.conf
     const filePath = process.cwd() + "/.community/nginx/conf/nginx.conf";
