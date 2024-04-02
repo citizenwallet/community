@@ -1,11 +1,15 @@
 import { execPromise } from "@/utils/exec";
-import { execSync } from "child_process";
+import { execSync, spawn } from "child_process";
 import { v2 as compose } from "docker-compose";
 import { existsSync } from "fs";
 import path from "path";
 
-export const dockerComposeUpIndexer = async () => {
-  await execPromise("docker compose up indexer --build -d");
+export const dockerComposeUpIndexer = () => {
+  spawn("docker compose up indexer --build -d", {
+    detached: true,
+    shell: true,
+    stdio: "ignore",
+  });
 };
 
 export const dockerIsIndexerUp = async () => {
