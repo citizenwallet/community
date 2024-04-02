@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@citizenwallet/sdk": "^1.2.9",
+    "@citizenwallet/sdk": "^1.2.10",
     "@pinata/sdk": "^2.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -32,7 +32,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^18",
     "react-qr-code": "^2.0.12",
-    "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.97",
+    "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.98",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.0",
