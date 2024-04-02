@@ -342,6 +342,12 @@ async function main() {
   cursor = term.saveCursor();
   cursor("Community: starting...");
   spinner = await term.spinner("dotSpinner");
+  const command = "sudo lsof -i :3000 -t";
+  const pid = execSync(command).toString().trim();
+  if (pid) {
+    execSync(`kill ${pid}`);
+  }
+
   spawn("node server.js", {
     detached: true,
     shell: true,
