@@ -114,7 +114,7 @@ fi
 cd community
 
 # trigger run script
-echo "Launching community...\n"
+echo "Launching community..."
 
 npm i > /dev/null 2>&1
 
