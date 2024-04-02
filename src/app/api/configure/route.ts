@@ -44,13 +44,6 @@ export async function POST(req: Request) {
       return Response.json({ message: "IPFS not configured" }, { status: 500 });
     }
 
-    const webBurnerPassword = process.env.APP_WEB_BURNER_PASSWORD;
-    const webDBVoucherPassword = process.env.APP_WEB_DB_VOUCHER_PASSWORD;
-    const webSentryUrl = process.env.APP_WEB_SENTRY_URL;
-    if (!webBurnerPassword || !webDBVoucherPassword || !webSentryUrl) {
-      return Response.json({ message: "App not configured" }, { status: 500 });
-    }
-
     config.node.url = network.rpcUrl;
     config.node.ws_url = network.wsRpcUrl;
 
@@ -68,8 +61,6 @@ export async function POST(req: Request) {
       ipfsApiSecret,
       btoa(dbSecret)
     );
-
-    writeAppEnv(webBurnerPassword, webDBVoucherPassword, webSentryUrl);
 
     return Response.json({ hash } as ConfigureResponse, { status: 200 });
   } catch (error: any) {
