@@ -16,9 +16,7 @@ import {
   SessionService,
 } from "@citizenwallet/sdk";
 import { isValidUrl } from "@/utils/url";
-import { generateKey } from "@/utils/random";
 import { ConfigureResponse } from "@/app/api/configure/route";
-import { dockerComposeCompileApp, dockerComposeUpIndexer } from "@/services/cw";
 
 class ConfigLogic {
   store: StoreApi<ConfigStore>;
@@ -247,11 +245,29 @@ class ConfigLogic {
 
       this.store.getState().deployRequest(DeployStep.App);
 
-      await dockerComposeCompileApp();
+      const appResponse = await fetch("/dashboard/api/configure/app", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!appResponse.ok) {
+        throw new Error("Failed to load app");
+      }
 
       this.store.getState().deployRequest(DeployStep.Indexer);
 
-      await dockerComposeUpIndexer();
+      const indexerResponse = await fetch("/dashboard/api/configure/indexer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!indexerResponse.ok) {
+        throw new Error("Failed to start indexer");
+      }
 
       this.store.getState().deploySuccess();
 

@@ -4,14 +4,11 @@ import {
   createAppFolder,
   downloadApp,
 } from "@/services/community";
-import {
-  dockerComposeCompileApp,
-  dockerComposeIsAppCompiled,
-} from "@/services/cw";
+import { isAppCompiled } from "@/services/cw";
 
 export async function POST(req: Request) {
   try {
-    const appIsCompiled = await dockerComposeIsAppCompiled();
+    const appIsCompiled = await isAppCompiled();
     if (appIsCompiled) {
       return Response.json({ message: "Already running" }, { status: 400 });
     }
