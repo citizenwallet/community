@@ -258,13 +258,15 @@ async function main() {
       process.exit(1);
     }
 
+    term.nextLine(2);
     const cursor = term.saveCursor();
     cursor("Certificate Generation: starting...");
     let spinner = await term.spinner("dotSpinner");
     // generate SSL certs
     execSync(
       `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --agree-tos --no-eff-email --email ${emailInput}
-    `
+    `,
+      { stdio: "ignore" }
     );
     spinner.animate(false);
     cursor.eraseLine();
