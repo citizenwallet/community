@@ -9,8 +9,8 @@ if command -v curl >/dev/null 2>&1; then
     echo "Checking for curl: ✅"
 else
     echo "Checking for curl: Needs to be installed"
-    sudo apt update
-    sudo apt install curl -y
+    sudo apt update > /dev/null 2>&1
+    sudo apt install curl -y > /dev/null 2>&1
     echo "curl installed"
 fi
 
@@ -20,7 +20,7 @@ if command -v node >/dev/null 2>&1; then
 else
     echo "Checking for Node.js: Needs to be installed"
 
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1
 
     export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -28,7 +28,7 @@ else
 
     source ~/.bashrc
 
-    nvm install 21
+    nvm install 21 > /dev/null 2>&1
 
     echo "Node installed"
 fi
@@ -38,8 +38,8 @@ if command -v git >/dev/null 2>&1; then
     echo "Checking for git: ✅"
 else
     echo "Checking for git: Needs to be installed"
-    sudo apt update
-    sudo apt install git -y
+    sudo apt update > /dev/null 2>&1
+    sudo apt install git -y > /dev/null 2>&1
     echo "git installed"
 fi
 
@@ -50,20 +50,20 @@ else
     echo "Checking for docker: Needs to be
     installed"
     # Add Docker's official GPG key:
-    sudo apt-get update
-    sudo apt-get install ca-certificates -y
-    sudo install -m 0755 -d /etc/apt/keyrings
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    sudo apt-get update > /dev/null 2>&1
+    sudo apt-get install ca-certificates -y > /dev/null 2>&1
+    sudo install -m 0755 -d /etc/apt/keyrings > /dev/null 2>&1
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc > /dev/null 2>&1
+    sudo chmod a+r /etc/apt/keyrings/docker.asc > /dev/null 2>&1
 
     # Add the repository to Apt sources:
     echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update
+    sudo apt-get update > /dev/null 2>&1
 
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null 2>&1
 
     echo "docker installed"
 fi
@@ -71,13 +71,13 @@ fi
 # Check if the docker group exists, and if it doesn't, create it
 if ! getent group docker >/dev/null; then
     echo "Creating the docker group"
-    sudo groupadd docker
+    sudo groupadd docker > /dev/null 2>&1
 fi
 
 # Check if the current user is a member of the docker group, and if they're not, add them to it
 if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
     echo "Adding the current user to the docker group"
-    sudo usermod -aG docker ${USER}
+    sudo usermod -aG docker ${USER} > /dev/null 2>&1
 
     echo "User permissions updated. Please run the script again."
     newgrp docker
@@ -93,7 +93,7 @@ else
     CURRENT_VERSION="0.0.0"
 fi
 
-curl -o community_version -L https://builds.internal.citizenwallet.xyz/community/version
+curl -o community_version -L https://builds.internal.citizenwallet.xyz/community/version > /dev/null 2>&1
 
 NEW_VERSION=$(cat community_version)
 
@@ -103,9 +103,9 @@ if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
 else
     echo "Community: Needs to be updated"
 
-    curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz"
+    curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1
 
-    tar -xzf community.tar.gz -C community
+    tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
     echo "Community: ✅"
 fi
@@ -114,6 +114,8 @@ fi
 cd community
 
 # trigger run script
-npm i
+echo "Launching community...\n"
+
+npm i > /dev/null 2>&1
 
 npm run community
