@@ -18,6 +18,7 @@ import {
 import { isValidUrl } from "@/utils/url";
 import { generateKey } from "@/utils/random";
 import { ConfigureResponse } from "@/app/api/configure/route";
+import { dockerComposeCompileApp, dockerComposeUpIndexer } from "@/services/cw";
 
 class ConfigLogic {
   store: StoreApi<ConfigStore>;
@@ -246,7 +247,11 @@ class ConfigLogic {
 
       this.store.getState().deployRequest(DeployStep.App);
 
+      await dockerComposeCompileApp();
+
       this.store.getState().deployRequest(DeployStep.Indexer);
+
+      await dockerComposeUpIndexer();
 
       this.store.getState().deploySuccess();
 

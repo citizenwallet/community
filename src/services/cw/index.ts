@@ -1,4 +1,5 @@
 import { execPromise } from "@/utils/exec";
+import { execSync } from "child_process";
 import { v2 as compose } from "docker-compose";
 import { existsSync } from "fs";
 import path from "path";
@@ -26,10 +27,25 @@ export const dockerIsIndexerUp = async () => {
 };
 
 export const dockerComposeCompileApp = async () => {
-  await compose.upOne("app", {
-    cwd: path.join(process.cwd()),
-    log: true,
-  });
+  execSync("rm -rf .community/web/*");
+
+  const response = await fetch(
+    `${process.env.BUILD_OUTPUT_URL}/web/${process.env.BUILD_VERSION_FILE_NAME}`
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Error fetching version file");
+  }
+
+  const version = (await response.text()).trim();
+
+  execSync(
+    `curl -o .community/web/app.tar.gz -L ${process.env.BUILD_OUTPUT_URL}/web/cw_web_${version}.tar.gz`
+  );
+
+  execSync("tar -xvf .community/web/app.tar.gz -C .community/web");
+
+  execSync("rm -rf .community/web/app.tar.gz");
 };
 
 export const dockerComposeIsAppCompiled = async () => {

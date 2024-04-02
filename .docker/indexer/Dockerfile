@@ -22,4 +22,4 @@ RUN BUILD_VERSION=$(cat ${BUILD_VERSION_FILE_NAME}) && \
 RUN chmod +x /cw/main
 
 # define the command to be run on launch
-CMD ["/cw/main", "-evm", "celo", "-port", "3001", "dbpath", "/cw/data"]
+CMD ["/cw/main", "-evm", "celo", "-port", "3001", "dbpath", "/cw/data", "-ws"]

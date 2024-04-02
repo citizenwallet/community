@@ -25,7 +25,7 @@ export default function Container({
     owner: string,
     factoryService: CommunityFactoryContractService,
     checkoutService: SessionService
-  ) => void;
+  ) => Promise<boolean>;
 }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [subscribe, actions] = useCheckout(network);
@@ -70,13 +70,19 @@ export default function Container({
     }
   }, [actions, factoryActions, sessionOwner, token]);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (!sessionOwner) return;
-    onCheckout(
+    actions.stopListeners();
+
+    const success = await onCheckout(
       sessionOwner,
       factoryActions.communityFactoryService,
       actions.getSessionService()
     );
+
+    if (!success) {
+      actions.listenToBalance();
+    }
   };
 
   const handleCancel = () => {

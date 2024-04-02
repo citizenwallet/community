@@ -181,9 +181,9 @@ export default function Container({}) {
     owner: string,
     factoryService: CommunityFactoryContractService,
     checkoutService: SessionService
-  ) => {
+  ): Promise<boolean> => {
     if (!network || !community || !valid || deployment.loading) {
-      return;
+      return false;
     }
 
     const success = await logic.deploy(
@@ -193,11 +193,12 @@ export default function Container({}) {
       checkoutService
     );
     if (!success) {
-      return;
+      return false;
     }
 
     // redirect to home
     router.replace("/");
+    return true;
   };
 
   return (
