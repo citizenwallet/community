@@ -262,10 +262,9 @@ async function main() {
     cursor("Certificate Generation: starting...");
     let spinner = await term.spinner("dotSpinner");
     // generate SSL certs
-    await execPromise(
+    execSync(
       `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --agree-tos --no-eff-email --email ${emailInput}
-    `,
-      true
+    `
     );
     spinner.animate(false);
     cursor.eraseLine();
@@ -283,14 +282,14 @@ async function main() {
   }
 
   // stop all containers
-  await execPromise("docker compose down", true);
+  await execPromise("docker compose down");
 
   // start nginx
   term.nextLine(2);
   let cursor = term.saveCursor();
   cursor("Server: starting...");
   let spinner = await term.spinner("dotSpinner");
-  await execPromise("docker compose up server --build -d", true);
+  await execPromise("docker compose up server --build -d");
   spinner.animate(false);
   cursor.eraseLine();
   cursor.column(1);
@@ -303,7 +302,7 @@ async function main() {
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
-    await execPromise("docker compose up indexer --build -d", true);
+    await execPromise("docker compose up indexer --build -d");
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
