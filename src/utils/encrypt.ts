@@ -19,5 +19,5 @@ export const decrypt = (encryptedValue: string, key: string): string => {
   const decipher = crypto.createDecipheriv("aes-256-cfb", keyBuffer, iv);
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString("base64");
+  return decrypted.toString();
 };
