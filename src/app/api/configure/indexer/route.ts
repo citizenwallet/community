@@ -1,4 +1,5 @@
 // app/api/configure/indexer
+import { communityFileExists, readCommunityFile } from "@/services/community";
 import {
   dockerComposeUpIndexer,
   dockerIsIndexerUp,
@@ -18,16 +19,20 @@ export async function POST(req: Request) {
       return Response.json({ message: "Already running" }, { status: 400 });
     }
 
-    if (!existsSync(process.cwd() + ".community/config/community.json")) {
+    if (!communityFileExists()) {
       return Response.json(
         { message: "Community not configured" },
         { status: 412 }
       );
     }
 
-    const community: Config = JSON.parse(
-      readFileSync(process.cwd() + ".community/config/community.json", "utf8")
-    );
+    const community = readCommunityFile();
+    if (!community) {
+      return Response.json(
+        { message: "Community not configured" },
+        { status: 412 }
+      );
+    }
 
     const network: Network = NETWORKS[community.node.chain_id];
     if (!community.erc4337.paymaster_address) {
