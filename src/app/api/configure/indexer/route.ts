@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const pk = readFileSync(process.cwd() + ".community/config/pk", "utf8");
+    const pk = readFileSync(process.cwd() + "/.community/config/pk", "utf8");
     if (!pk) {
       return Response.json(
         { message: "Private key not provided" },
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     );
 
     // remove the file
-    unlinkSync(process.cwd() + ".community/config/pk");
+    unlinkSync(process.cwd() + "/.community/config/pk");
 
     await Promise.race([
       dockerComposeUpIndexer(),
