@@ -12,7 +12,7 @@ export const encrypt = (secretValue: string, key: string): string => {
 };
 
 export const decrypt = (encryptedValue: string, key: string): string => {
-  const keyBuffer = Buffer.from(key, "hex");
+  const keyBuffer = Buffer.from(key, "base64");
   const encryptedBuffer = Buffer.from(encryptedValue, "base64");
   const iv = encryptedBuffer.subarray(0, 16);
   const encryptedText = encryptedBuffer.subarray(16);
