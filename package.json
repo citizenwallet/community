@@ -34,7 +34,7 @@
     "react-dom": "^18",
     "react-qr-code": "^2.0.12",
     "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.99",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "5.1.6",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.0",
