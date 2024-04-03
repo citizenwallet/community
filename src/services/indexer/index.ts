@@ -83,15 +83,15 @@ export const prepareDB = async (
     `);
 
     db.run(`
-        CREATE INDEX IF NOT EXISTS idx_events_84532_state ON t_events_${network.chainId}(state);
+        CREATE INDEX IF NOT EXISTS idx_events_${network.chainId}_state ON t_events_${network.chainId}(state);
     `);
 
     db.run(`
-        CREATE INDEX IF NOT EXISTS idx_events_84532_address_signature ON t_events_${network.chainId}(contract, standard);
+        CREATE INDEX IF NOT EXISTS idx_events_${network.chainId}_address_signature ON t_events_${network.chainId}(contract, standard);
     `);
 
     db.run(`
-        CREATE INDEX IF NOT EXISTS idx_events_84532_address_signature_state ON t_events_${network.chainId}(contract, standard, state);
+        CREATE INDEX IF NOT EXISTS idx_events_${network.chainId}_address_signature_state ON t_events_${network.chainId}(contract, standard, state);
     `);
 
     db.run(
