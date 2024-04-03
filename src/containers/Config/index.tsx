@@ -461,6 +461,7 @@ export default function Container({ sponsor }: ContainerProps) {
               {network && community && (
                 <CommunityCheckout
                   network={network}
+                  sponsor={sponsor}
                   token={validAddress}
                   loading={deployment.loading}
                   onValidityChange={handleValidityChange}

@@ -12,12 +12,14 @@ import { Flex, Separator, Text } from "@radix-ui/themes";
 
 export default function Container({
   network,
+  sponsor,
   token,
   loading = false,
   onValidityChange,
   onCheckout,
 }: {
   network: Network;
+  sponsor: string;
   token: string;
   loading: boolean;
   onValidityChange?: (valid: boolean) => void;
@@ -40,11 +42,12 @@ export default function Container({
     actions.updateAmountToPay((signer) => {
       return factoryActions.communityFactoryService.estimateCreate(
         signer.address,
+        sponsor,
         token,
         0
       );
     });
-  }, [actions, factoryActions, token]);
+  }, [actions, factoryActions, sponsor, token]);
 
   const sessionAddress = subscribe((state) => state.sessionAddress);
   const sessionBalance = subscribe((state) => state.sessionBalance);
@@ -63,12 +66,13 @@ export default function Container({
       actions.updateAmountToPay((_) => {
         return factoryActions.communityFactoryService.estimateCreate(
           sessionOwner,
+          sponsor,
           token,
           0
         );
       });
     }
-  }, [actions, factoryActions, sessionOwner, token]);
+  }, [actions, factoryActions, sessionOwner, sponsor, token]);
 
   const handleCheckout = async () => {
     if (!sessionOwner) return;
