@@ -1,7 +1,7 @@
 import crypto from "crypto";
 
 export const encrypt = (secretValue: string, key: string): string => {
-  const keyBuffer = Buffer.from(key, "hex");
+  const keyBuffer = Buffer.from(key, "base64");
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv("aes-256-cfb", keyBuffer, iv);
   const plaintext = Buffer.from(secretValue, "base64");
