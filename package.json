@@ -33,7 +33,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^18",
     "react-qr-code": "^2.0.12",
-    "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.98",
+    "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.99",
     "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
