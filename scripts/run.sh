@@ -118,4 +118,6 @@ echo "Launching community..."
 
 npm i > /dev/null 2>&1
 
+npm i sqlite3@5.1.6 > /dev/null 2>&1
+
 npm run community
