@@ -3,8 +3,8 @@ import {
   appFolderExists,
   createAppFolder,
   downloadApp,
+  isAppCompiled,
 } from "@/services/community";
-import { isAppCompiled } from "@/services/cw";
 
 export async function POST(req: Request) {
   try {

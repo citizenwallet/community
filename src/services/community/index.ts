@@ -1,4 +1,4 @@
-import { Config, Network } from "@citizenwallet/sdk";
+import { Config } from "@citizenwallet/sdk";
 import { execSync } from "child_process";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
@@ -65,35 +65,6 @@ export const readCommunityHash = (): string | undefined => {
   return readFileSync(filePath, "utf8");
 };
 
-export const writeIndexerEnv = (
-  network: Network,
-  ipfsBaseUrl: string,
-  ipfsApiKey: string,
-  ipfsApiSecret: string,
-  dbSecret: string
-) => {
-  const env = `
-    # CHAIN
-    RPC_URL='${network.rpcUrl}'
-    RPC_WS_URL='${network.wsRpcUrl}'
-
-    # DEVOPS
-    SENTRY_URL='x'
-    DISCORD_URL='x'
-
-    # IPFS
-    PINATA_BASE_URL='${ipfsBaseUrl}'
-    PINATA_API_KEY='${ipfsApiKey}'
-    PINATA_API_SECRET='${ipfsApiSecret}'
-
-    # DB
-    DB_SECRET='${dbSecret}'
-    `;
-
-  const filePath = path.join(process.cwd(), ".env.indexer");
-  return writeFileSync(filePath, env);
-};
-
 export const writeAppEnv = (
   webBurnerPassword: string,
   webDBVoucherPassword: string,
@@ -142,4 +113,9 @@ export const downloadApp = async () => {
 
   // remove the tar
   execSync(`rm -rf ${process.cwd()}/.community/app.tar.gz > /dev/null 2>&1`);
+};
+
+export const isAppCompiled = async () => {
+  const filePath = path.join(process.cwd(), ".community/web/index.html");
+  return existsSync(filePath);
 };

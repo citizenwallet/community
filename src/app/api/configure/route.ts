@@ -4,13 +4,11 @@ import {
   communityHashExists,
   configFolderExists,
   createConfigFolder,
-  writeAppEnv,
   writeCommunityFile,
   writeCommunityHash,
-  writeIndexerEnv,
 } from "@/services/community";
+import { completeIndexerEnv } from "@/services/indexer";
 import { pinJson } from "@/services/ipfs";
-import { generateKey } from "@/utils/random";
 import { Config, NETWORKS, Network } from "@citizenwallet/sdk";
 
 export interface ConfigureResponse {
@@ -37,30 +35,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const ipfsBaseUrl = process.env.IPFS_BASE_URL;
-    const ipfsApiKey = process.env.IPFS_API_KEY;
-    const ipfsApiSecret = process.env.IPFS_API_SECRET;
-    if (!ipfsBaseUrl || !ipfsApiKey || !ipfsApiSecret) {
-      return Response.json({ message: "IPFS not configured" }, { status: 500 });
-    }
-
     config.node.url = network.rpcUrl;
     config.node.ws_url = network.wsRpcUrl;
-
-    const dbSecret = generateKey(32);
 
     const hash = await pinJson(config); // pin the config to IPFS
 
     writeCommunityHash(hash);
     writeCommunityFile(config);
 
-    writeIndexerEnv(
-      network,
-      ipfsBaseUrl,
-      ipfsApiKey,
-      ipfsApiSecret,
-      btoa(dbSecret)
-    );
+    completeIndexerEnv(network);
 
     return Response.json({ hash } as ConfigureResponse, { status: 200 });
   } catch (error: any) {

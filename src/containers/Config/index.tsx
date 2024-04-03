@@ -49,7 +49,11 @@ import {
 import { useRouter } from "next/navigation";
 import { ColorChangeHandler, ColorResult, SketchPicker } from "react-color";
 
-export default function Container({}) {
+interface ContainerProps {
+  sponsor: string;
+}
+
+export default function Container({ sponsor }: ContainerProps) {
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -188,6 +192,7 @@ export default function Container({}) {
 
     const success = await logic.deploy(
       owner,
+      sponsor,
       factoryService,
       validAddress,
       checkoutService

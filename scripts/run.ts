@@ -9,7 +9,11 @@ import {
   communityHashExists,
   downloadApp,
 } from "@/services/community";
+import { dockerComposeUpIndexer } from "@/services/indexer";
 import { execPromise } from "@/utils/exec";
+import { generateBase64Key } from "@/utils/random";
+import { encrypt } from "@/utils/encrypt";
+import { ethers } from "ethers";
 
 function terminate() {
   term.grabInput(false);
@@ -76,6 +80,11 @@ async function main() {
     process.exit(1);
   }
 
+  let pinataApiKeyInput = "";
+  let pinataApiSecretInput = "";
+
+  let dbSecret = "";
+
   // TODO: check if .env files exist
   if (!existsSync(".env")) {
     term("Creating .env file...\n");
@@ -130,9 +139,7 @@ async function main() {
 
     // pinata_api_key
     term("\nEnter the Pinata API key: ");
-    const pinataApiKeyInput = (
-      (await term.inputField({}).promise) || ""
-    ).trim();
+    pinataApiKeyInput = ((await term.inputField({}).promise) || "").trim();
     if (!pinataApiKeyInput) {
       term.red("Pinata API key is required.\n");
       process.exit(1);
@@ -142,15 +149,18 @@ async function main() {
 
     // pinata_api_secret
     term("\nEnter the Pinata API secret: ");
-    const pinataApiSecretInput = (
-      (await term.inputField({}).promise) || ""
-    ).trim();
+    pinataApiSecretInput = ((await term.inputField({}).promise) || "").trim();
     if (!pinataApiSecretInput) {
       term.red("Pinata API secret is required.\n");
       process.exit(1);
     }
 
     env = env.replace("<pinata_api_secret>", pinataApiSecretInput);
+
+    // db_secret
+    dbSecret = generateBase64Key(32);
+
+    env = env.replace("<db_secret>", dbSecret);
 
     // write .env
     const filePath = process.cwd() + "/.env";
@@ -163,11 +173,48 @@ async function main() {
   }
 
   if (!existsSync(".env.indexer")) {
-    const filePath = process.cwd() + "/.env.indexer";
+    // Read the file
+    let env = readFileSync(".env.indexer.example", "utf8");
     term("Creating .env.indexer file...\n");
 
+    // pinata_api_key
+    if (!pinataApiKeyInput) {
+      term("\nEnter the Pinata API key: ");
+      pinataApiKeyInput = ((await term.inputField({}).promise) || "").trim();
+      if (!pinataApiKeyInput) {
+        term.red("Pinata API key is required.\n");
+        process.exit(1);
+      }
+    }
+
+    env = env.replace("<pinata_api_key>", pinataApiKeyInput);
+
+    // pinata_api_secret
+    if (!pinataApiSecretInput) {
+      term("\nEnter the Pinata API secret: ");
+      pinataApiSecretInput = ((await term.inputField({}).promise) || "").trim();
+      if (!pinataApiSecretInput) {
+        term.red("Pinata API secret is required.\n");
+        process.exit(1);
+      }
+    }
+
+    env = env.replace("<pinata_api_secret>", pinataApiSecretInput);
+
+    // db_secret
+    if (!dbSecret) {
+      dbSecret = generateBase64Key(32);
+    }
+
+    env = env.replace("<db_secret>", dbSecret);
+
     // write the file
-    writeFileSync(filePath, "");
+    const filePath = process.cwd() + "/.env.indexer";
+    writeFileSync(filePath, env);
+
+    const pk = ethers.Wallet.createRandom().privateKey;
+
+    writeFileSync(".community/config/pk", encrypt(pk, dbSecret));
 
     term("Created .env.indexer file.\n");
   }
@@ -317,7 +364,7 @@ async function main() {
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
-    await execPromise("docker compose up indexer --build -d");
+    dockerComposeUpIndexer();
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
@@ -336,6 +383,8 @@ async function main() {
     cursor.eraseLine();
     cursor.column(1);
     cursor("App: compiled ✅\n");
+  } else {
+    // first time start
   }
 
   // start community

@@ -129,6 +129,7 @@ class ConfigLogic {
 
   async deploy(
     owner: string,
+    sponsor: string,
     factoryService: CommunityFactoryContractService,
     tokenAddress: string,
     checkoutService: SessionService
@@ -137,7 +138,7 @@ class ConfigLogic {
       this.store.getState().deployRequest(DeployStep.Config);
 
       // deploy community
-      const tx = await factoryService.create(owner, tokenAddress, 0);
+      const tx = await factoryService.create(owner, sponsor, tokenAddress, 0);
 
       await tx.wait();
 
@@ -146,7 +147,7 @@ class ConfigLogic {
         paymasterAddress,
         accountFactoryAddress,
         profileAddress,
-      ] = await factoryService.get(owner, tokenAddress, 0);
+      ] = await factoryService.get(owner, sponsor, tokenAddress, 0);
 
       const community = this.store.getState().community;
       if (!community) {
