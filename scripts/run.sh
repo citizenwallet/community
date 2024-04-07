@@ -4,13 +4,27 @@ echo
 echo "Run script 1.0.0"
 echo
 
+spinner() {
+    local pid=$!
+    local delay=0.1
+    local spinstr='|/-\'
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
+
 # check for curl, install if needed
 if command -v curl >/dev/null 2>&1; then
     echo "Checking for curl: ✅"
 else
     echo "Checking for curl: Needs to be installed"
-    sudo apt update > /dev/null 2>&1
-    sudo apt install curl -y > /dev/null 2>&1
+    sudo apt update > /dev/null 2>&1 & spinner
+    sudo apt install curl -y > /dev/null 2>&1 & spinner
     echo "curl installed"
 fi
 
@@ -20,7 +34,7 @@ if command -v node >/dev/null 2>&1; then
 else
     echo "Checking for Node.js: Needs to be installed"
 
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1 & spinner
 
     export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -38,8 +52,8 @@ if command -v git >/dev/null 2>&1; then
     echo "Checking for git: ✅"
 else
     echo "Checking for git: Needs to be installed"
-    sudo apt update > /dev/null 2>&1
-    sudo apt install git -y > /dev/null 2>&1
+    sudo apt update > /dev/null 2>&1 & spinner
+    sudo apt install git -y > /dev/null 2>&1 & spinner
     echo "git installed"
 fi
 
@@ -50,10 +64,10 @@ else
     echo "Checking for docker: Needs to be
     installed"
     # Add Docker's official GPG key:
-    sudo apt-get update > /dev/null 2>&1
-    sudo apt-get install ca-certificates -y > /dev/null 2>&1
-    sudo install -m 0755 -d /etc/apt/keyrings > /dev/null 2>&1
-    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc > /dev/null 2>&1
+    sudo apt-get update > /dev/null 2>&1 & spinner
+    sudo apt-get install ca-certificates -y > /dev/null 2>&1 & spinner
+    sudo install -m 0755 -d /etc/apt/keyrings > /dev/null 2>&1 & spinner
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc > /dev/null 2>&1 & spinner
     sudo chmod a+r /etc/apt/keyrings/docker.asc > /dev/null 2>&1
 
     # Add the repository to Apt sources:
@@ -61,9 +75,9 @@ else
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
     $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    sudo apt-get update > /dev/null 2>&1
+    sudo apt-get update > /dev/null 2>&1 & spinner
 
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null 2>&1
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null 2>&1 & spinner
 
     echo "docker installed"
 fi
@@ -103,7 +117,7 @@ if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
 else
     echo "Community: Needs to be updated"
 
-    curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1
+    curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
@@ -114,11 +128,14 @@ fi
 cd community
 
 # trigger run script
-echo "Launching community..."
+echo "Installing dependencies..."
 
-npm i > /dev/null 2>&1
+npm i > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
-npm i sqlite3@5.1.6 > /dev/null 2>&1
+npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
+
+# trigger run script
+echo "Launching community..."
 
 npm run community
