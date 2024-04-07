@@ -22,7 +22,7 @@ spinner() {
 if command -v curl >/dev/null 2>&1; then
     echo "Checking for curl: ✅"
 else
-    echo "Checking for curl: Needs to be installed"
+    echo "Checking for curl: ..."
     sudo apt update > /dev/null 2>&1 & spinner
     sudo apt install curl -y > /dev/null 2>&1 & spinner
     echo "curl installed"
@@ -32,7 +32,7 @@ fi
 if command -v node >/dev/null 2>&1; then
     echo "Checking for Node.js: ✅"
 else
-    echo "Checking for Node.js: Needs to be installed"
+    echo "Checking for Node.js: ..."
 
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1 & spinner
 
@@ -51,7 +51,7 @@ fi
 if command -v git >/dev/null 2>&1; then
     echo "Checking for git: ✅"
 else
-    echo "Checking for git: Needs to be installed"
+    echo "Checking for git: ..."
     sudo apt update > /dev/null 2>&1 & spinner
     sudo apt install git -y > /dev/null 2>&1 & spinner
     echo "git installed"
@@ -61,8 +61,7 @@ fi
 if command -v docker >/dev/null 2>&1; then
     echo "Checking for docker: ✅"
 else
-    echo "Checking for docker: Needs to be
-    installed"
+    echo "Checking for docker: ..."
     # Add Docker's official GPG key:
     sudo apt-get update > /dev/null 2>&1 & spinner
     sudo apt-get install ca-certificates -y > /dev/null 2>&1 & spinner
@@ -115,7 +114,7 @@ NEW_VERSION=$(cat community_version)
 if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
     echo "Community: ✅"
 else
-    echo "Community: Needs to be updated"
+    echo "Community: ..."
 
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
@@ -128,7 +127,7 @@ fi
 cd community
 
 # trigger run script
-echo "Installing dependencies..."
+echo "Installing dependencies, this can take a few seconds..."
 
 npm i > /dev/null 2>&1 & spinner
 
