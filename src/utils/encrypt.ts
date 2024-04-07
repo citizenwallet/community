@@ -4,7 +4,7 @@ export const encrypt = (secretValue: string, key: string): string => {
   const keyBuffer = Buffer.from(key, "base64");
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv("aes-256-cfb", keyBuffer, iv);
-  const plaintext = Buffer.from(secretValue, "base64");
+  const plaintext = Buffer.from(secretValue, "hex");
   let ciphertext = cipher.update(plaintext);
   ciphertext = Buffer.concat([ciphertext, cipher.final()]);
   const ciphertextWithIv = Buffer.concat([iv, ciphertext]);
@@ -19,5 +19,5 @@ export const decrypt = (encryptedValue: string, key: string): string => {
   const decipher = crypto.createDecipheriv("aes-256-cfb", keyBuffer, iv);
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
+  return decrypted.toString("hex");
 };

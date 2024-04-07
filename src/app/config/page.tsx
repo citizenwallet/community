@@ -7,7 +7,10 @@ import { ethers } from "ethers";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const pk = readFileSync(process.cwd() + "/.community/config/pk", "utf8");
+  const pk = readFileSync(
+    process.cwd() + "/.community/config/pk",
+    "utf8"
+  ).trim();
   if (!pk) {
     return <InfoPageTemplate description="Missing configuration file" />;
   }
