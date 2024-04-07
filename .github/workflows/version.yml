@@ -75,9 +75,6 @@ jobs:
       - name: Include docker compose
         run: cp docker-compose.yml .next/standalone
 
-      - name: Include Dockerfile
-        run: cp -r .docker .next/standalone
-
       - name: Include .env.example file
         run: cp .env.example .next/standalone
 
