@@ -1,25 +1,4 @@
 services:
-  indexer:
-    env_file:
-        - .env.indexer
-    build:
-      context: .
-      dockerfile: .docker/indexer/Dockerfile
-      args:
-        BUILD_OUTPUT_URL: ${BUILD_OUTPUT_URL}
-        BUILD_VERSION_FILE_NAME: ${BUILD_VERSION_FILE_NAME}
-        GOOS: ${GOOS}
-        GOARCH: ${GOARCH}
-    restart: on-failure
-    healthcheck:
-      test: "exit 0"
-    networks:
-      cwnet:
-        aliases:
-          - cw-indexer
-    volumes:
-      - data_volume:/cw/data
-      - config_volume:/cw/config/:ro
   server:
     image: nginx:latest
     ports:
@@ -78,12 +57,6 @@ volumes:
       o: bind
       type: none
       device: ${PWD}/.community/config
-  data_volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ${PWD}/.community/data
   certs_www_volume:
     driver: local
     driver_opts:

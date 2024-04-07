@@ -118,6 +118,7 @@ echo "Launching community..."
 
 npm i > /dev/null 2>&1
 
+# ensure that the proper os/arch of sqlite3 is installed
 npm i sqlite3@5.1.6 > /dev/null 2>&1
 
 npm run community

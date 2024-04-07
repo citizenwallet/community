@@ -7,11 +7,13 @@ import { config } from "dotenv";
 import {
   communityFileExists,
   communityHashExists,
-  downloadApp,
+  readCommunityFile,
 } from "@/services/community";
-import { dockerComposeUpIndexer } from "@/services/indexer";
+import { startIndexer } from "@/services/indexer";
+import { downloadApp } from "@/services/app";
 import { execPromise } from "@/utils/exec";
 import { generateBase64Key } from "@/utils/random";
+import { getSystemInfo } from "@/utils/system";
 import { encrypt } from "@/utils/encrypt";
 import { ethers } from "ethers";
 
@@ -37,6 +39,7 @@ const folders = [
   ".community/data",
   ".community/uploads",
   ".community/web",
+  ".community/indexer",
 ];
 
 // Purpose: Start the application.
@@ -60,11 +63,7 @@ async function main() {
 
   execSync("sudo chmod -R u+r ./.community");
 
-  const systemOS = os.platform();
-  let systemArch = os.arch();
-  if (systemArch === "x64") {
-    systemArch = "amd64";
-  }
+  const { systemOS, systemArch } = getSystemInfo();
 
   if (
     systemOS !== "linux" ||
@@ -364,7 +363,12 @@ async function main() {
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
-    dockerComposeUpIndexer();
+    const community = readCommunityFile();
+    if (!community) {
+      term.red("Community not configured.\n");
+      process.exit(1);
+    }
+    startIndexer(community.node.chain_id);
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);

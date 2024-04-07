@@ -1,12 +1,13 @@
 // app/api/configure/indexer
 import { communityFileExists, readCommunityFile } from "@/services/community";
 import {
-  dockerComposeUpIndexer,
-  dockerIsIndexerUp,
+  downloadIndexer,
+  isIndexerRunning,
   prepareDB,
+  startIndexer,
 } from "@/services/indexer";
-import { Config, NETWORKS, Network } from "@citizenwallet/sdk";
-import { existsSync, readFileSync, unlinkSync } from "fs";
+import { NETWORKS, Network } from "@citizenwallet/sdk";
+import { readFileSync, unlinkSync } from "fs";
 
 export interface ConfigureResponse {
   hash: string;
@@ -14,7 +15,7 @@ export interface ConfigureResponse {
 
 export async function POST(req: Request) {
   try {
-    const indexerIsRunning = await dockerIsIndexerUp();
+    const indexerIsRunning = isIndexerRunning();
     if (indexerIsRunning) {
       return Response.json({ message: "Already running" }, { status: 400 });
     }
@@ -50,6 +51,8 @@ export async function POST(req: Request) {
       );
     }
 
+    downloadIndexer();
+
     await prepareDB(
       network,
       community.token.decimals,
@@ -63,10 +66,8 @@ export async function POST(req: Request) {
     // remove the file
     unlinkSync(process.cwd() + "/.community/config/pk");
 
-    await Promise.race([
-      dockerComposeUpIndexer(),
-      new Promise<void>((resolve, _) => setTimeout(() => resolve(), 2000)),
-    ]);
+    // check if indexer is running
+    startIndexer(network.chainId);
 
     return Response.json({} as ConfigureResponse, { status: 200 });
   } catch (error: any) {

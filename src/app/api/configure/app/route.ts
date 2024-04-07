@@ -1,10 +1,6 @@
 // app/api/configure/indexer
-import {
-  appFolderExists,
-  createAppFolder,
-  downloadApp,
-  isAppCompiled,
-} from "@/services/community";
+import { appFolderExists, createAppFolder } from "@/services/community";
+import { downloadApp, isAppCompiled } from "@/services/app";
 
 export async function POST(req: Request) {
   try {

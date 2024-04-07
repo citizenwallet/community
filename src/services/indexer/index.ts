@@ -1,10 +1,11 @@
 import { v2 as compose } from "docker-compose";
 import sqlite3 from "sqlite3";
 import { Network } from "@citizenwallet/sdk";
-import { spawn } from "child_process";
+import { execSync, spawn } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { JsonRpcProvider } from "ethers";
+import { getSystemInfo } from "@/utils/system";
 
 export const completeIndexerEnv = (network: Network) => {
   let env = readFileSync(".env.indexer.example", "utf8");
@@ -16,30 +17,85 @@ export const completeIndexerEnv = (network: Network) => {
   return writeFileSync(filePath, env);
 };
 
-export const dockerComposeUpIndexer = () => {
-  spawn("docker compose up indexer --build -d", {
-    detached: true,
-    shell: true,
-    stdio: "ignore",
-  });
+export const indexerProcessId = () => {
+  const command = "sudo lsof -i :3001 -t";
+  const pid = execSync(command).toString().trim();
+
+  return pid;
 };
 
-export const dockerIsIndexerUp = async () => {
-  const { out, err } = await compose.ps({
-    cwd: path.join(process.cwd()),
-    log: true,
-  });
+export const startIndexer = (chainId: number) => {
+  stopIndexer();
 
-  // Split the output into lines
-  const lines = out.split("\n");
+  let chainEVM = "ethereum";
+  switch (chainId) {
+    case 8453:
+      chainEVM = "celo";
+      break;
+    case 84532:
+      chainEVM = "celo";
+      break;
+    case 42220:
+      chainEVM = "celo";
+      break;
+    case 44787:
+      chainEVM = "celo";
+      break;
+  }
 
-  // Find the line that contains the 'indexer' service name
-  const indexerLine = lines.find((line) => line.includes("indexer"));
+  spawn(
+    `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -port 3001 -dbpath ${process.cwd()}/.community -fbpath ${process.cwd()}/.community/config/firebase.json -ws`,
+    {
+      detached: true,
+      shell: true,
+      stdio: "ignore",
+    }
+  );
+};
 
-  // Check if the 'indexer' service is up
-  const isIndexerUp = indexerLine && indexerLine.includes("Up");
+export const stopIndexer = () => {
+  const pid = indexerProcessId();
+  if (!pid) {
+    return;
+  }
 
-  return isIndexerUp;
+  execSync(`kill ${pid}`);
+};
+
+export const isIndexerRunning = () => {
+  const command = "sudo lsof -i :3001 -t";
+  const pid = execSync(command).toString().trim();
+
+  return !!pid;
+};
+
+export const downloadIndexer = () => {
+  // clean up the indexer folder
+  execSync(`rm -rf ${process.cwd()}/.community/indexer/*`);
+
+  // download version file
+  const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
+  const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
+  execSync(
+    `curl -H 'Cache-Control: no-cache' -o ${process.cwd()}/.community/${buildVersionFileName}-indexer -L ${buildOutputUrl}/indexer/${buildVersionFileName}?cache_buster=$(date +%s) > /dev/null 2>&1`
+  );
+
+  const buildVersion = readFileSync(
+    `${process.cwd()}/.community/${buildVersionFileName}-indexer`,
+    "utf8"
+  ).replace(/\r?\n|\r/g, "");
+
+  const { systemOS, systemArch } = getSystemInfo();
+
+  // download the indexer
+  execSync(
+    `curl -o ${process.cwd()}/.community/indexer/indexer -L ${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion} > /dev/null 2>&1`
+  );
+};
+
+export const isIndexerDownloaded = async () => {
+  const filePath = path.join(process.cwd(), ".community/indexer/indexer");
+  return existsSync(filePath);
 };
 
 export const prepareDB = async (
@@ -52,7 +108,8 @@ export const prepareDB = async (
   encryptedPrivateKey: string
 ) => {
   if (existsSync(path.join(process.cwd(), ".community/data/cw.db"))) {
-    return;
+    // clean up the db folder
+    execSync(`rm -rf ${process.cwd()}/.community/data/*`);
   }
 
   const provider = new JsonRpcProvider(network.rpcUrl);
