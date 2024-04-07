@@ -211,7 +211,7 @@ async function main() {
     const filePath = process.cwd() + "/.env.indexer";
     writeFileSync(filePath, env);
 
-    const pk = ethers.Wallet.createRandom().privateKey;
+    const pk = ethers.Wallet.createRandom().privateKey.replace("0x", "");
 
     writeFileSync(".community/config/pk", encrypt(pk, dbSecret));
 
