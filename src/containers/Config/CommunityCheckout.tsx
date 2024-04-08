@@ -60,8 +60,6 @@ export default function Container({
   const isCheckingOut = factorySubscribe((state) => state.create.loading);
 
   useSafeEffect(() => {
-    console.log("sessionOwner", sessionOwner);
-    console.log("token", token);
     if (sessionOwner && token) {
       actions.updateAmountToPay((_) => {
         return factoryActions.communityFactoryService.estimateCreate(
