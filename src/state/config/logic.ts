@@ -223,7 +223,7 @@ class ConfigLogic {
       };
 
       console.log(config);
-      const response = await fetch("/dashboard/api/configure", {
+      const response = await fetch(`${this.baseUrl}/api/configure`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -246,7 +246,7 @@ class ConfigLogic {
 
       this.store.getState().deployRequest(DeployStep.App);
 
-      const appResponse = await fetch("/dashboard/api/configure/app", {
+      const appResponse = await fetch(`${this.baseUrl}/api/configure/app`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -259,12 +259,15 @@ class ConfigLogic {
 
       this.store.getState().deployRequest(DeployStep.Indexer);
 
-      const indexerResponse = await fetch("/dashboard/api/configure/indexer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const indexerResponse = await fetch(
+        `${this.baseUrl}/api/configure/indexer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!indexerResponse.ok) {
         throw new Error("Failed to start indexer");
