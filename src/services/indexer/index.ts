@@ -46,8 +46,18 @@ export const startIndexer = (chainId: number) => {
       break;
   }
 
+  // how can we provide push access in a safe way?
+  // TODO: global push service to send to?
+  // spawn(
+  //   `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -port 3001 -dbpath ${process.cwd()}/.community -fbpath ${process.cwd()}/.community/config/firebase.json -ws`,
+  //   {
+  //     detached: true,
+  //     shell: true,
+  //     stdio: "ignore",
+  //   }
+  // );
   spawn(
-    `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -port 3001 -dbpath ${process.cwd()}/.community -fbpath ${process.cwd()}/.community/config/firebase.json -ws`,
+    `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -port 3001 -dbpath ${process.cwd()}/.community -ws`,
     {
       detached: true,
       shell: true,
