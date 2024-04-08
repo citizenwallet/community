@@ -1,4 +1,3 @@
-import { v2 as compose } from "docker-compose";
 import sqlite3 from "sqlite3";
 import { Network } from "@citizenwallet/sdk";
 import { execSync, spawn } from "child_process";
@@ -17,11 +16,15 @@ export const completeIndexerEnv = (network: Network) => {
   return writeFileSync(filePath, env);
 };
 
-export const indexerProcessId = () => {
-  const command = "sudo lsof -i :3001 -t";
-  const pid = execSync(command).toString().trim();
+export const indexerProcessId = (): string | undefined => {
+  try {
+    const command = "sudo lsof -i :3001 -t";
+    const pid = execSync(command).toString().trim();
 
-  return pid;
+    return pid;
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export const startIndexer = (chainId: number) => {
@@ -63,8 +66,7 @@ export const stopIndexer = () => {
 };
 
 export const isIndexerRunning = () => {
-  const command = "sudo lsof -i :3001 -t";
-  const pid = execSync(command).toString().trim();
+  const pid = indexerProcessId();
 
   return !!pid;
 };
