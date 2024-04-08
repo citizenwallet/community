@@ -103,6 +103,8 @@ export const downloadIndexer = () => {
   execSync(
     `curl -o ${process.cwd()}/.community/indexer/indexer -L ${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion} > /dev/null 2>&1`
   );
+
+  execSync(`chmod +x ${process.cwd()}/.community/indexer/indexer`);
 };
 
 export const isIndexerDownloaded = async () => {
