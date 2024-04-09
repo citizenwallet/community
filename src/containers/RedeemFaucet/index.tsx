@@ -57,8 +57,14 @@ export default function Container({
 
   const handleCopyRedeemLink = () => {
     const protocol = window.location.protocol;
-    const baseUrl = window.location.hostname;
-    const link = `${protocol}//${baseUrl}/redeem/faucet/${faucetAddress}`;
+    const hostUrl = window.location.hostname;
+
+    const baseUrl: string =
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_BASE_PATH || ""
+        : "";
+
+    const link = `${protocol}//${hostUrl}${baseUrl}/redeem/faucet/${faucetAddress}`;
     navigator.clipboard.writeText(link);
 
     setRedeemCopied(true);
