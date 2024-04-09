@@ -18,6 +18,7 @@ import Image from "next/image";
 import MissingIcon from "@/assets/icons/missing.svg";
 import { readableDuration } from "@/utils/duration";
 import { ArrowUpRight } from "lucide-react";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 // http://localhost:3000/faucet/gratitude/0x48a5c3e5756bEA469d466932CF4A9fa735B689c5
 
@@ -189,7 +190,8 @@ export default function Container({
               <Text>Redeem amount: </Text>
               {!metadataLoading ? (
                 <Text>
-                  {metadata.amount} {token.symbol}
+                  {formatCurrency(BigInt(metadata.amount), token.decimals, 2)}{" "}
+                  {token.symbol}
                 </Text>
               ) : (
                 <Skeleton
