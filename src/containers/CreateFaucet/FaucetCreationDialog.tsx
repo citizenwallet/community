@@ -110,11 +110,14 @@ export default function FaucetCreationDialog({
       if (!faucetFactoryActions.faucetFactoryService) {
         return;
       }
+
+      const amount = redeemAmount * 10 ** token.decimals;
+
       return faucetFactoryActions.faucetFactoryService.estimateCreateSimpleFaucet(
         signer.address,
         0,
         token.address,
-        redeemAmount,
+        amount,
         redeemInterval,
         signer.address
       );
@@ -124,6 +127,7 @@ export default function FaucetCreationDialog({
     faucetFactoryActions,
     token.address,
     redeemAmount,
+    token.decimals,
     redeemInterval,
   ]);
 
@@ -169,11 +173,13 @@ export default function FaucetCreationDialog({
 
     actions.stopListeners();
 
+    const amount = redeemAmount * 10 ** token.decimals;
+
     const faucetAddress = await faucetFactoryActions.createSimpleFaucet(
       owner,
       0,
       token.address,
-      redeemAmount,
+      amount,
       redeemInterval,
       owner
     );
@@ -211,11 +217,14 @@ export default function FaucetCreationDialog({
         if (!faucetFactoryActions.faucetFactoryService) {
           return;
         }
+
+        const amount = redeemAmount * 10 ** token.decimals;
+
         return faucetFactoryActions.faucetFactoryService.estimateCreateSimpleFaucet(
           sessionOwner,
           0,
           tokenAddress,
-          redeemAmount,
+          amount,
           redeemInterval,
           sessionOwner
         );
@@ -227,6 +236,7 @@ export default function FaucetCreationDialog({
     sessionOwner,
     tokenAddress,
     redeemAmount,
+    token.decimals,
     redeemInterval,
   ]);
 
