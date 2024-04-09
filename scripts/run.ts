@@ -359,6 +359,8 @@ async function main() {
   const communityExists = communityFileExists();
   const hashExists = communityHashExists();
   if (communityExists && hashExists) {
+    config();
+
     // start indexer
     cursor = term.saveCursor();
     cursor("Indexer: starting...");
@@ -376,8 +378,6 @@ async function main() {
     cursor("Indexer: started ✅\n");
 
     // app
-    config();
-
     cursor = term.saveCursor();
     cursor("App: compiling...");
     spinner = await term.spinner("dotSpinner");
