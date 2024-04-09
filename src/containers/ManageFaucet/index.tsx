@@ -76,7 +76,7 @@ export default function Container({
 
   const network = NETWORKS[config.node.chain_id];
 
-  const [subscribe, actions] = useERC20(network);
+  const [subscribe, actions] = useERC20(network, config.token.address, config);
   const [faucetSubscribe, faucetActions] = useSimpleFaucetContract(
     faucetAddress,
     config,
