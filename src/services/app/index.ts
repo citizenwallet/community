@@ -2,7 +2,7 @@ import { execSync } from "child_process";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 
-export const downloadApp = async () => {
+export const downloadApp = () => {
   // clean up the web folder
   execSync(`rm -rf ${process.cwd()}/.community/web/*`);
 

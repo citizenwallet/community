@@ -9,7 +9,7 @@ import {
   communityHashExists,
   readCommunityFile,
 } from "@/services/community";
-import { startIndexer } from "@/services/indexer";
+import { downloadIndexer, startIndexer } from "@/services/indexer";
 import { downloadApp } from "@/services/app";
 import { execPromise } from "@/utils/exec";
 import { generateBase64Key } from "@/utils/random";
@@ -368,6 +368,7 @@ async function main() {
       term.red("Community not configured.\n");
       process.exit(1);
     }
+    downloadIndexer();
     startIndexer(community.node.chain_id);
     spinner.animate(false);
     cursor.eraseLine();
@@ -381,7 +382,7 @@ async function main() {
     cursor("App: compiling...");
     spinner = await term.spinner("dotSpinner");
 
-    await downloadApp();
+    downloadApp();
 
     spinner.animate(false);
     cursor.eraseLine();
