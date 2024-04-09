@@ -215,7 +215,8 @@ export default function Container({
               <Text>Redeem amount: </Text>
               {!metadataLoading ? (
                 <Text>
-                  {metadata.amount} {token.symbol}
+                  {formatCurrency(BigInt(metadata.amount), token.decimals, 2)}{" "}
+                  {token.symbol}
                 </Text>
               ) : (
                 <Skeleton
