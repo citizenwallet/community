@@ -31,6 +31,16 @@ server {
         }
     }
 
+    location /.well-known/apple-app-site-association {
+        default_type application/json;
+        alias /var/www/html/.well-known/apple-app-site-association;
+    }
+
+    location /.well-known/assetlinks.json {
+        default_type application/json;
+        alias /var/www/html/.well-known/assetlinks.json;
+    }
+
     location /uploads/ {
         alias /var/www/uploads/;
         expires 5m;
