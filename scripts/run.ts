@@ -213,7 +213,13 @@ async function main() {
 
     const pk = ethers.Wallet.createRandom().privateKey.replace("0x", "");
 
-    writeFileSync(".community/config/pk", encrypt(pk, dbSecret));
+    const encryptedKey = encrypt(pk, dbSecret);
+
+    console.log("dbSecret", dbSecret);
+    console.log("pk", pk);
+    console.log("encryptedKey", encryptedKey);
+
+    writeFileSync(".community/config/pk", encryptedKey);
 
     term("Created .env.indexer file.\n");
   }
