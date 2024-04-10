@@ -7,7 +7,7 @@ import { JsonRpcProvider } from "ethers";
 import { getSystemInfo } from "@/utils/system";
 
 export const completeIndexerEnv = (network: Network) => {
-  let env = readFileSync(".env.indexer.example", "utf8");
+  let env = readFileSync(".env.indexer", "utf8");
 
   env = env.replace("<chain_rpc_url>", network.rpcUrl);
   env = env.replace("<chain_ws_rpc_url>", network.wsRpcUrl);
