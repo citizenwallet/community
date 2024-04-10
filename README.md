@@ -23,9 +23,9 @@ Then you need to run
 npm run community
 ```
 
-If you just need to run it locally for development purposes, feel free to exit the script (CTRL+C) whenever it is asking for your password.
+If you just need to run it locally for development purposes, feel free to exit the script (CTRL+C) whenever it is asking for your password. Then make sure you create a `.community/config/community.json` and a `.community/config/hash` file.
 
-Otherwise, to continue, enter the root password (needed to chmod the newly `.community` folder created.)
+Otherwise, to continue and generate those files, enter the root password (needed to chmod the newly `.community` folder created) and proceed.
 
 Then you can finally run
 

@@ -76,5 +76,5 @@
 }
 
 code {
-  @apply bg-gray-200 border-2 border-gray-300 rounded-lg px-2 py-1 mx-1;
+  @apply bg-gray-200 border-2 border-gray-300 rounded-lg px-1 mx-1;
 }

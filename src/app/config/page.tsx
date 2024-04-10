@@ -16,7 +16,9 @@ export default async function Page() {
   if (!pk) {
     return (
       <ErrorPage title="Missing configuration file">
-        Make sure to run <code>npm run community</code>
+        Make sure you have a <code>.community/config/community.json</code> and
+        <code>.community/config/hash</code> configuration files or run{" "}
+        <code>npm run community</code> to generate one.
       </ErrorPage>
     );
   }
