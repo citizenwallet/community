@@ -15,6 +15,7 @@ You can run it on your local machine for development purposes (just ignore that 
 git clone git@github.com:citizenwallet/community.git
 cd community
 npm install
+cp .env.example .env
 ```
 
 Then you need to run
