@@ -1,6 +1,6 @@
 import ManageFaucet from "@/containers/ManageFaucet";
 import ManageFaucetTemplate from "@/templates/ManageFaucet";
-import InfoPageTemplate from "@/templates/InfoPage";
+import ErrorPage from "@/templates/ErrorPage";
 import { Suspense } from "react";
 import { readCommunityFile } from "@/services/community";
 import { Config } from "@citizenwallet/sdk";
@@ -20,7 +20,7 @@ export default async function Page({
   }
 
   if (!config) {
-    return <InfoPageTemplate description="Community not found" />;
+    return <ErrorPage description="Community not found" />;
   }
 
   return (

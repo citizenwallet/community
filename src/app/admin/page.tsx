@@ -1,7 +1,7 @@
 import CommunityHome from "@/containers/CommunityHome";
 import { readCommunityFile } from "@/services/community";
 import { Config } from "@citizenwallet/sdk";
-import InfoPageTemplate from "@/templates/InfoPage";
+import ErrorPage from "@/templates/ErrorPage";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export default async function Page() {
   }
 
   if (!config) {
-    return <InfoPageTemplate description="Community not found" />;
+    return <ErrorPage description="Community not found" />;
   }
 
   return <CommunityHome community={config} />;

@@ -1,11 +1,13 @@
 import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 
 export default function Template({
-  Content,
+  title,
   description,
+  children,
 }: {
-  Content?: React.ReactNode;
-  description: string;
+  title?: string;
+  children?: React.ReactNode;
+  description?: string;
 }) {
   return (
     <Flex
@@ -17,10 +19,11 @@ export default function Template({
       p="4"
       className="fadeIn min-h-screen"
     >
-      {Content ? <Section size="3">{Content}</Section> : null}
+      {title && <h1 className="text-3xl">{title}</h1>}
       <Section size="1">
         <Text size="6">{description}</Text>
       </Section>
+      {children ? <Section size="1">{children}</Section> : null}
     </Flex>
   );
 }

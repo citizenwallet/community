@@ -3,7 +3,7 @@ import RedeemFaucetTemplate from "@/templates/RedeemFaucet";
 import { Suspense } from "react";
 import { readCommunityFile } from "@/services/community";
 import { Config } from "@citizenwallet/sdk";
-import InfoPageTemplate from "@/templates/InfoPage";
+import ErrorPage from "@/templates/ErrorPage";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ export default async function Page({
   }
 
   if (!config) {
-    return <InfoPageTemplate description="Community not found" />;
+    return <ErrorPage title="Community not found" />;
   }
 
   const appBaseUrl = process.env.APP_BASE_URL;

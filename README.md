@@ -6,6 +6,33 @@ Here are a set of interfaces for you to run an ERC20 token without transaction f
 
 This includes a web wallet, an admin dashboard, a token transaction indexer and a transaction bundler (transaction fee sponsorship).
 
+## How to run locally?
+
+This is meant to run on a Linux system with AMD64 or ARM64 architecture.
+You can run it on your local machine for development purposes (just ignore that error).
+
+```
+git clone git@github.com:citizenwallet/community.git
+cd community
+npm install
+```
+
+Then you need to run
+
+```
+npm run community
+```
+
+If you just need to run it locally for development purposes, feel free to exit the script (CTRL+C) whenever it is asking for your password.
+
+Otherwise, to continue, enter the root password (needed to chmod the newly `.community` folder created.)
+
+Then you can finally run
+
+```
+npm run dev
+```
+
 ## Web Wallet /
 
 - ERC4337
