@@ -213,7 +213,9 @@ async function main() {
 
     const pk = ethers.Wallet.createRandom().privateKey.replace("0x", "");
 
-    const encryptedKey = encrypt(pk, dbSecret);
+    const b64PK = btoa(pk);
+
+    const encryptedKey = encrypt(b64PK, dbSecret);
 
     writeFileSync(".community/config/pk", encryptedKey);
 
