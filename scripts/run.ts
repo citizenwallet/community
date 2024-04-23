@@ -358,12 +358,8 @@ async function main() {
         lines.push(line);
         if (line.trim() === "" || line.trim().endsWith("}")) {
           // The user pressed Enter without typing anything,
-          rl.close();
+          resolve(lines.join("\n"));
         }
-      });
-
-      rl.on("close", () => {
-        resolve(lines.join("\n"));
       });
     });
 
