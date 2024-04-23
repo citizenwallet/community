@@ -92,8 +92,11 @@ if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
     echo "Adding the current user to the docker group"
     sudo usermod -aG docker ${USER} > /dev/null 2>&1
 
-    echo "User permissions updated. Please run the script again."
-    newgrp docker
+    echo
+    echo
+    echo "User permissions updated. Please exit, log in and run the script again 🔄."
+
+    exit 0
 fi
 
 if [ ! -d "community" ]; then
