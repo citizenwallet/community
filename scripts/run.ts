@@ -307,8 +307,12 @@ async function main() {
     await term.yesOrNo({ yes: ["yes", "y"], no: ["no", "n"] }).promise;
 
     // pinata_api_key
-    term("\nWhat email would you like to associate with your domain: \n");
-    const emailInput = ((await term.inputField({}).promise) || "").trim();
+    term(
+      "\nWhat email would you like to associate with your domain (default: hello@citizenwallet.xyz): \n"
+    );
+    const emailInput = (
+      (await term.inputField({}).promise) || "hello@citizenwallet.xyz"
+    ).trim();
     if (!emailInput) {
       term.red("An email is required.\n");
       process.exit(1);
@@ -359,6 +363,13 @@ async function main() {
         if (line.trim() === "" || line.trim().endsWith("}")) {
           // The user pressed Enter without typing anything,
           resolve(lines.join("\n"));
+
+          // Move the cursor up by the number of input lines
+          for (let i = 0; i < lines.length; i++) {
+            process.stdout.moveCursor(0, -1);
+            // Clear the current line
+            process.stdout.clearLine(0);
+          }
         }
       });
     });
