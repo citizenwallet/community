@@ -127,7 +127,7 @@ async function main() {
     // ipfs_cdn_url
     term("\nEnter the IPFS CDN URL: ");
     const ipfsCdnUrlInput = (
-      (await term.inputField({}).promise) || "https://ipfs.io/ipfs/"
+      (await term.inputField({}).promise) || "https://ipfs.io/ipfs"
     ).trim();
     if (!ipfsCdnUrlInput) {
       term.red("IPFS CDN URL is required.\n");
