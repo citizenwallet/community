@@ -200,3 +200,13 @@ export const prepareDB = async (
     );
   });
 };
+
+export const isPushEnabled = () => {
+  const filePath = path.join(process.cwd(), ".community/config/firebase.json");
+  return existsSync(filePath);
+};
+
+export const enablePush = (firebaseConfig: string) => {
+  const filePath = path.join(process.cwd(), ".community/config/firebase.json");
+  return writeFileSync(filePath, firebaseConfig);
+};

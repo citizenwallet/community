@@ -9,7 +9,12 @@ import {
   communityHashExists,
   readCommunityFile,
 } from "@/services/community";
-import { downloadIndexer, startIndexer } from "@/services/indexer";
+import {
+  downloadIndexer,
+  enablePush,
+  isPushEnabled,
+  startIndexer,
+} from "@/services/indexer";
 import { downloadApp } from "@/services/app";
 import { execPromise } from "@/utils/exec";
 import { generateBase64Key } from "@/utils/random";
@@ -363,6 +368,26 @@ async function main() {
       process.exit(1);
     }
     downloadIndexer();
+
+    if (!isPushEnabled()) {
+      // firebase.json
+      term("\nPaste your firebase.json here (leave empty to ignore): ");
+      const firebaseJsonInput = (
+        (await term.inputField({}).promise) || ""
+      ).trim();
+      if (!!firebaseJsonInput) {
+        try {
+          // check if valid json
+          const firebaseJson = JSON.parse(firebaseJsonInput);
+          if (firebaseJson.type !== "service_account") {
+            throw new Error("Invalid firebase.json");
+          }
+
+          enablePush(firebaseJsonInput);
+        } catch (_) {}
+      }
+    }
+
     startIndexer(community.node.chain_id);
     spinner.animate(false);
     cursor.eraseLine();
