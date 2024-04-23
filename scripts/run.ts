@@ -1,4 +1,4 @@
-import os from "os";
+import readline from "readline";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
@@ -339,6 +339,49 @@ async function main() {
     }
   }
 
+  // push notifications
+  if (!isPushEnabled()) {
+    // firebase.json
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    let firebaseJsonInput = await new Promise<string>((resolve, _) => {
+      term(
+        "\nPaste your firebase service account json here (leave empty to ignore): "
+      );
+
+      const lines: string[] = [];
+
+      rl.on("line", (line) => {
+        lines.push(line);
+        if (line.trim() === "" || line.trim().endsWith("}")) {
+          // The user pressed Enter without typing anything,
+          rl.close();
+        }
+      });
+
+      rl.on("close", () => {
+        resolve(lines.join("\n"));
+      });
+    });
+
+    if (!!firebaseJsonInput) {
+      try {
+        firebaseJsonInput = firebaseJsonInput.trim();
+
+        // check if valid json
+        const firebaseJson = JSON.parse(firebaseJsonInput);
+        if (firebaseJson.type !== "service_account") {
+          throw new Error("Invalid firebase.json");
+        }
+
+        enablePush(firebaseJsonInput);
+      } catch (_) {}
+    }
+  }
+
   // stop all containers
   await execPromise("docker compose down");
 
@@ -368,25 +411,6 @@ async function main() {
       process.exit(1);
     }
     downloadIndexer();
-
-    if (!isPushEnabled()) {
-      // firebase.json
-      term("\nPaste your firebase.json here (leave empty to ignore): ");
-      const firebaseJsonInput = (
-        (await term.inputField({}).promise) || ""
-      ).trim();
-      if (!!firebaseJsonInput) {
-        try {
-          // check if valid json
-          const firebaseJson = JSON.parse(firebaseJsonInput);
-          if (firebaseJson.type !== "service_account") {
-            throw new Error("Invalid firebase.json");
-          }
-
-          enablePush(firebaseJsonInput);
-        } catch (_) {}
-      }
-    }
 
     startIndexer(community.node.chain_id);
     spinner.animate(false);
