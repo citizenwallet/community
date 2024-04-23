@@ -124,18 +124,6 @@ async function main() {
     //   sessionBalanceTransferAddressInput
     // );
 
-    // ipfs_cdn_url
-    term("\nEnter the IPFS CDN URL: ");
-    const ipfsCdnUrlInput = (
-      (await term.inputField({}).promise) || "https://ipfs.io/ipfs"
-    ).trim();
-    if (!ipfsCdnUrlInput) {
-      term.red("IPFS CDN URL is required.\n");
-      process.exit(1);
-    }
-
-    env = env.replace("<ipfs_cdn_url>", ipfsCdnUrlInput);
-
     // pinata_api_key
     term("\nEnter the Pinata API key: ");
     pinataApiKeyInput = ((await term.inputField({}).promise) || "").trim();

@@ -17,7 +17,6 @@ import {
 } from "@citizenwallet/sdk";
 import { isValidUrl } from "@/utils/url";
 import { ConfigureResponse } from "@/app/api/configure/route";
-import { config } from "dotenv";
 
 class ConfigLogic {
   store: StoreApi<ConfigStore>;
@@ -27,9 +26,6 @@ class ConfigLogic {
       : "";
   constructor() {
     this.store = useConfigStore;
-
-    // parse .env
-    config();
   }
 
   setStep(step: ConfigStep) {
