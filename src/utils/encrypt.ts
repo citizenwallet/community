@@ -8,12 +8,12 @@ export const encrypt = (secretValue: string, key: string): string => {
   let ciphertext = cipher.update(plaintext);
   ciphertext = Buffer.concat([ciphertext, cipher.final()]);
   const ciphertextWithIv = Buffer.concat([iv, ciphertext]);
-  return ciphertextWithIv.toString("base64");
+  return ciphertextWithIv.toString("base64url");
 };
 
 export const decrypt = (encryptedValue: string, key: string): string => {
   const keyBuffer = Buffer.from(key, "base64");
-  const encryptedBuffer = Buffer.from(encryptedValue, "base64");
+  const encryptedBuffer = Buffer.from(encryptedValue, "base64url");
   const iv = encryptedBuffer.subarray(0, 16);
   const encryptedText = encryptedBuffer.subarray(16);
   const decipher = crypto.createDecipheriv("aes-256-cfb", keyBuffer, iv);
