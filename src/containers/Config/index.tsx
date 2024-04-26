@@ -51,9 +51,10 @@ import { ColorChangeHandler, ColorResult, SketchPicker } from "react-color";
 
 interface ContainerProps {
   sponsor: string;
+  salt: number;
 }
 
-export default function Container({ sponsor }: ContainerProps) {
+export default function Container({ sponsor, salt }: ContainerProps) {
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -195,7 +196,8 @@ export default function Container({ sponsor }: ContainerProps) {
       sponsor,
       factoryService,
       validAddress,
-      checkoutService
+      checkoutService,
+      salt
     );
     if (!success) {
       return false;
@@ -462,6 +464,7 @@ export default function Container({ sponsor }: ContainerProps) {
                 <CommunityCheckout
                   network={network}
                   sponsor={sponsor}
+                  salt={salt}
                   token={validAddress}
                   loading={deployment.loading}
                   onValidityChange={handleValidityChange}

@@ -13,6 +13,7 @@ import { Flex, Separator, Text } from "@radix-ui/themes";
 export default function Container({
   network,
   sponsor,
+  salt,
   token,
   loading = false,
   onValidityChange,
@@ -20,6 +21,7 @@ export default function Container({
 }: {
   network: Network;
   sponsor: string;
+  salt: number;
   token: string;
   loading: boolean;
   onValidityChange?: (valid: boolean) => void;
@@ -44,10 +46,10 @@ export default function Container({
         signer.address,
         sponsor,
         token,
-        0
+        salt
       );
     });
-  }, [actions, factoryActions, sponsor, token]);
+  }, [actions, factoryActions, sponsor, salt, token]);
 
   const sessionAddress = subscribe((state) => state.sessionAddress);
   const sessionBalance = subscribe((state) => state.sessionBalance);
@@ -66,11 +68,11 @@ export default function Container({
           sessionOwner,
           sponsor,
           token,
-          0
+          salt
         );
       });
     }
-  }, [actions, factoryActions, sessionOwner, sponsor, token]);
+  }, [actions, factoryActions, sessionOwner, sponsor, salt, token]);
 
   const handleCheckout = async () => {
     if (!sessionOwner) return;

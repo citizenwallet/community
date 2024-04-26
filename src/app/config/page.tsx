@@ -28,5 +28,7 @@ export default async function Page() {
 
   const ethPk = new ethers.Wallet(parsedPk);
 
-  return <Config sponsor={ethPk.address} />;
+  const salt: number = new Date().getTime();
+
+  return <Config sponsor={ethPk.address} salt={salt} />;
 }
