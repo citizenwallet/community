@@ -2,10 +2,10 @@
 
 import HomeTemplate from "@/templates/Home";
 import { shortenAddress } from "@/utils/shortenAddress";
-import { ArrowRightIcon, CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { ArrowUpRight } from "lucide-react";
-import { use, useRef, useState } from "react";
+import { useState } from "react";
 import QRCode from "react-qr-code";
 import { useRouter } from "next/navigation";
 import { Config, NETWORKS, Network, useSafeEffect } from "@citizenwallet/sdk";
@@ -16,6 +16,22 @@ interface ContainerProps {
   appDeepLink: string;
   config: Config;
 }
+
+const nativeCurrency = {
+  "1": "ETH",
+  "4": "ETH",
+  "10": "ETH", // optimism
+  "5": "XDAI",
+  "42220": "CELO",
+  "44787": "CELO",
+  "8453": "ETH", // base
+  "84532": "ETH", // base
+  "100": "xDAI",
+  "80001": "MATIC",
+  "137": "MATIC",
+  "43113": "AVAX",
+  "43114": "AVAX",
+};
 
 export default function Container({
   hash,
