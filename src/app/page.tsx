@@ -1,14 +1,14 @@
 import { communityFileExists, readCommunityHash } from "@/services/community";
 import { redirect } from "next/navigation";
 import Home from "@/containers/Home";
-
+import { readCommunityFile } from "@/services/community";
 export const dynamic = "force-dynamic";
 
 export default function Page() {
-  const exists = communityFileExists();
+  const config = readCommunityFile();
   const hash = readCommunityHash();
 
-  if (!exists || !hash) {
+  if (!config || !hash) {
     // redirect to /config
     redirect("/config");
   }
@@ -25,5 +25,12 @@ export default function Page() {
     throw new Error("Missing NATIVE_APP_DEEP_LINK environment variable");
   }
 
-  return <Home hash={hash} appBaseUrl={appBaseUrl} appDeepLink={appDeepLink} />;
+  return (
+    <Home
+      hash={hash}
+      appBaseUrl={appBaseUrl}
+      appDeepLink={appDeepLink}
+      config={config}
+    />
+  );
 }
