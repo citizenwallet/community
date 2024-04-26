@@ -8,7 +8,7 @@ import {
 } from "@citizenwallet/sdk";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import { Avatar, Box, Button, Flex, Text } from "@radix-ui/themes";
-import InfoPageTemplate from "@/templates/InfoPage";
+import ErrorPage from "@/templates/ErrorPage";
 import RedeemFaucetTemplate from "@/templates/RedeemFaucet";
 import { useEffect, useRef, useState } from "react";
 import QRCode from "react-qr-code";
@@ -112,17 +112,14 @@ export default function Container({
 
   if (!loading && !exists) {
     return (
-      <InfoPageTemplate
-        description="Faucet not found"
-        Content={
-          <Image
-            src={MissingIcon}
-            alt="faucet not found icon"
-            height={200}
-            width={200}
-          />
-        }
-      />
+      <ErrorPage title="Faucet not found">
+        <Image
+          src={MissingIcon}
+          alt="faucet not found icon"
+          height={200}
+          width={200}
+        />
+      </ErrorPage>
     );
   }
 

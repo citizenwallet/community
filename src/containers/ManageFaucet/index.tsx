@@ -11,7 +11,7 @@ import {
 } from "@citizenwallet/sdk";
 import { UploadIcon, CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import { Avatar, Box, Button, Flex, Separator, Text } from "@radix-ui/themes";
-import InfoPageTemplate from "@/templates/InfoPage";
+import ErrorPage from "@/templates/ErrorPage";
 import ManageFaucetTemplate from "@/templates/ManageFaucet";
 import TransferCard from "@/components/TransferCard";
 import { useEffect, useRef, useState } from "react";
@@ -128,17 +128,14 @@ export default function Container({
 
   if (!loading && !exists) {
     return (
-      <InfoPageTemplate
-        description="Faucet not found"
-        Content={
-          <Image
-            src={MissingIcon}
-            alt="faucet not found icon"
-            height={200}
-            width={200}
-          />
-        }
-      />
+      <ErrorPage title="Faucet not found">
+        <Image
+          src={MissingIcon}
+          alt="faucet not found icon"
+          height={200}
+          width={200}
+        />
+      </ErrorPage>
     );
   }
 
