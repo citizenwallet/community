@@ -30,7 +30,9 @@ export default async function Page() {
 
   const decryptedPk = decrypt(pk, dbSecret);
 
-  const ethPk = new ethers.Wallet(decryptedPk);
+  const parsedPk = atob(decryptedPk);
+
+  const ethPk = new ethers.Wallet(parsedPk);
 
   return <Config sponsor={ethPk.address} />;
 }

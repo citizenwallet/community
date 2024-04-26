@@ -42,54 +42,36 @@ jobs:
       - name: Download dependencies
         run: npm ci
 
+      - name: Run tests
+        run: npm test
+
+      # just so that we can compile, remove .env from the standalone folder later
       - name: Make .env file
         run: cp .env.example .env
 
       - name: Compile
         run: npm run build
 
-      - name: Include public folder
-        run: cp -r public .next/standalone
-
-      - name: Include .next/static folder
-        run: cp -r .next/static .next/standalone/.next/static
-
-      - name: Include assets folder
-        run: cp -r assets .next/standalone
-
-      - name: Include scripts folder
-        run: cp -r scripts .next/standalone
-
-      - name: Create src folder
-        run: mkdir .next/standalone/src
-
-      - name: Include utils folder
-        run: cp -r src/utils .next/standalone/src/utils
-
-      - name: Include services folder
-        run: cp -r src/services .next/standalone/src/services
-
-      - name: Include tsconfig.json file
-        run: cp tsconfig.json .next/standalone
-
-      - name: Include docker compose
-        run: cp docker-compose.yml .next/standalone
-
-      - name: Include .env.example file
-        run: cp .env.example .next/standalone
-
-      - name: Include .env.indexer.example file
-        run: cp .env.indexer.example .next/standalone
-
-      - name: Include nginx.conf.example file
-        run: cp nginx.conf.example .next/standalone
-
-      - name: Remove included .env
+      - name: Remove temporary .env file from standalone folder
         run: rm .next/standalone/.env
 
-      - name: Include nginx.cert.conf.example file
-        run: cp nginx.cert.conf.example .next/standalone
+      - name: Package files into standalone folder
+        run: |
+          cp -r public .next/standalone
+          cp -r .next/static .next/standalone/.next/static
+          cp -r assets .next/standalone
+          cp -r scripts .next/standalone
+          mkdir .next/standalone/src
+          cp -r src/utils .next/standalone/src/utils
+          cp -r src/services .next/standalone/src/services
+          cp tsconfig.json .next/standalone
+          cp docker-compose.yml .next/standalone
+          cp .env.example .next/standalone
+          cp .env.indexer.example .next/standalone
+          cp nginx.conf.example .next/standalone
+          cp nginx.cert.conf.example .next/standalone
 
+      # convenient in order to run a single upload command
       - name: Create outputs folder
         run: mkdir outputs
 
@@ -108,8 +90,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
+      # sync but don't delete files, keeps old versions but updates files that have changed
       - name: Upload outputs to S3
         run: aws s3 sync ./outputs s3://cw-build-artifacts/community
 
+      # invalidate cloudfront cache
       - name: Invalidate Build Outputs CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id EKM5NR0TASZ5T --paths '/*'

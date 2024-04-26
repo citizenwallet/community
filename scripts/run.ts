@@ -1,4 +1,4 @@
-import os from "os";
+import readline from "readline";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { terminal as term } from "terminal-kit";
 import { execSync, spawn } from "child_process";
@@ -9,7 +9,12 @@ import {
   communityHashExists,
   readCommunityFile,
 } from "@/services/community";
-import { downloadIndexer, startIndexer } from "@/services/indexer";
+import {
+  downloadIndexer,
+  enablePush,
+  isPushEnabled,
+  startIndexer,
+} from "@/services/indexer";
 import { downloadApp } from "@/services/app";
 import { execPromise } from "@/utils/exec";
 import { generateBase64Key } from "@/utils/random";
@@ -124,18 +129,6 @@ async function main() {
     //   sessionBalanceTransferAddressInput
     // );
 
-    // ipfs_cdn_url
-    term("\nEnter the IPFS CDN URL: ");
-    const ipfsCdnUrlInput = (
-      (await term.inputField({}).promise) || "https://ipfs.io/ipfs/"
-    ).trim();
-    if (!ipfsCdnUrlInput) {
-      term.red("IPFS CDN URL is required.\n");
-      process.exit(1);
-    }
-
-    env = env.replace("<ipfs_cdn_url>", ipfsCdnUrlInput);
-
     // pinata_api_key
     term("\nEnter the Pinata API key: ");
     pinataApiKeyInput = ((await term.inputField({}).promise) || "").trim();
@@ -213,7 +206,11 @@ async function main() {
 
     const pk = ethers.Wallet.createRandom().privateKey.replace("0x", "");
 
-    writeFileSync(".community/config/pk", encrypt(pk, dbSecret));
+    const b64PK = btoa(pk);
+
+    const encryptedKey = encrypt(b64PK, dbSecret);
+
+    writeFileSync(".community/config/pk", encryptedKey);
 
     term("Created .env.indexer file.\n");
   }
@@ -310,8 +307,12 @@ async function main() {
     await term.yesOrNo({ yes: ["yes", "y"], no: ["no", "n"] }).promise;
 
     // pinata_api_key
-    term("\nWhat email would you like to associate with your domain: \n");
-    const emailInput = ((await term.inputField({}).promise) || "").trim();
+    term(
+      "\nWhat email would you like to associate with your domain (default: hello@citizenwallet.xyz): \n"
+    );
+    const emailInput = (
+      (await term.inputField({}).promise) || "hello@citizenwallet.xyz"
+    ).trim();
     if (!emailInput) {
       term.red("An email is required.\n");
       process.exit(1);
@@ -339,6 +340,52 @@ async function main() {
         "Make sure that your DNS is correct (it can sometimes take time for the settings to propogate).\n"
       );
       process.exit(1);
+    }
+  }
+
+  // push notifications
+  if (!isPushEnabled()) {
+    // firebase.json
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    let firebaseJsonInput = await new Promise<string>((resolve, _) => {
+      term(
+        "\nPaste your firebase service account json here (leave empty to ignore): "
+      );
+
+      const lines: string[] = [];
+
+      rl.on("line", (line) => {
+        lines.push(line);
+        if (line.trim() === "" || line.trim().endsWith("}")) {
+          // The user pressed Enter without typing anything,
+          resolve(lines.join("\n"));
+
+          // Move the cursor up by the number of input lines
+          for (let i = 0; i < lines.length; i++) {
+            process.stdout.moveCursor(0, -1);
+            // Clear the current line
+            process.stdout.clearLine(0);
+          }
+        }
+      });
+    });
+
+    if (!!firebaseJsonInput) {
+      try {
+        firebaseJsonInput = firebaseJsonInput.trim();
+
+        // check if valid json
+        const firebaseJson = JSON.parse(firebaseJsonInput);
+        if (firebaseJson.type !== "service_account") {
+          throw new Error("Invalid firebase.json");
+        }
+
+        enablePush(firebaseJsonInput);
+      } catch (_) {}
     }
   }
 
@@ -371,6 +418,7 @@ async function main() {
       process.exit(1);
     }
     downloadIndexer();
+
     startIndexer(community.node.chain_id);
     spinner.animate(false);
     cursor.eraseLine();

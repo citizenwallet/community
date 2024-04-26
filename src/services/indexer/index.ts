@@ -7,7 +7,7 @@ import { JsonRpcProvider } from "ethers";
 import { getSystemInfo } from "@/utils/system";
 
 export const completeIndexerEnv = (network: Network) => {
-  let env = readFileSync(".env.indexer.example", "utf8");
+  let env = readFileSync(".env.indexer", "utf8");
 
   env = env.replace("<chain_rpc_url>", network.rpcUrl);
   env = env.replace("<chain_ws_rpc_url>", network.wsRpcUrl);
@@ -48,22 +48,22 @@ export const startIndexer = (chainId: number) => {
 
   // how can we provide push access in a safe way?
   // TODO: global push service to send to?
-  // spawn(
-  //   `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -confpath ${process.cwd()}/.community/config -port 3001 -dbpath ${process.cwd()}/.community -fbpath ${process.cwd()}/.community/config/firebase.json -ws`,
-  //   {
-  //     detached: true,
-  //     shell: true,
-  //     stdio: "ignore",
-  //   }
-  // );
   spawn(
-    `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -confpath ${process.cwd()}/.community/config -port 3001 -dbpath ${process.cwd()}/.community -ws`,
+    `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -confpath ${process.cwd()}/.community/config -port 3001 -dbpath ${process.cwd()}/.community -fbpath ${process.cwd()}/.community/config/firebase.json -ws`,
     {
       detached: true,
       shell: true,
       stdio: "ignore",
     }
   );
+  // spawn(
+  //   `${process.cwd()}/.community/indexer/indexer -evm ${chainEVM} -env ${process.cwd()}/.env.indexer -confpath ${process.cwd()}/.community/config -port 3001 -dbpath ${process.cwd()}/.community -ws`,
+  //   {
+  //     detached: true,
+  //     shell: true,
+  //     stdio: "ignore",
+  //   }
+  // );
 };
 
 export const stopIndexer = () => {
@@ -199,4 +199,14 @@ export const prepareDB = async (
       [paymaster, encryptedPrivateKey, currentDate, currentDate]
     );
   });
+};
+
+export const isPushEnabled = () => {
+  const filePath = path.join(process.cwd(), ".community/config/firebase.json");
+  return existsSync(filePath);
+};
+
+export const enablePush = (firebaseConfig: string) => {
+  const filePath = path.join(process.cwd(), ".community/config/firebase.json");
+  return writeFileSync(filePath, firebaseConfig);
 };
