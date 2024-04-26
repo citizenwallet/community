@@ -112,7 +112,7 @@ We charge a small fee of $x / month. That's it. Cancel at any time.
 
 If you would like your community to be added to the Citizen Wallet native app's community list, submit a PR with your community.json here:
 
-`https://github.com/citizenwallet/app`
+https://github.com/citizenwallet/app
 
 Your community.json can be found at:
 
