@@ -14,13 +14,7 @@ export default async function Page() {
     console.error(e);
   }
   if (!pk) {
-    return (
-      <ErrorPage title="Missing configuration file">
-        Make sure you have a <code>.community/config/community.json</code> and
-        <code>.community/config/hash</code> configuration files or run{" "}
-        <code>npm run community</code> to generate one.
-      </ErrorPage>
-    );
+    return <ErrorPage title="Missing configuration file" />;
   }
 
   const dbSecret = process.env.DB_SECRET;
