@@ -2,43 +2,48 @@
 
 import HomeTemplate from "@/templates/Home";
 import { shortenAddress } from "@/utils/shortenAddress";
-import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { ArrowUpRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import QRCode from "react-qr-code";
-
+import { useRouter } from "next/navigation";
+import { Config, NETWORKS, Network, useSafeEffect } from "@citizenwallet/sdk";
+import { useSponsorBalance } from "@/services/api/sponsor";
 interface ContainerProps {
   hash: string;
   appBaseUrl: string;
   appDeepLink: string;
+  config: Config;
 }
 
 export default function Container({
   hash,
   appBaseUrl,
   appDeepLink,
+  config,
 }: ContainerProps) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const [copied, setCopied] = useState(false);
+  const [webWallet, setWebWallet] = useState<string>("");
+  const { data, isLoading } = useSponsorBalance();
+  const router = useRouter();
+
+  useSafeEffect(() => {
+    setWebWallet(window.location.origin ?? "");
+  }, []);
 
   const faucetDeepLink = `?dl=community&community=${hash}`;
 
   const qrLink = `${appBaseUrl}${faucetDeepLink}`;
 
-  console.log("qrLink", qrLink);
+  const network: Network = NETWORKS[config.node.chain_id];
 
-  const handleCopy = (address: string) => {
-    navigator.clipboard.writeText(address);
-    setCopied(true);
+  const handleOpenSponsorExplorer = (address: string) => {
+    const link = `${config.scan.url}/address/${address}`;
+    window.open(link);
+  };
 
-    timeoutRef.current = setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-
-    return () => {
-      clearTimeout(timeoutRef.current);
-    };
+  const gotoDashboard = () => {
+    router.push(`/admin`);
   };
 
   const handleOpenApp = () => {
@@ -46,11 +51,59 @@ export default function Container({
     window.open(link);
   };
 
+  const handleCreateWebWallet = () => {
+    window.open(webWallet, "_blank");
+  };
+
   return (
     <HomeTemplate
-      QRCode={
+      SponsorBalance={
+        data &&
+        !isLoading && (
+          <Flex direction="column" align="center" p="2" gap="4">
+            <Text>
+              Balance: {data.balance} {network.symbol}
+            </Text>
+            <Button
+              variant="outline"
+              onClick={() => handleOpenSponsorExplorer(data.address)}
+            >
+              {shortenAddress(data.address)}{" "}
+              <ArrowUpRight height={14} width={14} />
+            </Button>
+          </Flex>
+        )
+      }
+      DashboardButton={
+        <Button variant="outline" onClick={gotoDashboard}>
+          Go to your dashboard
+          <ArrowRightIcon height={14} width={14} />
+        </Button>
+      }
+      WebCreateQRCode={
         <Box className="p-4 border rounded-lg bg-white">
-          <Text>Import Community </Text>
+          <Text>Create a web wallet</Text>
+          <QRCode
+            size={256}
+            style={{
+              height: "auto",
+              maxWidth: "100%",
+              width: "100%",
+            }}
+            className="animate-fadeIn p-1"
+            value={webWallet}
+            viewBox={`0 0 256 256`}
+          />
+          <Flex justify="center" align="center" pt="2">
+            <Button variant="outline" onClick={handleCreateWebWallet}>
+              Create Web Wallet <ArrowUpRight height={14} width={14} />
+            </Button>
+          </Flex>{" "}
+        </Box>
+      }
+      ImportAppQRCode={
+        <Box className="p-4 border rounded-lg bg-white">
+          <Text>Import Community</Text>
           <QRCode
             size={256}
             style={{
@@ -62,23 +115,11 @@ export default function Container({
             value={qrLink}
             viewBox={`0 0 256 256`}
           />
-          <Flex justify="between" align="center" pt="2">
-            <Button
-              variant="outline"
-              color="gray"
-              onClick={() => handleCopy(qrLink)}
-            >
-              {shortenAddress(hash)}{" "}
-              {copied ? (
-                <CheckIcon height={14} width={14} />
-              ) : (
-                <CopyIcon height={14} width={14} />
-              )}
-            </Button>
+          <Flex justify="center" align="center" pt="2">
             <Button variant="outline" onClick={handleOpenApp}>
               Open App <ArrowUpRight height={14} width={14} />
             </Button>
-          </Flex>
+          </Flex>{" "}
         </Box>
       }
     />
