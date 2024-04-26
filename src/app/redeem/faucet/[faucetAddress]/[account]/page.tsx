@@ -1,5 +1,5 @@
 import RedeemFaucetToAccount from "@/containers/RedeemFaucetToAccount";
-import RedeemFaucetToAccountTemplate from "@/templates/RedeemFaucetToAccountTemplate";
+import RedeemFaucetToAccountTemplate from "@/templates/RedeemFaucetToAccount";
 import { Suspense } from "react";
 import { readCommunityFile } from "@/services/community";
 import { Config } from "@citizenwallet/sdk";
