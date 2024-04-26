@@ -17,22 +17,6 @@ interface ContainerProps {
   config: Config;
 }
 
-const nativeCurrency = {
-  "1": "ETH",
-  "4": "ETH",
-  "10": "ETH", // optimism
-  "5": "XDAI",
-  "42220": "CELO",
-  "44787": "CELO",
-  "8453": "ETH", // base
-  "84532": "ETH", // base
-  "100": "xDAI",
-  "80001": "MATIC",
-  "137": "MATIC",
-  "43113": "AVAX",
-  "43114": "AVAX",
-};
-
 export default function Container({
   hash,
   appBaseUrl,
