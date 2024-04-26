@@ -51,7 +51,7 @@ import { ColorChangeHandler, ColorResult, SketchPicker } from "react-color";
 
 interface ContainerProps {
   sponsor: string;
-  salt: number;
+  salt: bigint;
 }
 
 export default function Container({ sponsor, salt }: ContainerProps) {

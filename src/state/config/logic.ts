@@ -133,7 +133,7 @@ class ConfigLogic {
     factoryService: CommunityFactoryContractService,
     tokenAddress: string,
     checkoutService: SessionService,
-    salt: number
+    salt: bigint
   ): Promise<boolean> {
     try {
       this.store.getState().deployRequest(DeployStep.Config);
@@ -143,7 +143,7 @@ class ConfigLogic {
         owner,
         sponsor,
         tokenAddress,
-        salt
+        Number(salt)
       );
 
       await tx.wait();
@@ -153,7 +153,7 @@ class ConfigLogic {
         paymasterAddress,
         accountFactoryAddress,
         profileAddress,
-      ] = await factoryService.get(owner, sponsor, tokenAddress, salt);
+      ] = await factoryService.get(owner, sponsor, tokenAddress, Number(salt));
 
       const community = this.store.getState().community;
       if (!community) {

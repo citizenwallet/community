@@ -21,7 +21,7 @@ export default function Container({
 }: {
   network: Network;
   sponsor: string;
-  salt: number;
+  salt: bigint;
   token: string;
   loading: boolean;
   onValidityChange?: (valid: boolean) => void;
@@ -46,7 +46,7 @@ export default function Container({
         signer.address,
         sponsor,
         token,
-        salt
+        Number(salt)
       );
     });
   }, [actions, factoryActions, sponsor, salt, token]);
@@ -68,7 +68,7 @@ export default function Container({
           sessionOwner,
           sponsor,
           token,
-          salt
+          Number(salt)
         );
       });
     }
