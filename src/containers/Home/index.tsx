@@ -9,12 +9,13 @@ import { useState } from "react";
 import QRCode from "react-qr-code";
 import { useRouter } from "next/navigation";
 import { Config, NETWORKS, Network, useSafeEffect } from "@citizenwallet/sdk";
-import { useSponsorBalance } from "@/services/api/sponsor";
 interface ContainerProps {
   hash: string;
   appBaseUrl: string;
   appDeepLink: string;
   config: Config;
+  sponsorBalance: string;
+  sponsorAddress: string;
 }
 
 export default function Container({
@@ -22,9 +23,10 @@ export default function Container({
   appBaseUrl,
   appDeepLink,
   config,
+  sponsorBalance,
+  sponsorAddress,
 }: ContainerProps) {
   const [webWallet, setWebWallet] = useState<string>("");
-  const { data, isLoading } = useSponsorBalance();
   const router = useRouter();
 
   useSafeEffect(() => {
@@ -58,21 +60,18 @@ export default function Container({
   return (
     <HomeTemplate
       SponsorBalance={
-        data &&
-        !isLoading && (
-          <Flex direction="column" align="center" p="2" gap="4">
-            <Text>
-              Balance: {data.balance} {network.symbol}
-            </Text>
-            <Button
-              variant="outline"
-              onClick={() => handleOpenSponsorExplorer(data.address)}
-            >
-              {shortenAddress(data.address)}{" "}
-              <ArrowUpRight height={14} width={14} />
-            </Button>
-          </Flex>
-        )
+        <Flex direction="column" align="center" p="2" gap="4">
+          <Text>
+            Balance: {sponsorBalance} {network.symbol}
+          </Text>
+          <Button
+            variant="outline"
+            onClick={() => handleOpenSponsorExplorer(sponsorAddress)}
+          >
+            {shortenAddress(sponsorAddress)}{" "}
+            <ArrowUpRight height={14} width={14} />
+          </Button>
+        </Flex>
       }
       DashboardButton={
         <Button variant="outline" onClick={gotoDashboard}>

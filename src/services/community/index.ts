@@ -1,5 +1,6 @@
 import { Config } from "@citizenwallet/sdk";
 import { execSync } from "child_process";
+import { JsonRpcProvider, ethers } from "ethers";
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
@@ -64,3 +65,16 @@ export const readCommunityHash = (): string | undefined => {
 
   return readFileSync(filePath, "utf8");
 };
+
+export async function getSponsorAddress(
+  paymasterContractAddress: string,
+  provider: JsonRpcProvider
+) {
+  const abi = ["function sponsor() public view returns (address)"];
+
+  const contract = new ethers.Contract(paymasterContractAddress, abi, provider);
+
+  const sponsorAddress = await contract.sponsor();
+
+  return sponsorAddress;
+}
