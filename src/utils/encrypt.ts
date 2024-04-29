@@ -8,7 +8,12 @@ export const encrypt = (secretValue: string, key: string): string => {
   let ciphertext = cipher.update(plaintext);
   ciphertext = Buffer.concat([ciphertext, cipher.final()]);
   const ciphertextWithIv = Buffer.concat([iv, ciphertext]);
-  return ciphertextWithIv.toString("base64url");
+
+  let result = ciphertextWithIv.toString("base64url");
+  if (result.length !== 108) {
+    result += "=".repeat(108 - result.length);
+  }
+  return result;
 };
 
 export const decrypt = (encryptedValue: string, key: string): string => {
