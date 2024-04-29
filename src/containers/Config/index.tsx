@@ -37,7 +37,7 @@ import {
   TextField,
 } from "@radix-ui/themes";
 import CoinIcon from "@/assets/icons/coin.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CommunityFactoryContractService,
   NETWORKS,
@@ -48,14 +48,16 @@ import {
 } from "@citizenwallet/sdk";
 import { useRouter } from "next/navigation";
 import { ColorChangeHandler, ColorResult, SketchPicker } from "react-color";
+import { randomUint256 } from "@/utils/bigint";
 
 interface ContainerProps {
   sponsor: string;
-  salt: bigint;
 }
 
-export default function Container({ sponsor, salt }: ContainerProps) {
+export default function Container({ sponsor }: ContainerProps) {
   const router = useRouter();
+
+  const salt = useRef<bigint>(randomUint256()).current;
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");

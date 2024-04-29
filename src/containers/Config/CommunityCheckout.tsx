@@ -46,7 +46,7 @@ export default function Container({
         signer.address,
         sponsor,
         token,
-        Number(salt)
+        salt
       );
     });
   }, [actions, factoryActions, sponsor, salt, token]);
@@ -68,7 +68,7 @@ export default function Container({
           sessionOwner,
           sponsor,
           token,
-          Number(salt)
+          salt
         );
       });
     }

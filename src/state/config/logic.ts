@@ -143,7 +143,7 @@ class ConfigLogic {
         owner,
         sponsor,
         tokenAddress,
-        Number(salt)
+        salt
       );
 
       await tx.wait();
@@ -153,7 +153,7 @@ class ConfigLogic {
         paymasterAddress,
         accountFactoryAddress,
         profileAddress,
-      ] = await factoryService.get(owner, sponsor, tokenAddress, Number(salt));
+      ] = await factoryService.get(owner, sponsor, tokenAddress, salt);
 
       const community = this.store.getState().community;
       if (!community) {

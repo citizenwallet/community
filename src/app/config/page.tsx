@@ -3,7 +3,6 @@ import { readFileSync } from "fs";
 import ErrorPage from "@/templates/ErrorPage";
 import { decrypt } from "@/utils/encrypt";
 import { ethers } from "ethers";
-import { randomUint256 } from "@/utils/bigint";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +28,5 @@ export default async function Page() {
 
   const ethPk = new ethers.Wallet(parsedPk);
 
-  const salt: bigint = randomUint256();
-
-  return <Config sponsor={ethPk.address} salt={salt} />;
+  return <Config sponsor={ethPk.address} />;
 }
