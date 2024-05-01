@@ -473,7 +473,7 @@ async function main() {
   term.underline(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
-  term.nextLine(1);
+  term.nextLine(2);
   qrcode.generate(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
