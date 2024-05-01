@@ -470,11 +470,11 @@ async function main() {
   term.nextLine(2);
   term.bold("Community URL\n");
   term.nextLine(2);
-  qrcode.generate(
+  term.underline(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
   term.nextLine(1);
-  term.underline(
+  qrcode.generate(
     `https://${process.env.NGINX_HOST}${process.env.NEXT_PUBLIC_BASE_PATH}`
   );
   term.nextLine(2);
