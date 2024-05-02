@@ -33,27 +33,20 @@ export default function Container({
   appBaseUrl: string;
   appDeepLink: string;
 }) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const [copied, setCopied] = useState(false);
+  const [webWallet, setWebWallet] = useState<string>("");
+
+  useSafeEffect(() => {
+    setWebWallet(window.location.origin ?? "");
+  }, []);
 
   const redeemTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const [redeemCopied, setRedeemCopied] = useState(false);
 
   useSafeEffect(() => {
     return () => {
-      clearTimeout(timeoutRef.current);
       clearTimeout(redeemTimeoutRef.current);
     };
   }, []);
-
-  const handleCopy = (address: string) => {
-    navigator.clipboard.writeText(address);
-    setCopied(true);
-
-    timeoutRef.current = setTimeout(() => {
-      setCopied(false);
-    }, 2000);
-  };
 
   const handleCopyRedeemLink = () => {
     const protocol = window.location.protocol;
@@ -104,6 +97,11 @@ export default function Container({
   const faucetDeepLink = `?dl=faucet-v1&faucet-v1=${deepLinkParams}`;
 
   const qrLink = `${appBaseUrl}${faucetDeepLink}`;
+
+  const handleOpenWeb = () => {
+    const link = `${webWallet}/#/${faucetDeepLink}`;
+    window.open(link);
+  };
 
   const handleOpenApp = () => {
     const link = `${appDeepLink}/#/${faucetDeepLink}`;
@@ -157,20 +155,11 @@ export default function Container({
                 viewBox={`0 0 256 256`}
               />
               <Flex justify="between" align="center" pt="2">
-                <Button
-                  variant="outline"
-                  color="gray"
-                  onClick={() => handleCopy(faucetAddress)}
-                >
-                  {shortenAddress(faucetAddress)}{" "}
-                  {copied ? (
-                    <CheckIcon height={14} width={14} />
-                  ) : (
-                    <CopyIcon height={14} width={14} />
-                  )}
+                <Button variant="outline" onClick={handleOpenWeb}>
+                  Web Wallet <ArrowUpRight height={14} width={14} />
                 </Button>
                 <Button variant="outline" onClick={handleOpenApp}>
-                  Open App <ArrowUpRight height={14} width={14} />
+                  Mobile App <ArrowUpRight height={14} width={14} />
                 </Button>
               </Flex>
             </Box>
