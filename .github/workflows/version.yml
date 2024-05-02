@@ -51,7 +51,7 @@ jobs:
 
       - name: Modify Version in code
         run: |
-          sed -i "s/Version = \".*\"/Version = \"${{ steps.bump-semver.outputs.new_version }}\"/g" src/constants/version.ts
+          sed -i "s/VERSION = \".*\"/VERSION = \"${{ steps.bump-semver.outputs.new_version }}\"/g" src/constants/version.ts
 
       - name: Compile
         run: npm run build
