@@ -20,6 +20,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { usePrevious } from "@/hooks/usePrevious";
+import { VERSION } from "@/constants/version";
 
 interface SidebarProps {
   title: string;
@@ -85,6 +86,9 @@ export default function Sidebar({ title }: SidebarProps) {
             Citizen Wallet
             <ExternalLinkIcon className="ml-2" />
           </Button>
+          <Text size="1" align="center">
+            Dashboard: v{VERSION}
+          </Text>
         </Flex>
       </Flex>
     );
@@ -126,6 +130,9 @@ export default function Sidebar({ title }: SidebarProps) {
                 Citizen Wallet
                 <ExternalLinkIcon className="ml-1" />
               </Button>
+              <Text size="1" align="center">
+                Dashboard: v{VERSION}
+              </Text>
             </Flex>
           </Flex>
         </Theme>

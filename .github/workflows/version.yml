@@ -49,6 +49,10 @@ jobs:
       - name: Make .env file
         run: cp .env.example .env
 
+      - name: Modify Version in code
+        run: |
+          sed -i "s/Version = \".*\"/Version = \"${{ steps.bump-semver.outputs.new_version }}\"/g" src/constants/version.ts
+
       - name: Compile
         run: npm run build
 
