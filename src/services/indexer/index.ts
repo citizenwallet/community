@@ -1,5 +1,4 @@
 import sqlite3 from "sqlite3";
-import { terminal as term } from "terminal-kit";
 import { Network } from "@citizenwallet/sdk";
 import { execSync, spawn } from "child_process";
 import { existsSync, readFileSync, writeFileSync } from "fs";
@@ -100,10 +99,10 @@ export const downloadIndexer = () => {
 
   const { systemOS, systemArch } = getSystemInfo();
 
-  term(
+  console.log(
     "${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion}"
   );
-  term(
+  console.log(
     `${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion}`
   );
 
