@@ -99,13 +99,6 @@ export const downloadIndexer = () => {
 
   const { systemOS, systemArch } = getSystemInfo();
 
-  console.log(
-    "${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion}"
-  );
-  console.log(
-    `${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion}`
-  );
-
   // download the indexer
   execSync(
     `curl -o ${process.cwd()}/.community/indexer/indexer -L ${buildOutputUrl}/indexer/indexer_${systemOS}_${systemArch}_${buildVersion} > /dev/null 2>&1`
