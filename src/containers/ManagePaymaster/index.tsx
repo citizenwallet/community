@@ -28,6 +28,11 @@ const ManagePaymaster = ({
     window.open(link);
   };
 
+  const generateQRCode = (config: Config, address: string) => {
+    const link = `${config.scan.url}/address/${address}`;
+    return link;
+  };
+
   return (
     <Flex direction="column" height="100%" width="100%">
       <Flex direction="column" align="center" p="2">
@@ -45,7 +50,7 @@ const ManagePaymaster = ({
                   width: "100%",
                 }}
                 className="animate-fadeIn p-0"
-                value=""
+                value={generateQRCode(config, address)}
                 viewBox={`0 0 256 256`}
               />
               <Flex className="mt-3">
