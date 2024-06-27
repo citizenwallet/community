@@ -28,7 +28,7 @@ const startSpinner = async () => {
     return term.spinner("dotSpinner");
   } else {
     // Code for non-interactive environment
-    console.log("Running in a non-interactive environment");
+    term("Running in a non-interactive environment");
   }
 
   return;
