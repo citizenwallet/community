@@ -23,6 +23,7 @@ export default async function Layout({
         <Sidebar
           title={config.community.name}
           newVersion={hasUpdate ? version : undefined}
+          oldVersion={VERSION}
         />
       )}
       <Flex direction="column">

@@ -28,14 +28,22 @@ import UpdateModal from "./UpdateModal";
 interface SidebarProps {
   title: string;
   newVersion?: string;
+  oldVersion?: string;
 }
 
-export default function Sidebar({ title, newVersion }: SidebarProps) {
+export default function Sidebar({
+  title,
+  newVersion,
+  oldVersion,
+}: SidebarProps) {
   let tabs: Tab[] = [
     { href: `/admin/`, item: "", label: "Home" },
     { href: `/admin/faucet`, item: "faucet", label: "Faucet" },
     { href: `/admin/paymaster`, item: "paymaster", label: "Paymaster" },
   ];
+
+  console.log("newVersion", newVersion);
+  console.log("oldVersion", oldVersion);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const pathname = usePathname();
