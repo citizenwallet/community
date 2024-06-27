@@ -13,7 +13,7 @@ export default async function Layout({
 
   const version = await getDashboardVersion();
 
-  const hasUpdate = compareSemver(VERSION, version) === -1;
+  const hasUpdate = compareSemver(VERSION, version) > 0;
 
   return (
     <Flex className="min-h-screen bg-background font-sans antialiased">
