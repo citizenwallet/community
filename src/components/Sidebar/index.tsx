@@ -30,6 +30,7 @@ export default function Sidebar({ title }: SidebarProps) {
   let tabs: Tab[] = [
     { href: `/admin/`, item: "", label: "Home" },
     { href: `/admin/faucet`, item: "faucet", label: "Faucet" },
+    { href: `/admin/paymaster`, item: "paymaster", label: "Paymaster" },
   ];
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
