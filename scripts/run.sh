@@ -151,7 +151,7 @@ else
     # there is no entry, add it
     echo "⏳ Startup script: installing..."
 
-    (crontab -l 2>/dev/null; echo "@reboot $script_path > $HOME/boot_logs.log 2>&1") | crontab -
+    (crontab -l 2>/dev/null; echo "@reboot rm $HOME/boot_logs.log && $script_path > $HOME/boot_logs.log 2>&1") | crontab -
    
     echo "✅ Startup script: installed"
 fi
