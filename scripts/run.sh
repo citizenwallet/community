@@ -119,6 +119,8 @@ if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
 else
     echo "⏳ Community: installing..."
 
+    rm -rf community/node_modules > /dev/null 2>&1
+
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
@@ -126,8 +128,6 @@ else
     script_path="$HOME/community/scripts/boot.sh"
 
     chmod +x $script_path
-
-    rm -rf community/node_modules
 
     echo "✅ Community: installed"
 fi
