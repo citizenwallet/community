@@ -78,3 +78,23 @@ export async function getSponsorAddress(
 
   return sponsorAddress;
 }
+
+export const getDashboardVersion = async (): Promise<string> => {
+  try {
+    const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
+    const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
+
+    const timestamp = (new Date().getTime() / 1000 / 60).toFixed(0);
+    const url = `${buildOutputUrl}/community/${buildVersionFileName}?cache_buster=${timestamp}`;
+
+    const response = await fetch(url);
+
+    const version = await response.text();
+
+    console.log("version", version);
+
+    return version;
+  } catch (error) {}
+
+  return "0.0.0";
+};

@@ -15,7 +15,7 @@ import {
   isPushEnabled,
   startIndexer,
 } from "@/services/indexer";
-import { downloadApp } from "@/services/app";
+import { downloadApp, startApp } from "@/services/app";
 import { execPromise } from "@/utils/exec";
 import { generateBase64Key } from "@/utils/random";
 import { getSystemInfo } from "@/utils/system";
@@ -91,7 +91,7 @@ async function main() {
 
   // TODO: check if .env files exist
   if (!existsSync(".env")) {
-    term("Creating .env file...\n");
+    term("⏳ Creating .env file...\n");
 
     // Read the file
     let env = readFileSync(".env.example", "utf8");
@@ -161,13 +161,13 @@ async function main() {
     // write the file
     writeFileSync(filePath, env);
 
-    term("Created .env file.\n");
+    term("✅ Created .env file.\n");
   }
 
   if (!existsSync(".env.indexer")) {
     // Read the file
     let env = readFileSync(".env.indexer.example", "utf8");
-    term("Creating .env.indexer file...\n");
+    term("⏳ Creating .env.indexer file...\n");
 
     // pinata_api_key
     if (!pinataApiKeyInput) {
@@ -212,13 +212,13 @@ async function main() {
 
     writeFileSync(".community/config/pk", encryptedKey);
 
-    term("Created .env.indexer file.\n");
+    term("✅ Created .env.indexer file.\n");
   }
 
   if (!existsSync(".community/nginx_cert/conf/nginx.conf")) {
     config();
 
-    term("Creating cert nginx.conf file...\n");
+    term("⏳ Creating cert nginx.conf file...\n");
 
     // Read the file
     let nginxConf = readFileSync("./nginx.cert.conf.example", "utf8");
@@ -240,13 +240,13 @@ async function main() {
     // write the file
     writeFileSync(filePath, nginxConf);
 
-    term("Created cert nginx.conf file.\n");
+    term("✅ Created cert nginx.conf file.\n");
   }
 
   if (!existsSync(".community/nginx/conf/nginx.conf")) {
     config();
 
-    term("Creating nginx.conf file...\n");
+    term("⏳ Creating nginx.conf file...\n");
 
     // Read the file
     let nginxConf = readFileSync("./nginx.conf.example", "utf8");
@@ -281,7 +281,7 @@ async function main() {
     // write the file
     writeFileSync(filePath, nginxConf);
 
-    term("Created nginx.conf file.\n");
+    term("✅ Created nginx.conf file.\n");
   }
 
   if (!existsSync(".community/certbot/conf/live")) {
@@ -293,7 +293,7 @@ async function main() {
       process.exit(1);
     }
 
-    term(`Generating an SSL certificate for ${nginxHost}...\n`);
+    term(`⏳ Generating an SSL certificate for ${nginxHost}...\n`);
 
     // user needs to add a DNS entry
     const publicIp = await import("public-ip");
@@ -320,7 +320,7 @@ async function main() {
 
     term.nextLine(2);
     const cursor = term.saveCursor();
-    cursor("Certificate Generation: starting...");
+    cursor("⏳ Certificate Generation: starting...");
     let spinner = await term.spinner("dotSpinner");
     // generate SSL certs
     execSync(
@@ -331,7 +331,7 @@ async function main() {
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
-    cursor("Certificate Generation: success ✅\n");
+    cursor("✅ Certificate Generation: success\n");
 
     if (!existsSync(".community/certbot/conf/live")) {
       term.red("There was an error generating a certificate.\n");
@@ -395,13 +395,13 @@ async function main() {
   // start nginx
   term.nextLine(2);
   let cursor = term.saveCursor();
-  cursor("Server: starting...");
+  cursor("⏳ Server: starting...");
   let spinner = await term.spinner("dotSpinner");
   await execPromise("docker compose up server --build -d");
   spinner.animate(false);
   cursor.eraseLine();
   cursor.column(1);
-  cursor("Server: started ✅\n");
+  cursor("✅ Server: started\n");
 
   const communityExists = communityFileExists();
   const hashExists = communityHashExists();
@@ -410,7 +410,7 @@ async function main() {
 
     // start indexer
     cursor = term.saveCursor();
-    cursor("Indexer: starting...");
+    cursor("⏳ Indexer: starting...");
     spinner = await term.spinner("dotSpinner");
     const community = readCommunityFile();
     if (!community) {
@@ -423,26 +423,27 @@ async function main() {
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
-    cursor("Indexer: started ✅\n");
+    cursor("✅ Indexer: started\n");
 
     // app
     cursor = term.saveCursor();
-    cursor("App: compiling...");
+    cursor("⏳ App: compiling...");
     spinner = await term.spinner("dotSpinner");
 
     downloadApp();
 
+    startApp();
     spinner.animate(false);
     cursor.eraseLine();
     cursor.column(1);
-    cursor("App: compiled ✅\n");
+    cursor("✅ App: started\n");
   } else {
     // first time start
   }
 
   // start community
   cursor = term.saveCursor();
-  cursor("Community: starting...");
+  cursor("⏳ Community: starting...");
   spinner = await term.spinner("dotSpinner");
 
   try {
@@ -453,7 +454,7 @@ async function main() {
     }
   } catch (_) {}
 
-  spawn("node server.js", {
+  spawn("PORT=3000 node server.js", {
     detached: true,
     shell: true,
     stdio: "ignore",
@@ -461,7 +462,7 @@ async function main() {
   spinner.animate(false);
   cursor.eraseLine();
   cursor.column(1);
-  cursor("Community: started ✅\n");
+  cursor("✅ Community: started\n");
 
   // parse .env
   config();

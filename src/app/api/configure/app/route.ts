@@ -1,11 +1,16 @@
 // app/api/configure/indexer
 import { appFolderExists, createAppFolder } from "@/services/community";
-import { downloadApp, isAppCompiled } from "@/services/app";
+import {
+  downloadApp,
+  isAppCompiled,
+  isAppRunning,
+  startApp,
+} from "@/services/app";
 
 export async function POST(req: Request) {
   try {
-    const appIsCompiled = await isAppCompiled();
-    if (appIsCompiled) {
+    const appIsRunning = isAppRunning();
+    if (appIsRunning) {
       return Response.json({ message: "Already running" }, { status: 400 });
     }
 
@@ -14,6 +19,8 @@ export async function POST(req: Request) {
     }
 
     downloadApp();
+
+    startApp();
 
     return Response.json({}, { status: 200 });
   } catch (error: any) {

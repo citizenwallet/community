@@ -20,19 +20,19 @@ spinner() {
 
 # check for curl, install if needed
 if command -v curl >/dev/null 2>&1; then
-    echo "Checking for curl: ✅"
+    echo "✅ curl: installed"
 else
-    echo "Checking for curl: ..."
+    echo "⏳ curl: installing..."
     sudo apt update > /dev/null 2>&1 & spinner
     sudo apt install curl -y > /dev/null 2>&1 & spinner
-    echo "curl installed"
+    echo "✅ curl: installed"
 fi
 
 # check for node, install if needed
 if command -v node >/dev/null 2>&1; then
-    echo "Checking for Node.js: ✅"
+    echo "✅ Node.js: installed"
 else
-    echo "Checking for Node.js: ..."
+    echo "⏳ Node.js: installing..."
 
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash > /dev/null 2>&1 & spinner
 
@@ -44,24 +44,24 @@ else
 
     nvm install 21 > /dev/null 2>&1
 
-    echo "Node installed"
+    echo "✅ Node.js: installed"
 fi
 
 # check for git, install if needed
 if command -v git >/dev/null 2>&1; then
-    echo "Checking for git: ✅"
+    echo "✅ git: installed"
 else
-    echo "Checking for git: ..."
+    echo "⏳ git: installing..."
     sudo apt update > /dev/null 2>&1 & spinner
     sudo apt install git -y > /dev/null 2>&1 & spinner
-    echo "git installed"
+    echo "✅ git: installed"
 fi
 
 # check for docker, install if needed
 if command -v docker >/dev/null 2>&1; then
-    echo "Checking for docker: ✅"
+    echo "✅ docker: installed"
 else
-    echo "Checking for docker: ..."
+    echo "⏳ docker: installing..."
     # Add Docker's official GPG key:
     sudo apt-get update > /dev/null 2>&1 & spinner
     sudo apt-get install ca-certificates -y > /dev/null 2>&1 & spinner
@@ -78,7 +78,7 @@ else
 
     sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y > /dev/null 2>&1 & spinner
 
-    echo "docker installed"
+    echo "✅ docker: installed"
 fi
 
 # Check if the docker group exists, and if it doesn't, create it
@@ -115,15 +115,15 @@ NEW_VERSION=$(cat community_version)
 
 # check for community repo, clone if not exists
 if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
-    echo "Community: ✅"
+    echo "✅ Community: installed"
 else
-    echo "Community: ..."
+    echo "⏳ Community: installing..."
 
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
-    echo "Community: ✅"
+    echo "✅ Community: installed"
 fi
 
 # change directory to community
@@ -138,6 +138,6 @@ npm i > /dev/null 2>&1 & spinner
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
 # trigger run script
-echo "Launching community..."
+echo "⏳ Launching community..."
 
 npm run community

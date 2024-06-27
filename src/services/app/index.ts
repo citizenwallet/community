@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execSync, spawn } from "child_process";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 
@@ -10,29 +10,65 @@ export const downloadApp = () => {
   const buildVersionFileName = process.env.BUILD_VERSION_FILE_NAME;
   const buildOutputUrl = process.env.BUILD_OUTPUT_URL;
   execSync(
-    `curl -H 'Cache-Control: no-cache' -o ${process.cwd()}/.community/${buildVersionFileName}-web -L ${buildOutputUrl}/web/${buildVersionFileName}?cache_buster=$(date +%s) > /dev/null 2>&1`
+    `curl -H 'Cache-Control: no-cache' -o ${process.cwd()}/.community/${buildVersionFileName}-webapp -L ${buildOutputUrl}/webapp/${buildVersionFileName}?cache_buster=$(date +%s) > /dev/null 2>&1`
   );
 
   const buildVersion = readFileSync(
-    `${process.cwd()}/.community/${buildVersionFileName}-web`,
+    `${process.cwd()}/.community/${buildVersionFileName}-webapp`,
     "utf8"
   ).replace(/\r?\n|\r/g, "");
 
   // download the app
   execSync(
-    `curl -o ${process.cwd()}/.community/app.tar.gz -L ${buildOutputUrl}/web/cw_web_${buildVersion}.tar.gz > /dev/null 2>&1`
+    `curl -o ${process.cwd()}/.community/webapp.tar.gz -L ${buildOutputUrl}/webapp/webapp_${buildVersion}.tar.gz > /dev/null 2>&1`
   );
 
   // extract the app
   execSync(
-    `tar -xvf ${process.cwd()}/.community/app.tar.gz -C .community/web > /dev/null 2>&1`
+    `tar -xvf ${process.cwd()}/.community/webapp.tar.gz -C .community/web > /dev/null 2>&1`
   );
 
   // remove the tar
-  execSync(`rm -rf ${process.cwd()}/.community/app.tar.gz > /dev/null 2>&1`);
+  execSync(`rm -rf ${process.cwd()}/.community/webapp.tar.gz > /dev/null 2>&1`);
+};
+
+export const appProcessId = (): string | undefined => {
+  try {
+    const command = "sudo lsof -i :3002 -t";
+    const pid = execSync(command).toString().trim();
+
+    return pid;
+  } catch (error) {
+    return undefined;
+  }
+};
+
+export const stopApp = () => {
+  const pid = appProcessId();
+  if (!pid) {
+    return;
+  }
+
+  execSync(`kill ${pid}`);
+};
+
+export const startApp = () => {
+  stopApp();
+
+  spawn("PORT=3002 node server.js", {
+    detached: true,
+    shell: true,
+    stdio: "ignore",
+  });
 };
 
 export const isAppCompiled = async () => {
-  const filePath = path.join(process.cwd(), ".community/web/index.html");
+  const filePath = path.join(process.cwd(), ".community/web/server.js");
   return existsSync(filePath);
+};
+
+export const isAppRunning = () => {
+  const pid = appProcessId();
+
+  return !!pid;
 };
