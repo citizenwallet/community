@@ -137,6 +137,20 @@ npm i > /dev/null 2>&1 & spinner
 # ensure that the proper os/arch of sqlite3 is installed
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
+# (crontab -l 2>/dev/null; echo "@reboot $script_path") | crontab -
+if crontab -l | grep -q "@reboot $script_path"; then
+    # theere is an entry, do nothing
+else
+    # there is no entry, add it
+    echo "Configuring startup script..."
+
+    script_path="$HOME/community/scripts/boot.sh"
+
+    chmod +x $script_path
+
+    (crontab -l 2>/dev/null; echo "@reboot $script_path") | crontab -
+fi
+
 # trigger run script
 echo "⏳ Launching community..."
 

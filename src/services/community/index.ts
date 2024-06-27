@@ -98,8 +98,8 @@ export const getDashboardVersion = async (): Promise<string> => {
 };
 
 export const updateCommunityServer = async () => {
-  const command =
-    'cd ~/ && bash -c "$(curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh)"';
+  // reboot machine
+  const command = "sudo reboot";
 
   execSync(command, { stdio: "inherit" });
 };
