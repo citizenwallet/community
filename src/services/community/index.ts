@@ -91,8 +91,6 @@ export const getDashboardVersion = async (): Promise<string> => {
 
     const version = await response.text();
 
-    console.log("version", version);
-
     return version;
   } catch (error) {}
 
