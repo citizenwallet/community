@@ -149,7 +149,7 @@ else
 
     chmod +x $script_path
 
-    (crontab -l 2>/dev/null; echo "@reboot $script_path") | crontab -
+    (crontab -l 2>/dev/null; echo "@reboot $script_path > $HOME/boot_logs.log 2>&1") | crontab -
    
     echo "✅ Startup script: installed"
 fi

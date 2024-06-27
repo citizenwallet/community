@@ -22,6 +22,18 @@ import { getSystemInfo } from "@/utils/system";
 import { encrypt } from "@/utils/encrypt";
 import { ethers } from "ethers";
 
+const startSpinner = async () => {
+  if (process.stdout.isTTY) {
+    // Code for interactive terminal
+    return term.spinner("dotSpinner");
+  } else {
+    // Code for non-interactive environment
+    console.log("Running in a non-interactive environment");
+  }
+
+  return;
+};
+
 function terminate() {
   term.grabInput(false);
   setTimeout(function () {
@@ -323,14 +335,14 @@ async function main() {
     term.nextLine(2);
     const cursor = term.saveCursor();
     cursor("⏳ Certificate Generation: starting...");
-    let spinner = await term.spinner("dotSpinner");
+    let spinner = await startSpinner();
     // generate SSL certs
     execSync(
       `docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d ${nginxHost} --agree-tos --no-eff-email --email ${emailInput}
     `,
       { stdio: "ignore" }
     );
-    spinner.animate(false);
+    spinner?.animate(false);
     cursor.eraseLine();
     cursor.column(1);
     cursor("✅ Certificate Generation: success\n");
@@ -398,9 +410,9 @@ async function main() {
   term.nextLine(2);
   let cursor = term.saveCursor();
   cursor("⏳ Server: starting...");
-  let spinner = await term.spinner("dotSpinner");
+  let spinner = await startSpinner();
   await execPromise("docker compose up server --build -d");
-  spinner.animate(false);
+  spinner?.animate(false);
   cursor.eraseLine();
   cursor.column(1);
   cursor("✅ Server: started\n");
@@ -413,7 +425,7 @@ async function main() {
     // start indexer
     cursor = term.saveCursor();
     cursor("⏳ Indexer: starting...");
-    spinner = await term.spinner("dotSpinner");
+    spinner = await startSpinner();
     const community = readCommunityFile();
     if (!community) {
       term.red("Community not configured.\n");
@@ -422,7 +434,7 @@ async function main() {
     downloadIndexer();
 
     startIndexer(community.node.chain_id);
-    spinner.animate(false);
+    spinner?.animate(false);
     cursor.eraseLine();
     cursor.column(1);
     cursor("✅ Indexer: started\n");
@@ -430,12 +442,12 @@ async function main() {
     // app
     cursor = term.saveCursor();
     cursor("⏳ App: compiling...");
-    spinner = await term.spinner("dotSpinner");
+    spinner = await startSpinner();
 
     downloadApp();
 
     startApp();
-    spinner.animate(false);
+    spinner?.animate(false);
     cursor.eraseLine();
     cursor.column(1);
     cursor("✅ App: started\n");
@@ -446,7 +458,7 @@ async function main() {
   // start community
   cursor = term.saveCursor();
   cursor("⏳ Community: starting...");
-  spinner = await term.spinner("dotSpinner");
+  spinner = await startSpinner();
 
   try {
     const command = "sudo lsof -i :3000 -t";
@@ -461,7 +473,7 @@ async function main() {
     shell: true,
     stdio: "ignore",
   });
-  spinner.animate(false);
+  spinner?.animate(false);
   cursor.eraseLine();
   cursor.column(1);
   cursor("✅ Community: started\n");
