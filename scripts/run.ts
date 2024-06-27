@@ -243,46 +243,48 @@ async function main() {
     term("✅ Created cert nginx.conf file.\n");
   }
 
-  if (!existsSync(".community/nginx/conf/nginx.conf")) {
-    config();
+  config();
 
-    term("⏳ Creating nginx.conf file...\n");
+  term("⏳ Creating nginx.conf file...\n");
 
-    // Read the file
-    let nginxConf = readFileSync("./nginx.conf.example", "utf8");
+  // Read the file
+  let nginxConf = readFileSync("./nginx.conf.example", "utf8");
 
-    // replace the placeholders with values
-    // host_name
-    const nginxHost = process.env.NGINX_HOST;
-    if (!nginxHost) {
-      term.red("Host name is required.\n");
-      process.exit(1);
-    }
-
-    nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
-
-    // docker_host_ip
-    const dockerHostIp = execSync(
-      "ip -4 addr show docker0 | grep -Po 'inet \\K[\\d.]+'"
-    )
-      .toString()
-      .trim();
-    if (!dockerHostIp) {
-      term.red("Docker host IP is required.\n");
-      process.exit(1);
-    }
-
-    nginxConf = nginxConf.replaceAll("<docker_host_ip>", dockerHostIp);
-
-    // write nginx.conf
-    const filePath = process.cwd() + "/.community/nginx/conf/nginx.conf";
-    term("\nWriting nginx.conf file...\n");
-
-    // write the file
-    writeFileSync(filePath, nginxConf);
-
-    term("✅ Created nginx.conf file.\n");
+  // replace the placeholders with values
+  // host_name
+  const nginxHost = process.env.NGINX_HOST;
+  if (!nginxHost) {
+    term.red("Host name is required.\n");
+    process.exit(1);
   }
+
+  nginxConf = nginxConf.replaceAll("<host_name>", nginxHost);
+
+  // docker_host_ip
+  const dockerHostIp = execSync(
+    "ip -4 addr show docker0 | grep -Po 'inet \\K[\\d.]+'"
+  )
+    .toString()
+    .trim();
+  if (!dockerHostIp) {
+    term.red("Docker host IP is required.\n");
+    process.exit(1);
+  }
+
+  nginxConf = nginxConf.replaceAll("<docker_host_ip>", dockerHostIp);
+
+  // write nginx.conf
+  const filePath = process.cwd() + "/.community/nginx/conf/nginx.conf";
+  term("\nWriting nginx.conf file...\n");
+
+  if (existsSync(".community/nginx/conf/nginx.conf")) {
+    execSync("rm .community/nginx/conf/nginx.conf");
+  }
+
+  // write the file
+  writeFileSync(filePath, nginxConf);
+
+  term("✅ Created nginx.conf file.\n");
 
   if (!existsSync(".community/certbot/conf/live")) {
     config();
