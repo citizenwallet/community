@@ -123,6 +123,10 @@ else
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
+    script_path="$HOME/community/scripts/boot.sh"
+
+    chmod +x $script_path
+
     echo "✅ Community: installed"
 fi
 
@@ -144,10 +148,6 @@ if crontab -l | grep -q "@reboot $script_path"; then
 else
     # there is no entry, add it
     echo "⏳ Startup script: installing..."
-
-    script_path="$HOME/community/scripts/boot.sh"
-
-    chmod +x $script_path
 
     (crontab -l 2>/dev/null; echo "@reboot $script_path > $HOME/boot_logs.log 2>&1") | crontab -
    
