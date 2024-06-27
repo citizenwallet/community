@@ -136,6 +136,8 @@ cd community
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
 
+npm cache clean --force
+
 npm i > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
