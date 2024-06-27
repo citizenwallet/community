@@ -127,6 +127,8 @@ else
 
     chmod +x $script_path
 
+    rm -rf community/node_modules
+
     echo "✅ Community: installed"
 fi
 
@@ -135,8 +137,6 @@ cd community
 
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
-
-rm -rf node_modules
 
 npm i > /dev/null 2>&1 & spinner
 
