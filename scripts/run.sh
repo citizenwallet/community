@@ -136,7 +136,7 @@ cd community
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
 
-npm cache clean --force
+rm -rf node_modules
 
 npm i > /dev/null 2>&1 & spinner
 
