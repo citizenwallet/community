@@ -4,6 +4,8 @@ import { getDashboardVersion, readCommunityFile } from "@/services/community";
 import { compareSemver } from "@/utils/semver";
 import { Flex, Separator } from "@radix-ui/themes";
 
+export const dynamic = "force-dynamic";
+
 export default async function Layout({
   children,
 }: {
@@ -13,7 +15,7 @@ export default async function Layout({
 
   const version = await getDashboardVersion();
 
-  const hasUpdate = compareSemver(VERSION, version) > 0;
+  const hasUpdate = compareSemver(version, VERSION) > 0;
 
   return (
     <Flex className="min-h-screen bg-background font-sans antialiased">
