@@ -29,7 +29,7 @@ server {
             rewrite ^ /dashboard/config redirect;
         }
 
-        set $upstream http://<docker_host_ip>:3002/;
+        set $upstream http://<docker_host_ip>:3002;
         proxy_pass $upstream;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
