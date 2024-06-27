@@ -55,7 +55,7 @@ export const stopApp = () => {
 export const startApp = () => {
   stopApp();
 
-  spawn("PORT=3002 node server.js", {
+  spawn("PORT=3002 node .community/web/server.js", {
     detached: true,
     shell: true,
     stdio: "ignore",
