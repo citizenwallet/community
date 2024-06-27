@@ -144,7 +144,7 @@ npm i > /dev/null 2>&1 & spinner
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
 # (crontab -l 2>/dev/null; echo "@reboot $script_path") | crontab -
-if crontab -l | grep -q "@reboot $script_path"; then
+if crontab -l | grep -q "@reboot rm $HOME/boot_logs.log && $script_path"; then
     # theere is an entry, do nothing
     echo "✅ Startup script: installed"
 else
