@@ -21,12 +21,16 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { usePrevious } from "@/hooks/usePrevious";
 import { VERSION } from "@/constants/version";
+import { useServer } from "@/state/server/actions";
+import ConfirmModal from "../../components/ConfirmModal";
+import UpdateModal from "./UpdateModal";
 
 interface SidebarProps {
   title: string;
+  newVersion?: string;
 }
 
-export default function Sidebar({ title }: SidebarProps) {
+export default function Sidebar({ title, newVersion }: SidebarProps) {
   let tabs: Tab[] = [
     { href: `/admin/`, item: "", label: "Home" },
     { href: `/admin/faucet`, item: "faucet", label: "Faucet" },
@@ -41,6 +45,8 @@ export default function Sidebar({ title }: SidebarProps) {
   const handleOpenChange = (open: boolean) => {
     setOpen(open);
   };
+
+  const [state, actions] = useServer();
 
   const previousPathname = usePrevious(pathname);
 
@@ -60,6 +66,12 @@ export default function Sidebar({ title }: SidebarProps) {
   const handleCitizenWallet = () => {
     window.open("https://citizenwallet.xyz", "https://citizenwallet.xyz");
   };
+
+  const handleUpdate = async () => {
+    actions.update();
+  };
+
+  const updating = state((s) => s.updating);
 
   if (isDesktop === undefined) {
     return null;
@@ -87,9 +99,26 @@ export default function Sidebar({ title }: SidebarProps) {
             Citizen Wallet
             <ExternalLinkIcon className="ml-2" />
           </Button>
-          <Text size="1" align="center">
-            Dashboard: v{VERSION}
-          </Text>
+          {updating && <UpdateModal />}
+          {newVersion && (
+            <ConfirmModal
+              title="Update Server"
+              description="This will download and install the latest version of web wallet, indexer and dashboard. This process can take a few seconds. After the update is complete, this page will need to be refreshed."
+              confirmText="Update"
+              onConfirm={handleUpdate}
+            >
+              <Button disabled={updating}>
+                Update available v{newVersion}
+              </Button>
+            </ConfirmModal>
+          )}
+          {!newVersion && (
+            <Flex justify="center" align="center" className="h-10">
+              <Text size="1" align="center">
+                Dashboard: v{VERSION}
+              </Text>
+            </Flex>
+          )}
         </Flex>
       </Flex>
     );
@@ -131,9 +160,26 @@ export default function Sidebar({ title }: SidebarProps) {
                 Citizen Wallet
                 <ExternalLinkIcon className="ml-1" />
               </Button>
-              <Text size="1" align="center">
-                Dashboard: v{VERSION}
-              </Text>
+              {updating && <UpdateModal />}
+              {newVersion && (
+                <ConfirmModal
+                  title="Update Server"
+                  description="This will download and install the latest version of web wallet, indexer and dashboard. This process can take a few seconds. After the update is complete, this page will need to be refreshed."
+                  confirmText="Update"
+                  onConfirm={handleUpdate}
+                >
+                  <Button disabled={updating}>
+                    Update available v{newVersion}
+                  </Button>
+                </ConfirmModal>
+              )}
+              {!newVersion && (
+                <Flex justify="center" align="center" className="h-10">
+                  <Text size="1" align="center">
+                    Dashboard: v{VERSION}
+                  </Text>
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </Theme>

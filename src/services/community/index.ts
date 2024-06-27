@@ -98,3 +98,10 @@ export const getDashboardVersion = async (): Promise<string> => {
 
   return "0.0.0";
 };
+
+export const updateCommunityServer = async () => {
+  const command =
+    'cd ~/ && bash -c "$(curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh)"';
+
+  execSync(command, { stdio: "inherit" });
+};
