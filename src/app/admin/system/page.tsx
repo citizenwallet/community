@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 
 export default async function Page() {
   const items: StatusItem[] = [
-    { label: "Dashboard", ok: true },
-    { label: "Indexer", ok: isIndexerRunning() },
-    { label: "Bundler", ok: isIndexerRunning() },
-    { label: "Wallet", ok: isAppRunning() },
+    { id: "dashboard", label: "Dashboard", ok: true },
+    { id: "indexer", label: "Indexer", ok: isIndexerRunning() },
+    { id: "bundler", label: "Bundler", ok: isIndexerRunning() },
+    { id: "wallet", label: "Wallet", ok: isAppRunning() },
   ];
 
   return (
