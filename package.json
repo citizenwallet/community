@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "community": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run.ts",
+    "community": "npx ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run.ts",
     "dev": "next dev",
     "build": "next build",
-    "start": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run_local.ts",
+    "start": "npx ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run_local.ts",
     "start:production": "next start",
     "lint": "next lint",
     "test": "jest"
