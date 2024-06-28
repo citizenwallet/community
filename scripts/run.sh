@@ -130,12 +130,12 @@ else
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
-    script_path="$HOME/community/scripts/boot.sh"
-
-    chmod +x $script_path
-
     echo "✅ Community: installed"
 fi
+
+script_path="$HOME/community/scripts/boot.sh"
+
+chmod +x $script_path
 
 # change directory to community
 cd community
