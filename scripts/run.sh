@@ -143,7 +143,7 @@ cd community
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
 
-npm i > /dev/null 2>&1 & spinner
+npm ci > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
