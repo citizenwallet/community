@@ -6,6 +6,8 @@ import ManagePaymaster from "@/containers/ManagePaymaster";
 import ManagePaymasterTemplate from "@/templates/ManagePaymaster";
 import ErrorPage from "@/templates/ErrorPage";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   let config: Config | undefined;
   try {

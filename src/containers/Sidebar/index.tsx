@@ -40,6 +40,7 @@ export default function Sidebar({
     { href: `/admin/`, item: "", label: "Home" },
     { href: `/admin/faucet`, item: "faucet", label: "Faucet" },
     { href: `/admin/paymaster`, item: "paymaster", label: "Paymaster" },
+    { href: `/admin/system`, item: "system", label: "System" },
   ];
 
   console.log("newVersion", newVersion);

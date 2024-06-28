@@ -34,7 +34,7 @@ export const downloadApp = () => {
 
 export const appProcessId = (): string | undefined => {
   try {
-    const command = "sudo lsof -i :3002 -t";
+    const command = "lsof -i :3002 -t";
     const pid = execSync(command).toString().trim();
 
     return pid;

@@ -18,7 +18,7 @@ export const completeIndexerEnv = (network: Network) => {
 
 export const indexerProcessId = (): string | undefined => {
   try {
-    const command = "sudo lsof -i :3001 -t";
+    const command = "lsof -i :3001 -t";
     const pid = execSync(command).toString().trim();
 
     return pid;
