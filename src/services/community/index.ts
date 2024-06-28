@@ -98,7 +98,7 @@ export const getDashboardVersion = async (): Promise<string> => {
 };
 
 export const updateCommunityServer = async () => {
-  // reboot machine
+  // update the community server
   const command =
     'bash -c "$(curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh)" > $HOME/error.log 2>&1';
 
