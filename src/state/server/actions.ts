@@ -1,6 +1,7 @@
 import { StoreApi, UseBoundStore } from "zustand";
 import { ServerState, useServerStore } from "./state";
 import { useMemo } from "react";
+import { delay } from "@/utils/delay";
 
 export class ServerActions {
   baseUrl: string =
@@ -27,6 +28,8 @@ export class ServerActions {
           "Content-Type": "application/json",
         },
       });
+
+      await delay(5000);
 
       // reload the page
       window.location.reload();
