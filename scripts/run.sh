@@ -99,6 +99,19 @@ if ! groups ${USER} | grep &>/dev/null '\bdocker\b'; then
     exit 0
 fi
 
+# run this script every time the system boots
+if crontab -l | grep -q "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1"; then
+    # there is an entry, do nothing
+    echo "✅ Startup script: installed"
+else
+    # there is no entry, add it
+    echo "⏳ Startup script: installing..."
+
+    (crontab -l 2>/dev/null; echo "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1") | crontab -
+   
+    echo "✅ Startup script: installed"
+fi
+
 if [ ! -d "community" ]; then
     mkdir community
 fi
@@ -117,19 +130,24 @@ NEW_VERSION=$(cat community_version)
 if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
     echo "✅ Community: installed"
 else
-    echo "⏳ Community: installing..."
+    echo "⏳ Community: updating..."
 
     rm -rf community/.next > /dev/null 2>&1
     rm -rf community/assets > /dev/null 2>&1
     rm -rf community/public > /dev/null 2>&1
     rm -rf community/scripts > /dev/null 2>&1
     rm -rf community/src > /dev/null 2>&1
+    rm -rf community/node_modules > /dev/null 2>&1
 
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
     echo "✅ Community: installed"
+
+    echo "Restarting..."
+
+    sudo reboot
 fi
 
 script_path="$HOME/community/scripts/boot.sh"
@@ -146,19 +164,6 @@ npm i > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
-
-# run this script every time the system boots
-if crontab -l | grep -q "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1"; then
-    # there is an entry, do nothing
-    echo "✅ Startup script: installed"
-else
-    # there is no entry, add it
-    echo "⏳ Startup script: installing..."
-
-    (crontab -l 2>/dev/null; echo "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1") | crontab -
-   
-    echo "✅ Startup script: installed"
-fi
 
 # trigger run script
 echo "⏳ Launching community..."
