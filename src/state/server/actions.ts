@@ -20,6 +20,7 @@ export class ServerActions {
         throw new Error("No update in development mode");
       }
 
+      // when this resolves, the script should be done
       await fetch(`${this.baseUrl}/api/server`, {
         method: "PATCH",
         headers: {
@@ -27,6 +28,7 @@ export class ServerActions {
         },
       });
 
+      // reload the page
       window.location.reload();
     } catch (error) {
       console.error(error);
