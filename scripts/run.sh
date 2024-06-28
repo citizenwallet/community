@@ -124,7 +124,6 @@ else
     rm -rf community/public > /dev/null 2>&1
     rm -rf community/scripts > /dev/null 2>&1
     rm -rf community/src > /dev/null 2>&1
-    rm -rf community/node_modules > /dev/null 2>&1
 
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
