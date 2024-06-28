@@ -8,6 +8,7 @@ import { compareSemver } from "@/utils/semver";
 
 export async function PATCH() {
   try {
+    // get the latest version of the dashboard
     const version = await getDashboardVersion();
 
     const hasUpdate = compareSemver(VERSION, version) === -1;
