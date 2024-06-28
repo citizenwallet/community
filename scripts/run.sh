@@ -144,10 +144,6 @@ else
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
 
     echo "✅ Community: installed"
-
-    echo "Restarting..."
-
-    sudo reboot
 fi
 
 script_path="$HOME/community/scripts/boot.sh"
@@ -160,10 +156,10 @@ cd community
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
 
-npm i > /dev/null 2>&1 & spinner
+npm ci > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
-npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
+npm ci sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
 # trigger run script
 echo "⏳ Launching community..."
