@@ -29,6 +29,7 @@ export class ServerActions {
         },
       });
 
+      // wait for services to restart before refreshing
       await delay(5000);
 
       // reload the page
