@@ -149,14 +149,14 @@ npm i > /dev/null 2>&1 & spinner
 npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
 # run this script every time the system boots
-if crontab -l | grep -q "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot_logs.log 2>&1"; then
+if crontab -l | grep -q "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1"; then
     # there is an entry, do nothing
     echo "✅ Startup script: installed"
 else
     # there is no entry, add it
     echo "⏳ Startup script: installing..."
 
-    (crontab -l 2>/dev/null; echo "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot_logs.log 2>&1") | crontab -
+    (crontab -l 2>/dev/null; echo "@reboot rm -f $HOME/boot.log && bash -c 'curl -fsSL https://raw.githubusercontent.com/citizenwallet/community/main/scripts/run.sh | bash' > $HOME/boot.log 2>&1") | crontab -
    
     echo "✅ Startup script: installed"
 fi
