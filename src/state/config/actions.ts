@@ -18,7 +18,7 @@ import {
 import { isValidUrl } from "@/utils/url";
 import { ConfigureResponse } from "@/app/api/configure/route";
 
-class ConfigLogic {
+class ConfigActions {
   store: StoreApi<ConfigStore>;
   baseUrl: string =
     process.env.NODE_ENV === "production"
@@ -291,8 +291,8 @@ class ConfigLogic {
   }
 }
 
-export const useConfigLogic = () => {
-  const logic = useMemo(() => new ConfigLogic(), []);
+export const useConfigActions = () => {
+  const logic = useMemo(() => new ConfigActions(), []);
 
   return logic;
 };

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useConfigLogic } from "@/state/config/logic";
+import { useConfigActions } from "@/state/config/actions";
 import { ConfigStep, useConfigStore } from "@/state/config/state";
 import ConfigPageTemplate from "@/templates/Config";
 import CommunityCheckout from "@/containers/Config/CommunityCheckout";
@@ -68,7 +68,7 @@ export default function Container({ sponsor }: ContainerProps) {
   const [file, setFile] = useState<string | null>(null);
   const [valid, setValid] = useState(false);
 
-  const logic = useConfigLogic();
+  const logic = useConfigActions();
   const step = useConfigStore((state) => state.step);
   const primaryColor = useConfigStore((state) => state.primaryColor);
   const invalidUrl = useConfigStore((state) => state.invalidUrl);
