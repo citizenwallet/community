@@ -119,13 +119,6 @@ if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
 else
     echo "⏳ Community: updating..."
 
-    rm -rf community/.next > /dev/null 2>&1
-    rm -rf community/assets > /dev/null 2>&1
-    rm -rf community/public > /dev/null 2>&1
-    rm -rf community/scripts > /dev/null 2>&1
-    rm -rf community/src > /dev/null 2>&1
-    rm -rf community/node_modules > /dev/null 2>&1
-
     curl -o community.tar.gz -L "https://builds.internal.citizenwallet.xyz/community/dashboard_${NEW_VERSION}.tar.gz" > /dev/null 2>&1 & spinner
 
     tar -xzf community.tar.gz -C community > /dev/null 2>&1
@@ -139,10 +132,10 @@ cd community
 # trigger run script
 echo "Installing dependencies, this can take a few seconds..."
 
-npm ci > /dev/null 2>&1 & spinner
+npm i > /dev/null 2>&1 & spinner
 
 # ensure that the proper os/arch of sqlite3 is installed
-npm ci sqlite3@5.1.6 > /dev/null 2>&1 & spinner
+npm i sqlite3@5.1.6 > /dev/null 2>&1 & spinner
 
 # trigger run script
 echo "⏳ Launching community..."
