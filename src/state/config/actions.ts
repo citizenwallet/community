@@ -17,6 +17,10 @@ import {
 } from "@citizenwallet/sdk";
 import { isValidUrl } from "@/utils/url";
 import { ConfigureResponse } from "@/app/api/configure/route";
+import axios from "axios";
+import path from "path";
+import { readCommunityFile } from "@/services/community";
+import { config } from "dotenv";
 
 class ConfigActions {
   store: StoreApi<ConfigStore>;
@@ -288,6 +292,27 @@ class ConfigActions {
     }
 
     return false;
+  }
+
+  async fetchTransactions(
+    url: string,
+    id: string,
+    offSet: number,
+    limit: number,
+    maxDate: string | null
+  ) {
+    try {
+      const response = await axios.get(
+        `${url}/logs/v2/transfers/${id}?offset=${offSet}&limit=${limit}&maxDate=${maxDate}`,
+        {
+          method: "GET",
+        }
+      );
+      return response?.data;
+    } catch (e) {
+      console.log(e);
+      throw new Error("Failed to load transactions");
+    }
   }
 }
 

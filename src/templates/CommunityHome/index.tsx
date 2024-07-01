@@ -7,11 +7,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function Template({
   CommunityCard,
+  TransactionTable,
 }: {
   CommunityCard?: React.ReactNode;
+  TransactionTable?: React.ReactNode;
 }) {
   return (
     <Flex direction="column" height="100%" width="100%">
@@ -33,6 +44,7 @@ export default function Template({
               <CardContent></CardContent>
             </Card>
           )}
+          {TransactionTable || <div>skeleton</div>}
         </Section>
       </Flex>
     </Flex>
