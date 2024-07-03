@@ -19,14 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { shortenAddress } from "@/utils/shortenAddress";
-import {
-  Box,
-  Flex,
-  IconButton,
-  Skeleton,
-  Strong,
-  Text,
-} from "@radix-ui/themes";
+import { Box, Flex, IconButton, Skeleton, Strong } from "@radix-ui/themes";
 import { Button as ControlButton } from "@/components/ui/button";
 import {
   ArrowRightIcon,
@@ -54,6 +47,7 @@ import { useState } from "react";
 import { useConfigActions } from "@/state/config/actions";
 import { useSafeEffect } from "@/hooks/useSafeEffect";
 import { useConfigStore } from "@/state/config/state";
+import { formatDate } from "@/utils/dateFormat";
 
 export interface TransactionsMeta {
   limit: number;
@@ -211,22 +205,13 @@ export default function Container({ community }: { community: Config }) {
               </SelectContent>
             </Select>
             <Flex>
-              <Box className="mr-2 cursor-pointer">
+              <Box className="cursor-pointer">
                 <IconButton
                   className="m-2"
                   variant="soft"
                   onClick={() => onRefresh()}
                 >
                   <RotateCcw />
-                </IconButton>
-              </Box>
-              <Box>
-                <IconButton
-                  className="m-2 cursor-pointer"
-                  variant="soft"
-                  color="green"
-                >
-                  <Download />
                 </IconButton>
               </Box>
             </Flex>
@@ -262,9 +247,7 @@ export default function Container({ community }: { community: Config }) {
                           {shortenAddress(transaction?.tx_hash)}
                         </TableCell>
                         <TableCell>
-                          {moment(transaction?.created_at).format(
-                            "DD-MMM-YYYY"
-                          )}
+                          {formatDate(transaction?.created_at)}
                         </TableCell>
                         <TableCell>
                           {shortenAddress(transaction?.from)}
@@ -281,7 +264,7 @@ export default function Container({ community }: { community: Config }) {
               </TableBody>
             </Table>
           )}
-          <Flex className="mt-2">
+          <Flex className="mt-2 {moment(transaction?.created_at).format(">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
