@@ -22,14 +22,11 @@ import { shortenAddress } from "@/utils/shortenAddress";
 import { Box, Flex, IconButton, Skeleton, Strong } from "@radix-ui/themes";
 import { Button as ControlButton } from "@/components/ui/button";
 import {
-  ArrowRightIcon,
   ChevronLeft,
   ChevronRight,
-  Download,
   MoveUpRight,
   RotateCcw,
 } from "lucide-react";
-import moment from "moment";
 import {
   Select,
   SelectContent,
@@ -48,6 +45,7 @@ import { useConfigActions } from "@/state/config/actions";
 import { useSafeEffect } from "@/hooks/useSafeEffect";
 import { useConfigStore } from "@/state/config/state";
 import { formatDate } from "@/utils/dateFormat";
+import { formatUnits } from "ethers";
 
 export interface TransactionsMeta {
   limit: number;
@@ -253,7 +251,12 @@ export default function Container({ community }: { community: Config }) {
                           {shortenAddress(transaction?.from)}
                         </TableCell>
                         <TableCell>{shortenAddress(transaction?.to)}</TableCell>
-                        <TableCell>{transaction?.value}</TableCell>
+                        <TableCell>
+                          {formatUnits(
+                            `${transaction?.value ?? 0}`,
+                            community.token.decimals
+                          )}
+                        </TableCell>
                         <TableCell>
                           {shortenAddress(transaction?.data?.description)}
                         </TableCell>
