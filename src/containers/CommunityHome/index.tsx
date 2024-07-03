@@ -69,27 +69,50 @@ export interface Transactions {
   meta: TransactionsMeta;
 }
 
-export default function Container({
-  community,
-}: {
-  community: Config;
-}) {
+export default function Container({ community }: { community: Config }) {
   const logic = useConfigActions();
   const transfers = useConfigStore((state) => state.transfers);
+  const { offset, limit, total } = useConfigStore(
+    (state) => state.transfersMeta
+  );
   const [paginationCount, setPaginationCount] = useState("10");
 
   const onFilterChange = (value: string) => {
-    console.log("dddddd");
+    const paginationInNumber = parseInt(value);
     setPaginationCount(value);
-    logic.fetchTransactions(community, 1, parseInt(value), "");
+    logic.fetchTransactions(community, 0, paginationInNumber, "");
   };
 
   const onPageChange = (direction: string) => {
-    console.log(direction);
+    const paginationInNumber = parseInt(paginationCount);
+    if (direction === "next") {
+      logic.fetchTransactions(
+        community,
+        offset + paginationInNumber,
+        paginationInNumber,
+        ""
+      );
+    } else {
+      logic.fetchTransactions(
+        community,
+        offset - paginationInNumber,
+        parseInt(paginationCount),
+        ""
+      );
+    }
+  };
+
+  const onRefresh = () => {
+    const paginationInNumber = parseInt(paginationCount);
+    logic.fetchTransactions(
+      community,
+      0,
+      paginationInNumber,
+      Date.now().toString()
+    );
   };
 
   useSafeEffect(() => {
-    console.log("dddd");
     logic.fetchInitialTransactions(community);
   }, []);
 
@@ -129,13 +152,21 @@ export default function Container({
               </SelectContent>
             </Select>
             <Flex>
-              <Box className="mr-2">
-                <IconButton className="m-2" variant="soft">
+              <Box className="mr-2 cursor-pointer">
+                <IconButton
+                  className="m-2 "
+                  variant="soft"
+                  onClick={() => onRefresh()}
+                >
                   <RotateCcw />
                 </IconButton>
               </Box>
               <Box>
-                <IconButton className="m-2" variant="soft" color="green">
+                <IconButton
+                  className="m-2 cursor-pointer"
+                  variant="soft"
+                  color="green"
+                >
                   <Download />
                 </IconButton>
               </Box>
@@ -154,7 +185,6 @@ export default function Container({
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
-
             <TableBody>
               {transfers &&
                 transfers?.map((transaction: Transfer) => {
@@ -170,7 +200,9 @@ export default function Container({
                       <TableCell>{shortenAddress(transaction?.from)}</TableCell>
                       <TableCell>{shortenAddress(transaction?.to)}</TableCell>
                       <TableCell>{transaction?.value}</TableCell>
-                      <TableCell>{transaction?.data?.description}</TableCell>
+                      <TableCell>
+                        {shortenAddress(transaction?.data?.description)}
+                      </TableCell>
                       <TableCell>{transaction?.status}</TableCell>
                     </TableRow>
                   );
@@ -182,6 +214,7 @@ export default function Container({
               <PaginationContent>
                 <PaginationItem>
                   <Button
+                    disabled={offset === 0}
                     variant="secondary"
                     onClick={() => onPageChange("prev")}
                   >
@@ -191,6 +224,7 @@ export default function Container({
                 </PaginationItem>
                 <PaginationItem>
                   <Button
+                    disabled={transfers.length === 0}
                     variant="secondary"
                     onClick={() => onPageChange("next")}
                   >

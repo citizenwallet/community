@@ -322,10 +322,6 @@ class ConfigActions {
     limit: number,
     maxDate: string
   ) {
-    console.log("config", config);
-    console.log("offset", offset);
-    console.log("limit", limit);
-    console.log("maxDate", maxDate);
     try {
       const params = {
         maxDate,
@@ -342,7 +338,7 @@ class ConfigActions {
       this.store.getState().setTransfersMeta(transfers.meta);
     } catch (e) {
       console.log(e);
-      //throw new Error("Failed to load transactions");
+      throw new Error("Failed to load transactions");
     }
   }
 }
