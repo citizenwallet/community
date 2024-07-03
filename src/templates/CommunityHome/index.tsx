@@ -10,8 +10,10 @@ import {
 
 export default function Template({
   CommunityCard,
+  TransactionTable,
 }: {
   CommunityCard?: React.ReactNode;
+  TransactionTable?: React.ReactNode;
 }) {
   return (
     <Flex direction="column" height="100%" width="100%">
@@ -32,6 +34,16 @@ export default function Template({
               </CardHeader>
               <CardContent></CardContent>
             </Card>
+          )}
+          {TransactionTable || (
+            <Flex className="flex-col mt-4">
+              <Skeleton className="h-[80px] w-[100%] rounded-md" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[60px] w-[100%] rounded-md mt-3" />
+            </Flex>
           )}
         </Section>
       </Flex>

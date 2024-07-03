@@ -14,9 +14,14 @@ import {
   ConfigToken,
   Network,
   SessionService,
+  IndexerService,
 } from "@citizenwallet/sdk";
 import { isValidUrl } from "@/utils/url";
 import { ConfigureResponse } from "@/app/api/configure/route";
+import axios from "axios";
+import path from "path";
+import { readCommunityFile } from "@/services/community";
+import { config } from "dotenv";
 
 class ConfigActions {
   store: StoreApi<ConfigStore>;
@@ -288,6 +293,57 @@ class ConfigActions {
     }
 
     return false;
+  }
+
+  async fetchInitialTransactions(config: Config) {
+    try {
+      this.store.getState().setTransfersLoading(true);
+      const params = {
+        maxDate: "",
+        limit: 10,
+        offset: 0,
+      };
+      const indexer = new IndexerService(config.indexer);
+      const transfers = await indexer.getTransfers(
+        config.token.address,
+        "",
+        params
+      );
+      this.store.getState().setTransfers(transfers.array);
+      this.store.getState().setTransfersMeta(transfers.meta);
+      this.store.getState().setTransfersLoading(false);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Failed to load transactions");
+    }
+  }
+
+  async fetchTransactions(
+    config: Config,
+    offset: number,
+    limit: number,
+    maxDate: string
+  ) {
+    try {
+      this.store.getState().setTransfersLoading(true);
+      const params = {
+        maxDate,
+        limit,
+        offset,
+      };
+      const indexer = new IndexerService(config.indexer);
+      const transfers = await indexer.getTransfers(
+        config.token.address,
+        "",
+        params
+      );
+      this.store.getState().setTransfers(transfers.array);
+      this.store.getState().setTransfersMeta(transfers.meta);
+      this.store.getState().setTransfersLoading(false);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Failed to load transactions");
+    }
   }
 }
 
