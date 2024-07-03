@@ -46,6 +46,7 @@ export type ConfigStore = {
   chainContinue: (network: Network, scan: ConfigScan, node: ConfigNode) => void;
   communityContinue: (community: ConfigCommunity, token: ConfigToken) => void;
   transfers: Transfer[];
+  transfersLoading: boolean;
   transfersMeta: IndexerResponsePaginationMetadata;
   deployment: {
     step: DeployStep;
@@ -53,6 +54,7 @@ export type ConfigStore = {
     error: boolean;
   };
   setTransfers: (transfers: Transfer[]) => void;
+  setTransfersLoading: (loading: boolean) => void;
   setTransfersMeta: (transfersMeta: IndexerResponsePaginationMetadata) => void;
   deployRequest: (step: DeployStep) => void;
   deploySuccess: () => void;
@@ -75,6 +77,7 @@ const getInitialState = () => ({
     error: false,
   },
   transfers: [],
+  transfersLoading: true,
   transfersMeta: {
     limit: 10,
     offset: 0,
@@ -108,6 +111,7 @@ export const useConfigStore = create<ConfigStore>((set) => ({
   failed: () => set({ loading: false, error: true }),
   reset: () => set(getInitialState(), true),
   setTransfers: (transfers: Transfer[]) => set({ transfers: transfers }),
+  setTransfersLoading: (loading: boolean) => set({ transfersLoading: loading }),
   setTransfersMeta: (transfersMeta: IndexerResponsePaginationMetadata) =>
     set({ transfersMeta }),
 }));

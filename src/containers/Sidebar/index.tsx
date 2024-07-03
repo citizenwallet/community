@@ -93,7 +93,7 @@ export default function Sidebar({
         direction="column"
         p="2"
         gap="2"
-        className="animate-fadeIn max-h-screen min-h-screen bg-white"
+        className="animate-fadeIn min-h-screen bg-white"
       >
         <Heading>{title}</Heading>
         <Separator size="4" />
@@ -158,7 +158,6 @@ export default function Sidebar({
             className="h-full"
           >
             <Separator size="4" />
-            <Tabs pathname={pathname} tabs={tabs} />
             <Flex grow="1"></Flex>
             <Flex direction="column">
               <Button variant="ghost" onClick={handleContribute}>

@@ -2,6 +2,7 @@ import CommunityHome from "@/containers/CommunityHome";
 import { readCommunityFile } from "@/services/community";
 import { Config } from "@citizenwallet/sdk";
 import ErrorPage from "@/templates/ErrorPage";
+import { Box, Flex } from "@radix-ui/themes";
 
 export const dynamic = "force-dynamic";
 

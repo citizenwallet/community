@@ -297,6 +297,7 @@ class ConfigActions {
 
   async fetchInitialTransactions(config: Config) {
     try {
+      this.store.getState().setTransfersLoading(true);
       const params = {
         maxDate: "",
         limit: 10,
@@ -310,6 +311,7 @@ class ConfigActions {
       );
       this.store.getState().setTransfers(transfers.array);
       this.store.getState().setTransfersMeta(transfers.meta);
+      this.store.getState().setTransfersLoading(false);
     } catch (e) {
       console.log(e);
       throw new Error("Failed to load transactions");
@@ -323,6 +325,7 @@ class ConfigActions {
     maxDate: string
   ) {
     try {
+      this.store.getState().setTransfersLoading(true);
       const params = {
         maxDate,
         limit,
@@ -336,6 +339,7 @@ class ConfigActions {
       );
       this.store.getState().setTransfers(transfers.array);
       this.store.getState().setTransfersMeta(transfers.meta);
+      this.store.getState().setTransfersLoading(false);
     } catch (e) {
       console.log(e);
       throw new Error("Failed to load transactions");

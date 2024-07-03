@@ -35,7 +35,16 @@ export default function Template({
               <CardContent></CardContent>
             </Card>
           )}
-          {TransactionTable || <div>skeleton</div>}
+          {TransactionTable || (
+            <Flex className="flex-col mt-4">
+              <Skeleton className="h-[80px] w-[100%] rounded-md" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[30px] w-[100%] rounded-md mt-2" />
+              <Skeleton className="h-[60px] w-[100%] rounded-md mt-3" />
+            </Flex>
+          )}
         </Section>
       </Flex>
     </Flex>
