@@ -19,7 +19,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { shortenAddress } from "@/utils/shortenAddress";
-import { Box, Flex, IconButton, Skeleton, Strong } from "@radix-ui/themes";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Link,
+  Skeleton,
+  Strong,
+} from "@radix-ui/themes";
 import { Button as ControlButton } from "@/components/ui/button";
 import {
   ChevronLeft,
@@ -125,6 +132,11 @@ export default function Container({ community }: { community: Config }) {
       paginationInNumber,
       Date.now().toString()
     );
+  };
+
+  const onOpenHash = (hash: string) => {
+    const link = `${community.scan.url}/tx/${hash}`;
+    window.open(link);
   };
 
   useSafeEffect(() => {
@@ -242,7 +254,11 @@ export default function Container({ community }: { community: Config }) {
                           {shortenAddress(transaction?.hash)}
                         </TableCell>
                         <TableCell>
-                          {shortenAddress(transaction?.tx_hash)}
+                          <Link
+                            onClick={() => onOpenHash(transaction?.tx_hash)}
+                          >
+                            {shortenAddress(transaction?.tx_hash)}
+                          </Link>
                         </TableCell>
                         <TableCell>
                           {formatDate(transaction?.created_at)}
