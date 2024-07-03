@@ -281,7 +281,7 @@ export default function Container({ community }: { community: Config }) {
               </TableBody>
             </Table>
           )}
-          <Flex>
+          <Flex className="mt-2">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
