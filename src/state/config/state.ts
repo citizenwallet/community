@@ -5,7 +5,9 @@ import {
   ConfigCommunity,
   ConfigToken,
   Network,
+  Transfer,
 } from "@citizenwallet/sdk";
+import { IndexerResponsePaginationMetadata } from "@citizenwallet/sdk/dist/src/services/indexer";
 import { create } from "zustand";
 
 export enum ConfigStep {
@@ -43,11 +45,15 @@ export type ConfigStore = {
   getStarted: () => void;
   chainContinue: (network: Network, scan: ConfigScan, node: ConfigNode) => void;
   communityContinue: (community: ConfigCommunity, token: ConfigToken) => void;
+  transfers: Transfer[];
+  transfersMeta: IndexerResponsePaginationMetadata;
   deployment: {
     step: DeployStep;
     loading: boolean;
     error: boolean;
   };
+  setTransfers: (transfers: Transfer[]) => void;
+  setTransfersMeta: (transfersMeta: IndexerResponsePaginationMetadata) => void;
   deployRequest: (step: DeployStep) => void;
   deploySuccess: () => void;
   deployFailed: () => void;
@@ -67,6 +73,12 @@ const getInitialState = () => ({
     step: DeployStep.Config,
     loading: false,
     error: false,
+  },
+  transfers: [],
+  transfersMeta: {
+    limit: 10,
+    offset: 0,
+    total: 10,
   },
 });
 
@@ -95,4 +107,7 @@ export const useConfigStore = create<ConfigStore>((set) => ({
     }),
   failed: () => set({ loading: false, error: true }),
   reset: () => set(getInitialState(), true),
+  setTransfers: (transfers: Transfer[]) => set({ transfers: transfers }),
+  setTransfersMeta: (transfersMeta: IndexerResponsePaginationMetadata) =>
+    set({ transfersMeta }),
 }));

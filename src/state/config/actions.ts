@@ -14,6 +14,7 @@ import {
   ConfigToken,
   Network,
   SessionService,
+  IndexerService,
 } from "@citizenwallet/sdk";
 import { isValidUrl } from "@/utils/url";
 import { ConfigureResponse } from "@/app/api/configure/route";
@@ -294,24 +295,54 @@ class ConfigActions {
     return false;
   }
 
-  async fetchTransactions(
-    url: string,
-    id: string,
-    offSet: number,
-    limit: number,
-    maxDate: string | null
-  ) {
+  async fetchInitialTransactions(config: Config) {
     try {
-      const response = await axios.get(
-        `${url}/logs/v2/transfers/${id}?offset=${offSet}&limit=${limit}&maxDate=${maxDate}`,
-        {
-          method: "GET",
-        }
+      const params = {
+        maxDate: "",
+        limit: 10,
+        offset: 0,
+      };
+      const indexer = new IndexerService(config.indexer);
+      const transfers = await indexer.getTransfers(
+        config.token.address,
+        "",
+        params
       );
-      return response?.data;
+      this.store.getState().setTransfers(transfers.array);
+      this.store.getState().setTransfersMeta(transfers.meta);
     } catch (e) {
       console.log(e);
       throw new Error("Failed to load transactions");
+    }
+  }
+
+  async fetchTransactions(
+    config: Config,
+    offset: number,
+    limit: number,
+    maxDate: string
+  ) {
+    console.log("config", config);
+    console.log("offset", offset);
+    console.log("limit", limit);
+    console.log("maxDate", maxDate);
+    try {
+      const params = {
+        maxDate,
+        limit,
+        offset,
+      };
+      const indexer = new IndexerService(config.indexer);
+      const transfers = await indexer.getTransfers(
+        config.token.address,
+        "",
+        params
+      );
+      this.store.getState().setTransfers(transfers.array);
+      this.store.getState().setTransfersMeta(transfers.meta);
+    } catch (e) {
+      console.log(e);
+      //throw new Error("Failed to load transactions");
     }
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Config } from "@citizenwallet/sdk";
+import { Config, Transfer } from "@citizenwallet/sdk";
 import CommunityHomeTemplate from "@/templates/CommunityHome";
 import {
   Card,
@@ -14,7 +14,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -36,18 +35,22 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useConfigActions } from "@/state/config/actions";
+import { useSafeEffect } from "@/hooks/useSafeEffect";
+import { useConfigStore } from "@/state/config/state";
 
-interface TransactionsMeta {
+export interface TransactionsMeta {
   limit: number;
   offset: number;
   total: number;
 }
 
-interface Description {
+export interface Description {
   description: string;
 }
 
-interface Transaction {
+export interface Transaction {
   hash: string;
   tx_hash: string;
   token_id: number;
@@ -60,20 +63,36 @@ interface Transaction {
   status: string;
 }
 
-interface Transactions {
+export interface Transactions {
   response_type: string;
   array: Transaction[] | [];
   meta: TransactionsMeta;
 }
 
 export default function Container({
-  community: { community },
-  transactions,
+  community,
 }: {
   community: Config;
-  transactions: Transactions;
 }) {
-  console.log(transactions);
+  const logic = useConfigActions();
+  const transfers = useConfigStore((state) => state.transfers);
+  const [paginationCount, setPaginationCount] = useState("10");
+
+  const onFilterChange = (value: string) => {
+    console.log("dddddd");
+    setPaginationCount(value);
+    logic.fetchTransactions(community, 1, parseInt(value), "");
+  };
+
+  const onPageChange = (direction: string) => {
+    console.log(direction);
+  };
+
+  useSafeEffect(() => {
+    console.log("dddd");
+    logic.fetchInitialTransactions(community);
+  }, []);
+
   return (
     <CommunityHomeTemplate
       CommunityCard={
@@ -81,14 +100,14 @@ export default function Container({
           <CardHeader>
             <CardTitle className="flex flex-row items-center">
               <Image
-                src={community.logo}
+                src={community.community.logo}
                 alt="community logo"
                 height={40}
                 width={40}
               />
-              {community.name}
+              {community.community.name}
             </CardTitle>
-            <CardDescription>{community.description}</CardDescription>
+            <CardDescription>{community.community.description}</CardDescription>
           </CardHeader>
           <CardContent></CardContent>
         </Card>
@@ -96,7 +115,10 @@ export default function Container({
       TransactionTable={
         <>
           <Flex justify="between" align="center" className="py-4 mt-2">
-            <Select>
+            <Select
+              value={paginationCount}
+              onValueChange={(value) => onFilterChange(value)}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="10" />
               </SelectTrigger>
@@ -132,9 +154,10 @@ export default function Container({
                 <TableHead>Status</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
-              {transactions &&
-                transactions?.array.map((transaction: Transaction) => {
+              {transfers &&
+                transfers?.map((transaction: Transfer) => {
                   return (
                     <TableRow key={transaction.hash}>
                       <TableCell>{shortenAddress(transaction?.hash)}</TableCell>
@@ -158,14 +181,19 @@ export default function Container({
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <Button variant="secondary">
-                    {" "}
+                  <Button
+                    variant="secondary"
+                    onClick={() => onPageChange("prev")}
+                  >
                     <ChevronLeft />
                     Previous
                   </Button>
                 </PaginationItem>
                 <PaginationItem>
-                  <Button variant="secondary">
+                  <Button
+                    variant="secondary"
+                    onClick={() => onPageChange("next")}
+                  >
                     Next <ChevronRight />
                   </Button>
                 </PaginationItem>
