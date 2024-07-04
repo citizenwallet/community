@@ -29,7 +29,9 @@ export enum DeployStep {
 export type ConfigStore = {
   step: ConfigStep;
   primaryColor: string;
+  secondaryColor: string;
   setPrimaryColor: (color: string) => void;
+  setSecondaryColor: (color: string) => void;
   config?: Config;
   network?: Network;
   scan?: ConfigScan;
@@ -67,6 +69,8 @@ const getInitialState = () => ({
   step: ConfigStep.Chain,
   primaryColor:
     process.env.NEXT_PUBLIC_COMMUNITY_THEME_PRIMARY_COLOR || "#000000",
+  secondaryColor:
+    process.env.NEXT_PUBLIC_COMMUNITY_THEME_SECONDARY_COLOR || "#000000",
   config: undefined,
   loading: true,
   error: false,
