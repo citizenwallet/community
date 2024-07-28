@@ -40,6 +40,9 @@ class ConfigActions {
   updatePrimaryColor(color: string) {
     this.store.setState({ primaryColor: color });
   }
+  updateSecondaryColor(color: string) {
+    this.store.setState({ secondaryColor: color });
+  }
 
   async imageUpload(logo: string): Promise<boolean> {
     try {
@@ -93,7 +96,8 @@ class ConfigActions {
       decimals: bigint;
     },
     file: string,
-    primaryColor?: string
+    primaryColor?: string,
+    secondaryColor?: string
   ) {
     const isValid = isValidUrl(url);
     if (!isValid) {
@@ -110,6 +114,11 @@ class ConfigActions {
       process.env.NEXT_PUBLIC_COMMUNITY_THEME_PRIMARY_COLOR ||
       "#000000";
 
+    const secondary =
+      secondaryColor ||
+      process.env.NEXT_PUBLIC_COMMUNITY_THEME_SECONDARY_COLOR ||
+      "#000000";
+
     const community: ConfigCommunity = {
       name,
       description,
@@ -119,6 +128,7 @@ class ConfigActions {
       logo: file,
       theme: {
         primary,
+        secondary,
       },
     };
 

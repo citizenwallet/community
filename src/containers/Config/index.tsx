@@ -1,5 +1,5 @@
 "use client";
-
+import { getTextColor } from "@/lib/colors";
 import { isAddress } from "ethers";
 import { useDebouncedCallback } from "use-debounce";
 import {
@@ -71,6 +71,7 @@ export default function Container({ sponsor }: ContainerProps) {
   const logic = useConfigActions();
   const step = useConfigStore((state) => state.step);
   const primaryColor = useConfigStore((state) => state.primaryColor);
+  const secondaryColor = useConfigStore((state) => state.secondaryColor);
   const invalidUrl = useConfigStore((state) => state.invalidUrl);
   const network = useConfigStore((state) => state.network);
   const scan = useConfigStore((state) => state.scan);
@@ -141,8 +142,13 @@ export default function Container({ sponsor }: ContainerProps) {
     }
   };
 
-  const handleColorChange: ColorChangeHandler = (color: ColorResult) => {
+  const handlePrimaryColorChange: ColorChangeHandler = (color: ColorResult) => {
     logic.updatePrimaryColor(color.hex);
+  };
+  const handleSecondaryColorChange: ColorChangeHandler = (
+    color: ColorResult
+  ) => {
+    logic.updateSecondaryColor(color.hex);
   };
 
   const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,13 +182,16 @@ export default function Container({ sponsor }: ContainerProps) {
       validAddress,
       metadata,
       file,
-      primaryColor
+      primaryColor,
+      secondaryColor
     );
   };
 
   const handleValidityChange = (value: boolean) => {
     setValid(value);
   };
+
+  const textColor = getTextColor(secondaryColor);
 
   const handleDeploy = async (
     owner: string,
@@ -275,7 +284,13 @@ export default function Container({ sponsor }: ContainerProps) {
             <AccordionContent>
               <Flex direction="column" justify="start" align="stretch" gap="2">
                 <Flex justify="center">
-                  <Card style={{ maxWidth: 300 }}>
+                  <Card
+                    style={{
+                      maxWidth: 300,
+                      color: textColor,
+                      backgroundColor: secondaryColor,
+                    }}
+                  >
                     <Flex gap="3" align="center" className="overflow-hidden">
                       <Avatar
                         size="3"
@@ -294,7 +309,7 @@ export default function Container({ sponsor }: ContainerProps) {
                         >
                           {name.trim() ? name : "Community Name"}
                         </Text>
-                        <Text as="div" size="2" color="gray">
+                        <Text as="div" size="2" style={{ color: textColor }}>
                           {description.trim()
                             ? description
                             : "Token Description"}
@@ -404,7 +419,28 @@ export default function Container({ sponsor }: ContainerProps) {
                       <SketchPicker
                         disableAlpha
                         color={primaryColor}
-                        onChange={handleColorChange}
+                        onChange={handlePrimaryColorChange}
+                      />
+                    </Popover.Content>
+                  </Popover.Root>
+                </Flex>
+                <Label>Secondary Color</Label>
+                <Flex justify="center" align="center">
+                  <Popover.Root>
+                    <Popover.Trigger>
+                      <Button
+                        variant="solid"
+                        style={{ backgroundColor: secondaryColor }}
+                      >
+                        <OpacityIcon height={14} width={14} />
+                        {secondaryColor}
+                      </Button>
+                    </Popover.Trigger>
+                    <Popover.Content side="bottom" size="1">
+                      <SketchPicker
+                        disableAlpha
+                        color={secondaryColor}
+                        onChange={handleSecondaryColorChange}
                       />
                     </Popover.Content>
                   </Popover.Root>
