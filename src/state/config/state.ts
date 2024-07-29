@@ -92,6 +92,7 @@ const getInitialState = () => ({
 export const useConfigStore = create<ConfigStore>((set) => ({
   ...getInitialState(),
   setPrimaryColor: (primaryColor) => set({ primaryColor }),
+  setSecondaryColor: (secondaryColor) => set({ secondaryColor }),
   setInvalidUrl: (invalidUrl) => set({ invalidUrl }),
   setStep: (step) => set({ step }),
   request: () => set({ loading: true, error: false }),
