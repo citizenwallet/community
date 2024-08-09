@@ -44,6 +44,9 @@ export const startIndexer = (chainId: number) => {
     case 44787:
       chainEVM = "celo";
       break;
+    case 42161:
+      chainEVM = "celo";
+      break;
   }
 
   // how can we provide push access in a safe way?
