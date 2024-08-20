@@ -116,9 +116,14 @@ export default function Sidebar({
               confirmText="Update"
               onConfirm={handleUpdate}
             >
-              <Button disabled={updating}>
-                Update available v{newVersion}
-              </Button>
+              <>
+                <Button disabled={updating}>
+                  Update available v{newVersion}
+                </Button>
+                <Text size="1" align="center">
+                  Dashboard: v{VERSION}
+                </Text>
+              </>
             </ConfirmModal>
           )}
           {!newVersion && (
@@ -176,9 +181,15 @@ export default function Sidebar({
                   confirmText="Update"
                   onConfirm={handleUpdate}
                 >
-                  <Button disabled={updating}>
-                    Update available v{newVersion}
-                  </Button>
+                  <>
+                    <Button disabled={updating}>
+                      Update available v{newVersion}
+                    </Button>
+
+                    <Text size="1" align="center">
+                      Dashboard: v{VERSION}
+                    </Text>
+                  </>
                 </ConfirmModal>
               )}
               {!newVersion && (
