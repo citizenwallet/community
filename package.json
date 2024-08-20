@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "community": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run.ts",
+    "setup_dev": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/setup_dev.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run_local.ts",
