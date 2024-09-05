@@ -37,6 +37,11 @@ services:
       - certs_conf_volume:/etc/letsencrypt/:rw
     depends_on:
       - server-cert
+  certbot-renew:
+    image: certbot/certbot:latest
+    volumes:
+      - certs_www_volume:/var/www/certbot/:rw
+      - certs_conf_volume:/etc/letsencrypt/:rw
 
 volumes:
   web_volume:
