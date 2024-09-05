@@ -355,6 +355,59 @@ async function main() {
       );
       process.exit(1);
     }
+
+    // run certbot-renew every 12 hours
+
+    // lets add a systemctl timer to run this every 12 hours
+    const serviceFileContents = `
+[Unit]
+Description=Renew SSL certificates using Docker Compose and Certbot
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=${process.cwd()}/community
+ExecStart=/bin/sh -c 'docker compose run --rm certbot-renew certonly --non-interactive --webroot -w /var/www/certbot -d ${nginxHost}'
+User=${process.env.USER}
+Group=docker
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+    `;
+
+    // write service file
+    const serviceFilePath =
+      "/etc/systemd/system/docker-compose-certbot-renew.service";
+    term("\nWriting certbot-renew.service file...\n");
+
+    // write the file
+    writeFileSync(serviceFilePath, serviceFileContents);
+
+    const timerFileContents = `
+[Unit]
+Description=Timer to renew SSL certificates using Docker Compose and Certbot
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+    `;
+
+    // write timer file
+    const timerFilePath =
+      "/etc/systemd/system/docker-compose-certbot-renew.timer";
+    term("\nWriting certbot-renew.timer file...\n");
+
+    // write the file
+    writeFileSync(timerFilePath, timerFileContents);
+
+    execSync("sudo systemctl daemon-reload");
+
+    execSync("sudo systemctl enable docker-compose-certbot-renew.timer");
+    execSync("sudo systemctl start docker-compose-certbot-renew.timer");
   }
 
   // push notifications
