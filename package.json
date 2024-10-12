@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "community": "ts-node -r tsconfig-paths/register -P scripts/tsconfig.json scripts/run.ts",
@@ -12,7 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@citizenwallet/sdk": "^1.2.42",
+    "@citizenwallet/sdk": "^1.2.46",
     "@pinata/sdk": "^2.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.1.1",
