@@ -2,7 +2,7 @@
 
 DOMAIN=$1
 
-cd $HOME/comnunity
+cd $HOME/community
 docker compose run --rm certbot-renew certonly --non-interactive --webroot -w /var/www/certbot -d $DOMAIN
 
 docker compose restart server

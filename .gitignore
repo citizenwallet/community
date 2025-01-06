@@ -21,7 +21,6 @@
 go.work
 
 # env
-.env
 .env*.local
 .env.app
 .env.dashboard
@@ -60,7 +59,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 
 # vercel
 .vercel
@@ -70,3 +68,4 @@ yarn-error.log*
 next-env.d.ts
 
 /outputs
+config.bat
