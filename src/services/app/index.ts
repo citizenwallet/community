@@ -34,7 +34,11 @@ export const downloadApp = () => {
 
 export const appProcessId = (): string | undefined => {
   try {
-    const command = "lsof -i :3002 -t";
+    // for some reason, lsof -i :3002 doesn't return the node process
+    // we could use `fuser 3002/tcp` but it's not available on all systems
+    // the following command works on linux and mac
+    const command =
+      "ps -eo pid,args | grep 3002 | head -n 1 | awk '{print $1}'";
     const pid = execSync(command).toString().trim();
 
     return pid;
